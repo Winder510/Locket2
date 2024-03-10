@@ -27,8 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="b1"
                 android:textSize="35dp"
+                app:icon="@drawable/icons8_user_32"
                 tools:ignore="NestedWeights">
 
             </Button>
@@ -39,8 +39,8 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_weight="2"
-                android:text="b2"
-                android:textSize="35dp">
+                android:textSize="35dp"
+                app:icon="@drawable/icons8_friend_58">
 
             </Button>
 
@@ -48,8 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="b3"
-                android:textSize="35dp">
+                android:textSize="35dp"
+                app:icon="@drawable/icons8_message_50">
 
             </Button>
 
@@ -71,8 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="b1"
-                android:textSize="35dp">
+                android:textSize="35dp"
+                app:icon="@drawable/icons8_flash_50">
 
             </Button>
 
@@ -90,8 +90,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="b1"
-                android:textSize="35dp">
+                android:textSize="35dp"
+                app:icon="@drawable/icons8_retake_50">
 
             </Button>
         </LinearLayout>
