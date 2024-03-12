@@ -21,6 +21,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         // ythinh
-        // phuc comment testing :)
+        // phuc comment testing
     }
 }
