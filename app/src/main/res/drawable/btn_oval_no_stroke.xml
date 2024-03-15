@@ -3,10 +3,14 @@
     android:shape="oval"   >
 
     <solid
-        android:color="#FBD7CF" >
+        android:color="@color/btn_color" >
     </solid>
 
-
+<!--    <gradient
+        android:startColor="#fd6d56"
+        android:endColor="#ff1077"
+        android:type="linear"
+        android:angle="135" />-->
 
     <padding
         android:left="15dp"
