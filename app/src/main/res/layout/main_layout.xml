@@ -5,117 +5,111 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@color/white"
-    android:layout_margin="16dp"
-    >
+    android:background="@color/material_dynamic_neutral80"
+    android:padding="16dp"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:weightSum="8"
-        >
+        android:layout_margin="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+          >
+
+            <ImageView
+                android:layout_width="63dp"
+                android:layout_height="66dp"
+                android:background="@drawable/btn_oval_no_stroke"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_user" />
+
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="35dp"
-                app:icon="@drawable/icons8_user_32"
-                tools:ignore="NestedWeights">
-
-            </Button>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="66dp"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_weight="2"
-                android:textSize="35dp"
-                app:icon="@drawable/icons8_friend_58">
-
-            </Button>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="35dp"
-                app:icon="@drawable/icons8_message_50">
+                android:text="Bạn bè"
+                android:textSize="20dp"
+                app:icon="@drawable/ic_friend"
+                tools:ignore="NestedWeights" />
 
-            </Button>
+            <ImageView
+                android:id="@+id/round_image_view"
+                android:layout_width="63dp"
+                android:layout_height="66dp"
+                android:background="@drawable/btn_oval_no_stroke"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icons8_message_50" />
+
 
         </LinearLayout>
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_weight="4"
-            android:background="@color/black" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:gravity="center_vertical">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="35dp"
-                app:icon="@drawable/icons8_flash_50">
-
-            </Button>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="b1"
-                android:textSize="35dp"
-                android:layout_margin="20dp">
-
-            </Button>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="35dp"
-                app:icon="@drawable/icons8_retake_50">
-
-            </Button>
-        </LinearLayout>
+            android:layout_weight="6"
+            android:background="@drawable/btn_border_radius"
+            android:scaleType="center"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
             android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icons8_flash_50" />
+
+
+            <ImageView
+                android:layout_width="104dp"
+                android:layout_height="104dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:background="@drawable/btn_oval_stroke"
+               />
+
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icons8_retake_50" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lịch sử"
-                android:textSize="35dp">
+                android:textSize="35dp" />
 
-            </TextView>
-
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </ImageButton>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:src="@drawable/down_arrow"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="7dp"
+                />
 
         </LinearLayout>
 
