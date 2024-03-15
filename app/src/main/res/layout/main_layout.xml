@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_neutral80"
+    android:background="@color/bg_color"
     android:padding="16dp"
     tools:context=".MainActivity">
 
@@ -23,12 +23,12 @@
             android:gravity="center_vertical"
           >
 
-            <ImageView
+            <ImageButton
                 android:layout_width="63dp"
                 android:layout_height="66dp"
                 android:background="@drawable/btn_oval_no_stroke"
-                android:scaleType="centerCrop"
                 android:src="@drawable/ic_user"
+                android:scaleType="centerCrop"
                 />
 
 
@@ -44,13 +44,13 @@
                 tools:ignore="NestedWeights"
                 android:backgroundTint="@color/btn_color"/>
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/round_image_view"
                 android:layout_width="63dp"
                 android:layout_height="66dp"
                 android:background="@drawable/btn_oval_no_stroke"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icons8_message_50" />
+                android:src="@drawable/ic_message" />
 
 
         </LinearLayout>
@@ -68,11 +68,12 @@
             android:gravity="center"
             android:layout_weight="1">
 
-            <ImageView
+            <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icons8_flash_50" />
+                android:src="@drawable/ic_flash"
+                android:background="@color/transparent_color"/>
 
 
             <ImageView
@@ -84,11 +85,12 @@
                />
 
 
-            <ImageView
+            <ImageButton
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/icons8_retake_50" />
+                android:src="@drawable/ic_retake"
+                android:background="@color/transparent_color"/>
 
         </LinearLayout>
 
@@ -108,7 +110,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="30dp"
-                android:src="@drawable/down_arrow"
+                android:src="@drawable/ic_down"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="7dp"
                 />

@@ -1,22 +1,28 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
 
-    <!-- Màu nền của hình tròn -->
-    <solid android:color="#FFF" />
+    <shape xmlns:android="http://schemas.android.com/apk/res/android"
+        android:shape="oval">
 
-    <!-- Đường viền của hình tròn -->
-    <stroke
-        android:width="5dp"
-        android:color="@color/black" />
+        <!-- Màu nền của hình tròn -->
+        <solid android:color="#FFF" />
 
-    <!-- Padding để giữ cho nội dung không bị cắt -->
-    <padding
-        android:left="10dp"
-        android:top="10dp"
-        android:right="10dp"
-        android:bottom="10dp" />
 
-    <!-- Góc bo của hình tròn -->
-    <corners android:radius="6dp" />
+        <stroke
+            android:width="10dp"
+            android:color="@color/primary_color" />
+        <!-- Đường viền của hình tròn -->
+        <stroke
+            android:width="5dp"
+            android:color="@color/black" />
 
-</shape>
+        <!-- Padding để giữ cho nội dung không bị cắt -->
+        <padding
+            android:left="10dp"
+            android:top="10dp"
+            android:right="10dp"
+            android:bottom="10dp" />
+
+        <!-- Góc bo của hình tròn -->
+        <corners android:radius="6dp" />
+
+    </shape>
+
