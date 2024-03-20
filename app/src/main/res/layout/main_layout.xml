@@ -19,8 +19,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:layout_weight="0.5"
+            android:gravity="top"
           >
 
             <ImageButton
@@ -29,6 +29,7 @@
                 android:background="@drawable/btn_oval_no_stroke"
                 android:src="@drawable/ic_user"
                 android:scaleType="centerCrop"
+
                 />
 
 
