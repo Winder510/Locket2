@@ -3,16 +3,18 @@
     android:shape="rectangle"   >
 
     <solid
-        android:color="#FBD7CF" >
+        android:color="@color/transparent_color" >
     </solid>
 
     <padding
         android:left="5dp"
         android:top="5dp"
         android:right="5dp"
-        android:bottom="5dp"    >
+        android:bottom="5dp">
     </padding>
-
+    <stroke
+        android:width="50dp"
+        android:color="@color/black" />
     <corners
         android:radius="70dp"   >
     </corners>

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="navbar_btn_size_40dp">40dp</string>
+    <string name="title_activity_up_load">UpLoadActivity</string>
 </resources>

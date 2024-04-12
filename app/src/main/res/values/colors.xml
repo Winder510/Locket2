@@ -3,7 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="btn_color">#99555453</color>
-    <color name="bg_color">#121212</color>
+    <color name="bg_color">#100F0F</color>
     <color name="primary_color">#F6D253</color>
     <color name="transparent_color">#00000000</color>
 </resources>
