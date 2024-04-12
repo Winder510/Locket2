@@ -31,6 +31,8 @@ import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.FirebaseError;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
@@ -67,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         btnCapture = findViewById(R.id.btnCapture);
         btnFlipCamera = findViewById(R.id.btnFlipCamera);
         btnToggleFlash = findViewById(R.id.btnToggleFlash);
-
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 startCamera(cameraFacing);
             }
         });
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
 
     public void startCamera(int cameraFacing) {
