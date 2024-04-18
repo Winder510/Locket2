@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "408642036971",
+    "firebase_url": "https://locket2-default-rtdb.firebaseio.com",
+    "project_id": "locket2",
+    "storage_bucket": "locket2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408642036971:android:eef9676d1025e452300aae",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlSfiL6eHxESLLuq0_F-dUUt5EsRfexu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
