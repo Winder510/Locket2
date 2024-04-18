@@ -38,6 +38,7 @@ public class UploadActivity extends AppCompatActivity {
             Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             imagePreview.setImageBitmap(rotatedBitmap);
         }
+
     }
 
 }

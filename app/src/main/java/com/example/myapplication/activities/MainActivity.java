@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Size;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -32,6 +33,8 @@ import android.widget.Toast;
 import com.example.myapplication.R;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.FirebaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btnCapture, btnToggleFlash, btnFlipCamera;
     private PreviewView previewView;
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
+    private ScaleGestureDetector scaleGestureDetector;
+    private float zoomRatio = 1.0f;
 
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
@@ -69,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         btnCapture = findViewById(R.id.btnCapture);
         btnFlipCamera = findViewById(R.id.btnFlipCamera);
         btnToggleFlash = findViewById(R.id.btnToggleFlash);
+        
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
@@ -85,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
                 startCamera(cameraFacing);
             }
         });
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
     }
+
 
     public void startCamera(int cameraFacing) {
 
@@ -115,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 cameraProvider.unbindAll();
 
                 Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
                 btnCapture.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -48,7 +48,9 @@ android {
 }
 
 dependencies {
-
+    implementation("com.google.firebase:firebase-auth")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation 'com.hbb20:ccp:2.5.0'
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity

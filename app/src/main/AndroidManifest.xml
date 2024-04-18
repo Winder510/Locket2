@@ -28,8 +28,17 @@
             android:exported="false"
             android:label="@string/title_activity_up_load"
             android:theme="@style/Theme.MyApplication" />
+        <activity android:name=".activities.MainActivity"
+            android:exported="false"/>
+        <activity android:name=".activities.LoginUsernameActivity"
+            android:exported="false"/>
+        <activity android:name=".activities.LoginOTPActivity"
+            android:exported="false"/>
+
+        <activity android:name=".activities.LoginPhoneNumberActivity"
+            android:exported="false"/>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.SplashScreen"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
