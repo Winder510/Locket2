@@ -40,15 +40,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-
+import maes.tech.intentanim.CustomIntent;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton btnCapture, btnToggleFlash, btnFlipCamera;
+    ImageButton btnCapture, btnToggleFlash, btnFlipCamera,btnSetting;
     private PreviewView previewView;
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
-    private ScaleGestureDetector scaleGestureDetector;
-    private float zoomRatio = 1.0f;
 
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
@@ -74,12 +72,25 @@ public class MainActivity extends AppCompatActivity {
         btnCapture = findViewById(R.id.btnCapture);
         btnFlipCamera = findViewById(R.id.btnFlipCamera);
         btnToggleFlash = findViewById(R.id.btnToggleFlash);
-        
+        btnSetting = findViewById(R.id.btnSetting);
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
             startCamera(cameraFacing);
         }
+
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "Chuyển đến màn hình cài đặt", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+
+                CustomIntent.customType(MainActivity.this,"right-to-left");
+
+
+            }
+        });
         btnFlipCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
