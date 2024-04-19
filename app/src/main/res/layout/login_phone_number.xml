@@ -76,14 +76,13 @@
 
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="372dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/transparent_color"
             android:text="Sử dụng email thay cho số điện thoại"
-            android:textSize="20sp"
             android:textColor="#888"
-            android:textStyle="italic"
-            />
+            android:textSize="18sp"
+            android:textStyle="italic" />
 
     </LinearLayout>
 
