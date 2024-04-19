@@ -6,4 +6,6 @@
     <color name="bg_color">#100F0F</color>
     <color name="primary_color">#EEAB01</color>
     <color name="transparent_color">#00000000</color>
+    <color name="st_setting_color">#b2b1b0</color>
+    <color name="st_setting_color2">#EBEBEB</color>
 </resources>
