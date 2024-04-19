@@ -333,7 +333,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:backgroundTint="@color/btn_color"
+                    android:background="@color/btn_color"
                     android:baselineAligned="false"
                     android:padding="7dp"
                     android:scaleType="centerCrop"
