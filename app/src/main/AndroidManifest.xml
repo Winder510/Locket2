@@ -33,6 +33,12 @@
         <activity android:name=".activities.LoginUsernameActivity"
             android:exported="false"/>
         <activity
+            android:name=".activities.SearchUserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.SettingsActivity"
             android:exported="true" />
         <activity android:name=".activities.LoginOTPActivity"
@@ -40,6 +46,7 @@
 
         <activity android:name=".activities.LoginPhoneNumberActivity"
             android:exported="false"/>
+        <activity android:name=".activities.RecentChatActivity" android:exported="false"/>
         <activity
             android:name=".activities.SplashScreen"
             android:exported="true" >

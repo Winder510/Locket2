@@ -18,6 +18,7 @@
                 android:layout_height="40dp"
                 android:gravity="right">
                 <ImageButton
+                    android:id="@+id/back_btn"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginRight="10dp"
@@ -32,11 +33,14 @@
                 android:orientation="vertical">
 
                 <ImageButton
+                    android:id="@+id/profile_image_view"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:background="@drawable/btn_capture"/>
-
+                    android:background="@color/bg_color"
+                    android:src="@drawable/ic_user"
+                    android:scaleType="centerCrop"/>
                 <TextView
+                    android:id="@+id/profile_username"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:text="Họ tên"
@@ -44,6 +48,13 @@
                     android:textColor="@color/white"
                     android:textSize="30dp"
                     android:layout_marginTop="20dp"/>
+
+                <Button
+                    android:id="@+id/update_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sửa thông tin"
+                    android:textSize="20dp"/>
 
             </LinearLayout>
 
@@ -63,7 +74,7 @@
                     android:drawableLeft="@drawable/ic_search"
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
-                    ></TextView>
+                    />
 
                 <Button
                     android:layout_width="match_parent"
@@ -78,7 +89,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_friends"></Button>
+                    android:drawableLeft="@drawable/ic_friends"/>
 
             </LinearLayout>
 
@@ -100,7 +111,7 @@
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
                     android:layout_marginTop="25dp"
-                    ></TextView>
+                    />
                 <ImageButton
                     android:layout_width="170dp"
                     android:layout_height="170dp"
@@ -130,7 +141,7 @@
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
                     android:layout_marginTop="25dp"
-                    ></TextView>
+                    />
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -145,7 +156,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_userpic"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -159,7 +170,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_tag"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -173,7 +184,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_party_balloons"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -187,7 +198,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_email"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -201,7 +212,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_plus"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -215,7 +226,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_block"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -229,7 +240,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_transaction"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
 
             </LinearLayout>
 
@@ -250,7 +261,7 @@
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
                     android:layout_marginTop="25dp"
-                    ></TextView>
+                    />
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -265,7 +276,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_warning2"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
 
                 <Button
                     android:layout_width="match_parent"
@@ -280,7 +291,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_popular"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
 
             </LinearLayout>
 
@@ -300,7 +311,7 @@
                     android:drawableLeft="@drawable/ic_heart"
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="25dp"></TextView>
+                    android:layout_marginTop="25dp"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -315,7 +326,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_tiktok"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -329,7 +340,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_instagram"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -343,7 +354,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_twitter"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -357,7 +368,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_share"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -371,7 +382,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_star"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -385,7 +396,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_service"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -399,7 +410,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_lock"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
 
             </LinearLayout>
             <LinearLayout
@@ -419,7 +430,7 @@
                     android:drawablePadding="15dp"
                     android:gravity="center_vertical"
                     android:layout_marginTop="25dp"
-                    ></TextView>
+                    />
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -434,9 +445,10 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_bin"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
 
                 <Button
+                    android:id="@+id/logout_btn"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/custom_btn2"
@@ -449,7 +461,7 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_logout"
-                    android:drawableRight="@drawable/ic_choose"></Button>
+                    android:drawableRight="@drawable/ic_choose"/>
 
             </LinearLayout>
 

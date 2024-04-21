@@ -16,7 +16,7 @@ public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash_layout);
+        setContentView(R.layout.activity_splash);
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -25,7 +25,7 @@ public class SplashScreen extends AppCompatActivity {
                     startActivity(new Intent(SplashScreen.this, MainActivity.class));
                 } else {
                     startActivity(new Intent(SplashScreen.this, LoginPhoneNumberActivity.class));
-                }
+              }
                 finish();
             }
         }, 1000);
