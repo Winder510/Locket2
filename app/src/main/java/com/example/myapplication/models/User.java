@@ -7,13 +7,23 @@ public class User {
     private String username;
     private Timestamp createdTimestamp;
 
+    private String userId;
     public User() {
     }
 
-    public User(String phone, String username, Timestamp createdTimestamp) {
+    public User(String phone, String username, Timestamp createdTimestamp,String userId) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
+        this.userId = userId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getPhone() {
@@ -39,4 +49,6 @@ public class User {
     public void setCreatedTimestamp(Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
+
+
 }

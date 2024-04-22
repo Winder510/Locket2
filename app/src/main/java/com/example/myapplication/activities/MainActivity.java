@@ -1,12 +1,16 @@
 package com.example.myapplication.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Size;
-import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultCallback;
@@ -27,25 +31,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import android.Manifest;
-import android.widget.Toast;
-
 import com.example.myapplication.R;
+import com.example.myapplication.models.User;
+import com.example.myapplication.utils.AndroidUtils;
+import com.example.myapplication.utils.FirebaseUtils;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.FirebaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+
 import maes.tech.intentanim.CustomIntent;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton btnCapture, btnToggleFlash, btnFlipCamera,btnSetting;
+    ImageButton btnCapture, btnToggleFlash, btnFlipCamera, btnSetting, btnRecentChat;
+    Button btnSearchUser;
     private PreviewView previewView;
+    // for <setting layout>
+    User currentUser;
+    Uri uriImage;
+    ///>
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
 
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
@@ -58,11 +64,12 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
+    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.main_layout);
+        setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -73,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
         btnFlipCamera = findViewById(R.id.btnFlipCamera);
         btnToggleFlash = findViewById(R.id.btnToggleFlash);
         btnSetting = findViewById(R.id.btnSetting);
+        btnSearchUser = findViewById(R.id.btnSearchUser);
+        btnRecentChat = findViewById(R.id.btnRecentChat);
+
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
@@ -84,11 +94,43 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Chuyển đến màn hình cài đặt", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
+
+                if (currentUser == null) {
+                    FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            currentUser = task.getResult().toObject(User.class);
+                            if (currentUser != null) {
+                                AndroidUtils.passUserModelAsIntent(intent, currentUser);
+                                startActivity(intent);
+                                CustomIntent.customType(MainActivity.this,"right-to-left");
+                            }
+
+                        }
+                    });
+                }else{
+                    AndroidUtils.passUserModelAsIntent(intent, currentUser);
+                    startActivity(intent);
+                    CustomIntent.customType(MainActivity.this,"right-to-left");
+                }
+
+
+
+            }
+        });
+        btnRecentChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RecentChatActivity.class);
                 startActivity(intent);
 
-                CustomIntent.customType(MainActivity.this,"right-to-left");
-
-
+                CustomIntent.customType(MainActivity.this, "right-to-left");
+            }
+        });
+        btnSearchUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchUserActivity.class);
+                startActivity(intent);
             }
         });
         btnFlipCamera.setOnClickListener(new View.OnClickListener() {

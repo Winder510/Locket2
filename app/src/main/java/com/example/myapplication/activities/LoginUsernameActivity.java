@@ -27,19 +27,19 @@ public class LoginUsernameActivity extends AppCompatActivity {
     String phoneNumber;
     User user;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_username);
+        setContentView(R.layout.activity_login_username);
 
         usernameInput = findViewById(R.id.login_username);
         nextBtn = findViewById(R.id.login_next_btn);
         progressBar = findViewById(R.id.login_progress_bar);
 
         phoneNumber = getIntent().getExtras().getString("phone");
+
         getUserName();
-
-
         nextBtn.setOnClickListener(v -> {
             setUserName();
         });
@@ -58,7 +58,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
         if (user != null) {
             user.setUsername(userName);
         } else {
-            user = new User(phoneNumber, userName, Timestamp.now());
+            user = new User(phoneNumber, userName, Timestamp.now(),FirebaseUtils.currentUserID());
         }
         FirebaseUtils.currentUserDetail().set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

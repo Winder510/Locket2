@@ -25,6 +25,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -43,14 +44,13 @@ public class LoginOTPActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_otp);
-
+        setContentView(R.layout.activity_login_otp);
         nextButton = findViewById(R.id.login_next_btn);
         otpInput = findViewById(R.id.login_otp);
         progressBar = findViewById(R.id.login_progress_bar);
         resendOtpTextView = findViewById(R.id.resend_otp_textview);
 
-        phoneNumber = getIntent().getExtras().getString("phone");
+        phoneNumber = Objects.requireNonNull(getIntent().getExtras()).getString("phone");
 
         sendOtp(phoneNumber, false);
 
@@ -58,7 +58,6 @@ public class LoginOTPActivity extends AppCompatActivity {
             String enterOtp = otpInput.getText().toString();
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, enterOtp);
             signIn(credential);
-            setInProgress(true);
         });
 
         resendOtpTextView.setOnClickListener((v)->{
@@ -127,10 +126,12 @@ public class LoginOTPActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     AndroidUtils.showToast(getApplicationContext(), "OTP verification failed");
+                    setInProgress(false);
                 }
             }
         });
     }
+
 
     void startResendTimer() {
         resendOtpTextView.setEnabled(false);
