@@ -46,7 +46,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         profilePic = findViewById(R.id.profile_image_view);
         usernameInput = findViewById(R.id.profile_username);
-        updateProfileBtn = findViewById(R.id.update_profile);
         logoutBtn = findViewById(R.id.logout_btn);
         btnBack = findViewById(R.id.back_btn);
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
