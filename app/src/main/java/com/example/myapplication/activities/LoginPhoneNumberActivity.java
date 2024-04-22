@@ -19,11 +19,10 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
     Button sendOtpBtn;
     ProgressBar progressBar;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login_phone_number);
+        setContentView(R.layout.activity_login_phone_number);
 
         countryCodePicker = findViewById(R.id.login_countrycode);
         phoneInput = findViewById(R.id.login_mobile_number);
@@ -33,14 +32,14 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
         countryCodePicker.registerCarrierNumberEditText(phoneInput);
         sendOtpBtn.setOnClickListener((v)->{
             if(!countryCodePicker.isValidFullNumber()){
-                phoneInput.setError("Số điện thoại không hợp lệ cai lon");
+                phoneInput.setError("Số điện thoại không hợp lệ ");
                 return;
             }
             Intent intent = new Intent(LoginPhoneNumberActivity.this,LoginOTPActivity.class);
             intent.putExtra("phone", countryCodePicker.getFullNumberWithPlus());
             startActivity(intent);
-
-
         });
+
     }
+
 }

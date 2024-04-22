@@ -42,6 +42,7 @@
                 tools:ignore="NestedWeights" />
 
             <Button
+                android:id="@+id/btnSearchUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
@@ -58,7 +59,7 @@
                 tools:ignore="NestedWeights" />
 
             <ImageButton
-                android:id="@+id/round_image_view"
+                android:id="@+id/btnRecentChat"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
