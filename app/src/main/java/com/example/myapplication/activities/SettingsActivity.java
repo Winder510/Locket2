@@ -1,14 +1,19 @@
 package com.example.myapplication.activities;
+import com.example.myapplication.Gesture.SimpleGestureFilter;
+import com.example.myapplication.Gesture.SimpleGestureFilter.SimpleGestureListener;
+
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,7 +31,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import maes.tech.intentanim.CustomIntent;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements
+        SimpleGestureListener {
+    private SimpleGestureFilter detector;
     ImageView profilePic;
     TextView usernameInput;
     Button updateProfileBtn, logoutBtn;
@@ -97,9 +104,47 @@ public class SettingsActivity extends AppCompatActivity {
             updateToFireStore();
         }
 
-
+        detector = new SimpleGestureFilter(SettingsActivity.this, this);
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        // Call onTouchEvent of SimpleGestureFilter class
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
     }
 
+    @Override
+    public void onSwipe(int direction) {
+
+        //Detect the swipe gestures and display toast
+        String showToastMessage = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT:
+                showToastMessage = "You have Swiped Right.";
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT:
+                showToastMessage = "You have Swiped Left.";
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN:
+                showToastMessage = "You have Swiped Down.";
+                break;
+            case SimpleGestureFilter.SWIPE_UP:
+                showToastMessage = "You have Swiped Up.";
+                break;
+
+        }
+        Toast.makeText(this, showToastMessage, Toast.LENGTH_SHORT).show();
+    }
+
+
+    //Toast shown when double tapped on screen
+    @Override
+    public void onDoubleTap() {
+        Toast.makeText(this, "You have Double Tapped.", Toast.LENGTH_SHORT)
+                .show();
+    }
     void updateToFireStore() {
 
     }
