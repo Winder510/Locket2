@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="btn_color">#99555453</color>
+    <color name="bg_color">#100F0F</color>
+    <color name="primary_color">#EEAB01</color>
+    <color name="transparent_color">#00000000</color>
+    <color name="st_setting_color">#b2b1b0</color>
+    <color name="st_setting_color2">#EBEBEB</color>
+    <color name="chat_color_receiver">#99555453</color>
+    <color name="chat_color_sender">#EEAB01</color>
+</resources>
