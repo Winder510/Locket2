@@ -325,7 +325,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_tiktok"
+                    android:drawableLeft="@drawable/tiktok"
                     android:drawableRight="@drawable/ic_choose"/>
                 <Button
                     android:layout_width="match_parent"
