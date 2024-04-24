@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Chuyển đến màn hình cài đặt", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
 
                 if (currentUser == null) {
@@ -112,9 +111,6 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                     CustomIntent.customType(MainActivity.this,"right-to-left");
                 }
-
-
-
             }
         });
         btnRecentChat.setOnClickListener(new View.OnClickListener() {

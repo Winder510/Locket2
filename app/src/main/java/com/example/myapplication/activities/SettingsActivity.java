@@ -74,7 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
-                CustomIntent.customType(SettingsActivity.this, "left-to-right");
+                CustomIntent.customType(SettingsActivity.this, "right-to-left");
             }
         });
         profilePic.setOnClickListener(v -> {
