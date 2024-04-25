@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -143,6 +145,7 @@
                     android:layout_marginTop="25dp"
                     />
                 <Button
+                    android:id="@+id/btnProfile_Image"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/custom_btn"

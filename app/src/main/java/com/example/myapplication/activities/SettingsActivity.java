@@ -36,7 +36,7 @@ public class SettingsActivity extends AppCompatActivity implements
     private SimpleGestureFilter detector;
     ImageView profilePic;
     TextView usernameInput;
-    Button updateProfileBtn, logoutBtn;
+    Button updateProfileBtn, logoutBtn, profilePicBtn;
 
     ActivityResultLauncher<Intent> imagePickerLauncher;
     Uri selectedImageUri;
@@ -56,6 +56,8 @@ public class SettingsActivity extends AppCompatActivity implements
         updateProfileBtn = findViewById(R.id.update_profile);
         logoutBtn = findViewById(R.id.logout_btn);
         btnBack = findViewById(R.id.back_btn);
+        profilePicBtn = findViewById(R.id.btnProfile_Image);
+
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -84,16 +86,9 @@ public class SettingsActivity extends AppCompatActivity implements
                 CustomIntent.customType(SettingsActivity.this, "left-to-right");
             }
         });
-        profilePic.setOnClickListener(v -> {
-            ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512, 512)
-                    .createIntent(new Function1<Intent, Unit>() {
-                        @Override
-                        public Unit invoke(Intent intent) {
-                            imagePickerLauncher.launch(intent);
-                            return null;
-                        }
-                    });
-        });
+        profilePic.setOnClickListener(v -> pickImage());
+        profilePicBtn.setOnClickListener(v -> pickImage());
+
         if (selectedImageUri != null) {
             FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
                     .addOnCompleteListener(task -> {
@@ -103,7 +98,6 @@ public class SettingsActivity extends AppCompatActivity implements
         } else {
             updateToFireStore();
         }
-
         detector = new SimpleGestureFilter(SettingsActivity.this, this);
     }
     @Override
@@ -139,7 +133,16 @@ public class SettingsActivity extends AppCompatActivity implements
         }
         Toast.makeText(this, showToastMessage, Toast.LENGTH_SHORT).show();
     }
-
+    public void pickImage() {
+        ImagePicker.with(this)
+                .cropSquare()
+                .compress(512)
+                .maxResultSize(512, 512)
+                .createIntent(intent -> {
+                    imagePickerLauncher.launch(intent);
+                    return null;
+                });
+    }
     void updateToFireStore() {
 
     }

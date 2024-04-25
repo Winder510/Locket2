@@ -164,9 +164,9 @@ public class MainActivity extends AppCompatActivity implements
         switch (direction) {
 
             case SimpleGestureFilter.SWIPE_RIGHT:
-                showToastMessage = "You have Swiped Right.";Intent intent = new Intent(MainActivity.this, SearchUserActivity.class);
+                showToastMessage = "You have Swiped Right.";Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
-                CustomIntent.customType(MainActivity.this, "left-to-right");
+                CustomIntent.customType(MainActivity.this, "right-to-left");
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
                 showToastMessage = "You have Swiped Left.";
