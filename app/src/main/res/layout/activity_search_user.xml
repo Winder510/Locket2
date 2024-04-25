@@ -86,35 +86,4 @@
         android:id="@+id/search_user_recycler_view" />
 
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_below="@id/search_user_recycler_view"
-        android:id="@+id/sent_request">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="1dp"
-            android:text="Sent Requests"
-            android:textColor="@color/st_setting_color"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/check_circle" />
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/sent_request"
-        android:padding="10dp"
-        android:id="@+id/sent_request_recycle" />
-
-
 </RelativeLayout>
