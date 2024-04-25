@@ -142,13 +142,6 @@ public class SimpleGestureFilter extends SimpleOnGestureListener {
     }
 
     @Override
-    public boolean onDoubleTap(MotionEvent arg) {
-        this.listener.onDoubleTap();
-        ;
-        return true;
-    }
-
-    @Override
     public boolean onDoubleTapEvent(MotionEvent arg) {
         return true;
     }
@@ -167,7 +160,5 @@ public class SimpleGestureFilter extends SimpleOnGestureListener {
 
     public static interface SimpleGestureListener {
         void onSwipe(int direction);
-
-        void onDoubleTap();
     }
 }

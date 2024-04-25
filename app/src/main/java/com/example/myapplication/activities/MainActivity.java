@@ -1,5 +1,7 @@
 package com.example.myapplication.activities;
 
+import com.example.myapplication.Gesture.SimpleGestureFilter;
+import com.example.myapplication.Gesture.SimpleGestureFilter.SimpleGestureListener;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Size;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -43,7 +46,8 @@ import java.util.concurrent.Executors;
 
 import maes.tech.intentanim.CustomIntent;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        SimpleGestureListener {
 
     ImageButton btnCapture, btnToggleFlash, btnFlipCamera, btnSetting, btnRecentChat;
     Button btnSearchUser;
@@ -53,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     Uri uriImage;
     ///>
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
+    private SimpleGestureFilter detector;
 
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
@@ -140,8 +145,42 @@ public class MainActivity extends AppCompatActivity {
                 startCamera(cameraFacing);
             }
         });
+
+        detector = new SimpleGestureFilter(MainActivity.this, this);
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        // Call onTouchEvent of SimpleGestureFilter class
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
     }
 
+    @Override
+    public void onSwipe(int direction) {
+
+        //Detect the swipe gestures and display toast
+        String showToastMessage = "";
+
+        switch (direction) {
+
+            case SimpleGestureFilter.SWIPE_RIGHT:
+                showToastMessage = "You have Swiped Right.";Intent intent = new Intent(MainActivity.this, SearchUserActivity.class);
+                startActivity(intent);
+                CustomIntent.customType(MainActivity.this, "left-to-right");
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT:
+                showToastMessage = "You have Swiped Left.";
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN:
+                showToastMessage = "You have Swiped Down.";
+                break;
+            case SimpleGestureFilter.SWIPE_UP:
+                showToastMessage = "You have Swiped Up.";
+                break;
+
+        }
+        Toast.makeText(this, showToastMessage, Toast.LENGTH_SHORT).show();
+    }
 
     public void startCamera(int cameraFacing) {
 

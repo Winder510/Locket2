@@ -81,7 +81,7 @@ public class SettingsActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 onBackPressed();
-                CustomIntent.customType(SettingsActivity.this, "right-to-left");
+                CustomIntent.customType(SettingsActivity.this, "left-to-right");
             }
         });
         profilePic.setOnClickListener(v -> {
@@ -126,6 +126,8 @@ public class SettingsActivity extends AppCompatActivity implements
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
                 showToastMessage = "You have Swiped Left.";
+                onBackPressed();
+                CustomIntent.customType(SettingsActivity.this, "left-to-right");
                 break;
             case SimpleGestureFilter.SWIPE_DOWN:
                 showToastMessage = "You have Swiped Down.";
@@ -138,13 +140,6 @@ public class SettingsActivity extends AppCompatActivity implements
         Toast.makeText(this, showToastMessage, Toast.LENGTH_SHORT).show();
     }
 
-
-    //Toast shown when double tapped on screen
-    @Override
-    public void onDoubleTap() {
-        Toast.makeText(this, "You have Double Tapped.", Toast.LENGTH_SHORT)
-                .show();
-    }
     void updateToFireStore() {
 
     }
