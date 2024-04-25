@@ -89,7 +89,7 @@
             android:layout_marginTop="0dp"
             android:layout_marginEnd="15dp"
             android:layout_marginBottom="13dp"
-            android:background="@drawable/btn_oval_no_stroke"
+            android:background="@drawable/btn_oval_custom1"
             android:elevation="5dp"
             android:padding="8dp"
             android:src="@drawable/pngwing" />
