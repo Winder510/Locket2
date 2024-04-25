@@ -24,7 +24,7 @@ public class SplashScreen extends AppCompatActivity {
                 if (FirebaseUtils.isLoggedIn()) {
                     startActivity(new Intent(SplashScreen.this, MainActivity.class));
                 } else {
-                    startActivity(new Intent(SplashScreen.this, LoginPhoneNumberActivity.class));
+                    startActivity(new Intent(SplashScreen.this, LoginActivity.class));
               }
                 finish();
             }

@@ -18,6 +18,7 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
     EditText phoneInput;
     Button sendOtpBtn;
     ProgressBar progressBar;
+    Button btnemail;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.login_progress_bar);
         progressBar.setVisibility(View.GONE);
         countryCodePicker.registerCarrierNumberEditText(phoneInput);
+        btnemail=findViewById(R.id.btnemail);
         sendOtpBtn.setOnClickListener((v)->{
             if(!countryCodePicker.isValidFullNumber()){
                 phoneInput.setError("Số điện thoại không hợp lệ ");
@@ -38,6 +40,14 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginPhoneNumberActivity.this,LoginOTPActivity.class);
             intent.putExtra("phone", countryCodePicker.getFullNumberWithPlus());
             startActivity(intent);
+        });
+
+        btnemail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =new Intent(LoginPhoneNumberActivity.this,LoginWithEmail.class);
+                startActivity(intent);
+            }
         });
 
     }

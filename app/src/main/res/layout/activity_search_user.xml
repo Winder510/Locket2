@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".activities.SearchUserActivity">
 
     <RelativeLayout
@@ -13,27 +14,17 @@
         android:padding="10dp"
         android:id="@+id/toolbar">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search User"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_marginStart="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/back_btn"/>
 
         <ImageButton
+            android:id="@+id/back_btn"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_left_arrow"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/white"
-            android:layout_centerVertical="true"
-            android:id="@+id/back_btn"/>
+            android:src="@drawable/ic_left_arrow"
+            app:tint="@color/white" />
 
     </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -45,11 +36,13 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_rounded_corner"
+            android:background="@color/black"
             android:layout_margin="10dp"
-            android:hint="Username"
+            android:hint="Tìm hoặc thêm bạn bè"
+            android:textColorHint="@color/white"
             android:padding="10dp"
             android:elevation="4dp"
+            android:textColor="@color/white"
             android:layout_toLeftOf="@id/search_user_btn"
             android:id="@+id/seach_username_input"
             />
@@ -66,14 +59,31 @@
             android:id="@+id/search_user_btn"/>
 
     </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/search_user_layout"
+        android:text="Bạn bè của bạn"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:id="@+id/banbe"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/banbe"
+        android:text="11/20 người bạn đã được bổ sung"
+        android:gravity="center"
+        android:textColor="@color/white"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_user_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/search_user_layout"
-        android:padding="10dp"
-        android:id="@+id/search_user_recycler_view"
-        />
+        android:layout_marginTop="73dp"
+        android:padding="10dp" />
 
 
 </RelativeLayout>
