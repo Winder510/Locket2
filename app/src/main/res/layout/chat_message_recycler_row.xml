@@ -7,10 +7,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_rounded_corner"
-        android:backgroundTint="@color/chat_color_sender"
+        android:backgroundTint="@color/chat_color_receiver"
         android:padding="8dp"
         android:layout_marginEnd="80dp"
         android:id="@+id/left_chat_layout"
+        android:layout_toRightOf="@+id/profile_pic_layout"
         android:orientation="vertical">
         <TextView
             android:layout_width="wrap_content"
@@ -18,13 +19,15 @@
             android:textColor="@color/white"
             android:textSize="18sp"
 
-            android:id="@+id/left_chat_textview"/>
+            android:id="@+id/left_chat_textview" />
+
+
     </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_text_rounded_corner"
-        android:backgroundTint="@color/chat_color_receiver"
+        android:backgroundTint="@color/st_setting_color"
         android:layout_alignParentEnd="true"
         android:padding="8dp"
         android:layout_marginStart="80dp"
@@ -37,5 +40,10 @@
 
             android:id="@+id/right_chat_textview"/>
     </LinearLayout>
-
+    <include layout="@layout/profile_pic_view"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="10dp"
+        android:id="@+id/profile_pic_layout"
+        />
 </RelativeLayout>
