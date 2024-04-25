@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User name"
+                android:textColor="@color/st_setting_color"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:id="@+id/user_name_text"
@@ -35,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="4d"
                 android:textSize="18sp"
+                android:textColor="@color/st_setting_color"
                 android:textStyle="bold"
                 android:id="@+id/last_time_chat"
                 />
@@ -43,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+000000000000"
+            android:textColor="@color/st_setting_color"
             android:id="@+id/phone_text"/>
     </LinearLayout>
 
