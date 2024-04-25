@@ -3,6 +3,8 @@ package com.example.myapplication.activities;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
@@ -22,6 +24,7 @@ public class SearchUserActivity extends AppCompatActivity {
     ImageButton backButton;
     RecyclerView recyclerView;
     SearchUserRecyclerAdapter adapter;
+    Button huy;
 
 
     @Override
@@ -35,6 +38,13 @@ public class SearchUserActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.search_user_recycler_view);
 
         searchInput.requestFocus();
+        huy=findViewById(R.id.btnhuy);
+        huy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchInput.setText("");
+            }
+        });
         backButton.setOnClickListener(v -> {
             onBackPressed();
         });
@@ -65,6 +75,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
             }
         });
+
     }
     void clearRecyclerView() {
         // Xóa dữ liệu trong RecyclerView và cập nhật UI

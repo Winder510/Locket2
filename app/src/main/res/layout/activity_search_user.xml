@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_color"
+        android:background="@color/black"
         android:padding="10dp"
         android:id="@+id/toolbar">
 
@@ -43,20 +43,20 @@
             android:padding="10dp"
             android:elevation="4dp"
             android:textColor="@color/white"
-            android:layout_toLeftOf="@id/search_user_btn"
+            android:layout_toLeftOf="@id/btnhuy"
             android:id="@+id/seach_username_input"
             />
-        <ImageButton
+        <Button
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_search"
+            android:text="Hủy"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@color/white"
             app:tint="@color/black"
             android:padding="4dp"
             android:layout_margin="10dp"
-            android:id="@+id/search_user_btn"/>
+            android:id="@+id/btnhuy"/>
 
     </RelativeLayout>
     <TextView
