@@ -42,7 +42,11 @@ public class SearchUserActivity extends AppCompatActivity {
         huy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchInput.setText("");
+                if(searchInput.getText().toString()!="")
+                {
+                    searchInput.setText("");
+                }
+                else return;
             }
         });
         backButton.setOnClickListener(v -> {
