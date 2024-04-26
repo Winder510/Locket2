@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchUserActivity">
+    tools:context=".activities.SearchUserActivity"
+    android:background="@color/black">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_color"
+        android:background="@color/black"
         android:padding="10dp"
         android:id="@+id/toolbar">
 
