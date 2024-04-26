@@ -26,6 +26,7 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, Se
         super(options);
         this.context = context;
     }
+    //Phương thức này được gọi mỗi khi RecyclerView cần hiển thị một mục trong danh sách. Nó cập nhật nội dung của ViewHolder để phản ánh dữ liệu người dùng tại vị trí cụ thể trong danh sách.
 
     @Override
     protected void onBindViewHolder(@NonNull UserModelViewHolder holder, int position, @NonNull User model) {
@@ -42,13 +43,15 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, Se
             context.startActivity(intent);
         });
     }
-
+    //Phương thức này tạo một ViewHolder mới khi RecyclerView cần. Nó inflate (nạp) layout cho mỗi mục của danh sách từ một tệp XML và trả về một instance của ViewHolder chứa nó.
     @NonNull
     @Override
     public UserModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
        View view = LayoutInflater.from(context).inflate(R.layout.search_user_recycler_row,parent,false);
        return new UserModelViewHolder(view);
     }
+
+    //Đây là một inner class được sử dụng để đại diện cho mỗi mục trong RecyclerView. Nó chứa các tham chiếu đến các thành phần giao diện người dùng (TextView, ImageView) trong mỗi mục.
 
     class UserModelViewHolder extends RecyclerView.ViewHolder {
         TextView usernameText;

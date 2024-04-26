@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
     Button sendOtpBtn;
     ProgressBar progressBar;
     Button btnemail;
+    ImageButton btnback;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         countryCodePicker.registerCarrierNumberEditText(phoneInput);
         btnemail=findViewById(R.id.btnemail);
+        btnback=findViewById(R.id.round_image_view);
         sendOtpBtn.setOnClickListener((v)->{
             if(!countryCodePicker.isValidFullNumber()){
                 phoneInput.setError("Số điện thoại không hợp lệ ");
@@ -40,6 +43,14 @@ public class LoginPhoneNumberActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginPhoneNumberActivity.this,LoginOTPActivity.class);
             intent.putExtra("phone", countryCodePicker.getFullNumberWithPlus());
             startActivity(intent);
+        });
+
+        btnback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(LoginPhoneNumberActivity.this, IntroduceActivity.class);
+                startActivity(intent);
+            }
         });
 
         btnemail.setOnClickListener(new View.OnClickListener() {

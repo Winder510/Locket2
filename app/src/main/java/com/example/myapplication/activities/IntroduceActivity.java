@@ -13,14 +13,14 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.myapplication.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class IntroduceActivity extends AppCompatActivity {
 
     Button btnTtk,btnDn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_introduce);
         btnTtk=findViewById(R.id.btn_Tao1taikhoan);
         btnDn=findViewById(R.id.btn_DangNhap);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -31,18 +31,19 @@ public class LoginActivity extends AppCompatActivity {
         btnTtk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(LoginActivity.this, SignUpEmailActivity.class);
+                Intent intent =new Intent(IntroduceActivity.this, SignUpEmailActivity.class);
                 startActivity(intent);
             }
         });
         btnDn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent =new Intent(LoginActivity.this, LoginPhoneNumberActivity.class);
+                Intent intent =new Intent(IntroduceActivity.this, LoginPhoneNumberActivity.class);
                 startActivity(intent);
             }
         });
 
 
     }
+
 }
