@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/edit_text_rounded_corner"
+    android:background="@color/black"
     android:layout_margin="10dp"
     android:elevation="2dp">
 
@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:text="User name"
                 android:textSize="18sp"
+                android:textColor="@color/white"
                 android:textStyle="bold"
                 android:id="@+id/user_name_text"
                 android:layout_marginRight="10dp"/>
@@ -43,6 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="+000000000000"
+            android:textColor="@color/white"
             android:id="@+id/phone_text"/>
     </LinearLayout>
 
