@@ -41,14 +41,13 @@ public class SettingsActivity extends AppCompatActivity implements
     private SimpleGestureFilter detector;
     ImageView profilePic;
     TextView usernameInput;
-    Button logoutBtn, profilePicBtn, editNameBtn, editBdayBtn, listBlockBtn;
+    Button logoutBtn, profilePicBtn, editNameBtn, editBdayBtn, listBlockBtn, editMailBtn;
 
     ActivityResultLauncher<Intent> imagePickerLauncher;
     Uri selectedImageUri;
     ImageButton btnBack;
     User currentUser;
-    View viewEdit_Name,viewEdit_Bday,viewList_Block, mainView;
-    private Map<View, Boolean> viewSlideStates = new HashMap<>();
+    View mainView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +57,6 @@ public class SettingsActivity extends AppCompatActivity implements
 
         currentUser = AndroidUtils.getUserModelFromIntent(getIntent());
 
-        mainView = findViewById(R.id.settingsLayout);
         profilePic = findViewById(R.id.profile_image_view);
         usernameInput = findViewById(R.id.profile_username);
         logoutBtn = findViewById(R.id.logout_btn);
@@ -67,14 +65,9 @@ public class SettingsActivity extends AppCompatActivity implements
         editNameBtn = findViewById(R.id.btnEditName);
         editBdayBtn = findViewById(R.id.btnEditBday);
         listBlockBtn = findViewById(R.id.btnListBlock);
+        editMailBtn = findViewById(R.id.btnEditMail);
 
-        viewEdit_Name = findViewById(R.id.editName_View);
-        viewEdit_Bday = findViewById(R.id.editBday_View);
-        viewList_Block= findViewById(R.id.listBlock_View);
 
-        viewSlideStates.put(viewEdit_Name, false);
-        viewSlideStates.put(viewEdit_Bday, false);
-        viewSlideStates.put(viewList_Block, false);
 
 
 
@@ -120,9 +113,13 @@ public class SettingsActivity extends AppCompatActivity implements
         }
         detector = new SimpleGestureFilter(SettingsActivity.this, this);
 
-        editNameBtn.setOnClickListener(v->slideUp(viewEdit_Name));
-        editBdayBtn.setOnClickListener(v->slideUp(viewEdit_Bday));
-        listBlockBtn.setOnClickListener(v->slideUp(viewList_Block));
+        editMailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheet bottomSheet = new BottomSheet();
+                bottomSheet.show(getSupportFragmentManager(),"TAG");
+            }
+        });
     }
     @Override
     public boolean dispatchTouchEvent(MotionEvent me) {
@@ -135,45 +132,14 @@ public class SettingsActivity extends AppCompatActivity implements
     public void onSwipe(int direction) {
         switch (direction) {
             case SimpleGestureFilter.SWIPE_RIGHT:
-                handleSwipeRight();
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
-                handleSwipeLeft();
                 break;
             case SimpleGestureFilter.SWIPE_DOWN:
-                handleSwipeDown();
                 break;
             case SimpleGestureFilter.SWIPE_UP:
-                handleSwipeUp();
                 break;
         }
-    }
-    private void handleSwipeRight() {
-        String showToastMessage = "You have Swiped Right.";
-        Toast.makeText(this, showToastMessage, Toast.LENGTH_SHORT).show();
-    }
-
-    private void handleSwipeLeft() {
-        String showToastMessage = "You have Swiped Left.";
-        onBackPressed();
-        CustomIntent.customType(SettingsActivity.this, "left-to-right");
-    }
-
-    private void handleSwipeDown() {
-        if (viewSlideStates.containsValue(true)) { // Kiểm tra xem có view nào đang slide up không
-            for (Map.Entry<View, Boolean> entry : viewSlideStates.entrySet()) {
-                if (entry.getValue()) { // Nếu view đang slide up
-                    slideDown(entry.getKey()); // Slide down view đó
-                    viewSlideStates.put(entry.getKey(), false); // Đặt trạng thái của view đó là slide down
-                    return;
-                }
-            }
-        }
-    }
-
-    private void handleSwipeUp() {
-        String showToastMessage = "You have Swiped Up.";
-        Toast.makeText(this, showToastMessage, Toast.LENGTH_SHORT).show();
     }
     public void pickImage() {
         ImagePicker.with(this)
@@ -184,75 +150,6 @@ public class SettingsActivity extends AppCompatActivity implements
                     imagePickerLauncher.launch(intent);
                     return null;
                 });
-    }
-    public void slideUp(final View view) {
-        view.setVisibility(View.VISIBLE);
-
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-
-        view.startAnimation(animate);
-
-        ValueAnimator animator;
-
-        if (view == viewEdit_Name || view == viewList_Block) {
-            final int parentHeightInPx = ((ViewGroup) view.getParent()).getHeight();
-            animator = ValueAnimator.ofInt(0, parentHeightInPx);
-        }
-        else {
-            animator = ValueAnimator.ofInt(0, 900);
-        }
-        animator.setDuration(500);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int value = (Integer) valueAnimator.getAnimatedValue();
-                view.getLayoutParams().height = value;
-                view.requestLayout();
-            }
-        });
-        animator.start();
-        viewSlideStates.put(view, true);
-
-        changeVGstate((ViewGroup) mainView, false);
-
-    }
-
-    public void slideDown(View view){
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-
-        changeVGstate((ViewGroup) mainView, true);
-    }
-    public static void changeVGstate(ViewGroup current, boolean enable)
-    {
-        current.setFocusable(enable);
-        current.setClickable(enable);
-        current.setEnabled(enable);
-
-        for (int i = 0; i < current.getChildCount(); i++)
-        {
-            View v = current.getChildAt(i);
-            if (v instanceof ViewGroup)
-                changeVGstate((ViewGroup)v, enable);
-            else
-            {
-                v.setFocusable(enable);
-                v.setClickable(enable);
-                v.setEnabled(enable);
-            }
-        }
     }
     void updateToFireStore() {
 
