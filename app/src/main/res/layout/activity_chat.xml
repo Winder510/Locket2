@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchUserActivity"
-    android:background="@color/black">
+    tools:context=".activities.SearchUserActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -50,7 +49,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
         android:layout_above="@id/bottom_layout"
-        android:id="@+id/chat_recycler_view"/>
+        android:id="@+id/chat_recycler_view"
+        android:background="@color/black"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
