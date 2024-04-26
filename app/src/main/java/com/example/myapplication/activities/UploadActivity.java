@@ -10,10 +10,21 @@ import android.widget.ImageView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.adapter.ChatRecyclerAdapter;
+import com.example.myapplication.adapter.UserRecyclerAdapter;
+import com.example.myapplication.models.ChatMessage;
+import com.example.myapplication.models.User;
+import com.example.myapplication.utils.FirebaseUtils;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
 
 public class UploadActivity extends AppCompatActivity {
+    UserRecyclerAdapter adapter;
+    RecyclerView recyclerView;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +45,18 @@ public class UploadActivity extends AppCompatActivity {
             imagePreview.setImageBitmap(rotatedBitmap);
         }
 
-    }
 
+        recyclerView = findViewById(R.id.list_user_recycler_view);
+
+        setupChatRecyclerView();
+
+    }
+    void setupChatRecyclerView(){
+       Query query = FirebaseUtils.allUserCollectionReference();
+       FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>().setQuery(query,User.class).build();
+        adapter = new UserRecyclerAdapter(options,getApplicationContext());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
 }

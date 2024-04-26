@@ -55,6 +55,11 @@ public class SettingsActivity extends AppCompatActivity {
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
                             AndroidUtils.setProfilePic(getApplicationContext(), selectedImageUri, profilePic);
+                            FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
+                                    .addOnCompleteListener(task -> {
+                                        AndroidUtils.showToast(getApplicationContext(),"hehe");
+                                        updateToFireStore();
+                                    });
                         }
                     }
                 });
@@ -76,6 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
                 CustomIntent.customType(SettingsActivity.this, "left-to-right");
             }
         });
+
         profilePic.setOnClickListener(v -> {
             ImagePicker.with(this).cropSquare().compress(512).maxResultSize(512, 512)
                     .createIntent(new Function1<Intent, Unit>() {
@@ -86,21 +92,28 @@ public class SettingsActivity extends AppCompatActivity {
                         }
                     });
         });
-        if (selectedImageUri != null) {
-            FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
-                    .addOnCompleteListener(task -> {
-                        AndroidUtils.showToast(getApplicationContext(),"hehe");
-                        updateToFireStore();
-                    });
-        } else {
-            updateToFireStore();
-        }
+//        if (selectedImageUri != null) {
+//            FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
+//                    .addOnCompleteListener(task -> {
+//                        AndroidUtils.showToast(getApplicationContext(),"hehe");
+//                        updateToFireStore();
+//                    });
+//        } else {
+//            updateToFireStore();
+//        }
 
 
     }
 
     void updateToFireStore() {
-
+        FirebaseUtils.currentUserDetail().set(currentUser)
+                .addOnCompleteListener(task -> {
+                   if(task.isSuccessful()){
+                        AndroidUtils.showToast(getApplicationContext(),"Update Complete");
+                   }else{
+                       AndroidUtils.showToast(getApplicationContext(),"Update failed");
+                   }
+                });
     }
 
 }

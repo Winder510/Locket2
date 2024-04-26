@@ -132,13 +132,12 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="27dp"
-                android:layout_marginTop="7dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_down"
-
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/list_user_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingStart="30dp"
                 />
 
         </LinearLayout>
