@@ -1,23 +1,20 @@
 package com.example.myapplication.activities;
+import static android.content.ContentValues.TAG;
+
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.Gesture.SimpleGestureFilter.SimpleGestureListener;
 
-
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -31,8 +28,11 @@ import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -41,32 +41,45 @@ public class SettingsActivity extends AppCompatActivity implements
     private SimpleGestureFilter detector;
     ImageView profilePic;
     TextView usernameInput;
-    Button logoutBtn, profilePicBtn, editNameBtn, editBdayBtn, listBlockBtn, editMailBtn;
+
+    Button logoutBtn, profilePicBtn, editNameBtn, editBdayBtn, listBlockBtn, editMailBtn, editReportBtn, editSuggestionBtn,
+            openTiktokBtn, openIgBtn, openTwitterBtn, openServiceBtn, openPolicyBtn;
 
     ActivityResultLauncher<Intent> imagePickerLauncher;
     Uri selectedImageUri;
     ImageButton btnBack;
     User currentUser;
     View mainView;
+    // Khai báo một request code
+    private static final int BOTTOM_SHEET_REQUEST_CODE = 100;
 
+    // Khai báo một biến để lưu trữ dữ liệu cần cập nhật
+    private String newName;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_settings);
 
+
         currentUser = AndroidUtils.getUserModelFromIntent(getIntent());
 
         profilePic = findViewById(R.id.profile_image_view);
-        usernameInput = findViewById(R.id.profile_username);
         logoutBtn = findViewById(R.id.logout_btn);
         btnBack = findViewById(R.id.back_btn);
         profilePicBtn = findViewById(R.id.btnProfile_Image);
+        usernameInput = findViewById(R.id.profile_username);
         editNameBtn = findViewById(R.id.btnEditName);
         editBdayBtn = findViewById(R.id.btnEditBday);
         listBlockBtn = findViewById(R.id.btnListBlock);
         editMailBtn = findViewById(R.id.btnEditMail);
-
+        editReportBtn = findViewById(R.id.btnEditReport);
+        editSuggestionBtn = findViewById(R.id.btnEditSuggestion);
+        openTiktokBtn = findViewById(R.id.btnOpenTiktok);
+        openIgBtn = findViewById(R.id.btnOpenIG);
+        openTwitterBtn = findViewById(R.id.btnOpenTwitter);
+        openServiceBtn = findViewById(R.id.btnOpenService);
+        openPolicyBtn = findViewById(R.id.btnOpenPolicy);
 
 
 
@@ -82,7 +95,9 @@ public class SettingsActivity extends AppCompatActivity implements
                     }
                 });
 
-        usernameInput.setText(currentUser.getUsername());
+        setUpUserName(currentUser.getUsername());
+
+
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,13 +128,17 @@ public class SettingsActivity extends AppCompatActivity implements
         }
         detector = new SimpleGestureFilter(SettingsActivity.this, this);
 
-        editMailBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomSheet bottomSheet = new BottomSheet();
-                bottomSheet.show(getSupportFragmentManager(),"TAG");
-            }
-        });
+        editMailBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_email));
+        editNameBtn.setOnClickListener(v->showEditDialog(R.layout.edit_name));
+        editBdayBtn.setOnClickListener(v->showEditDialog(R.layout.edit_birthday));
+        listBlockBtn.setOnClickListener(v->showEditDialog(R.layout.edit_block));
+        editReportBtn.setOnClickListener(v->showEditDialog(R.layout.edit_report));
+        editSuggestionBtn.setOnClickListener(v->showEditDialog(R.layout.edit_suggestion));
+        openTiktokBtn.setOnClickListener(v->openLink("https://www.tiktok.com/@locketcamera"));
+        openIgBtn.setOnClickListener(v->openLink("https://www.instagram.com/locketcamera/"));
+        openTwitterBtn.setOnClickListener(v->openLink("https://twitter.com/locketcamera"));
+        openServiceBtn.setOnClickListener(v->openLink("https://locket.camera/terms"));
+        openPolicyBtn.setOnClickListener(v->openLink("https://locket.camera/privacy"));
     }
     @Override
     public boolean dispatchTouchEvent(MotionEvent me) {
@@ -151,8 +170,41 @@ public class SettingsActivity extends AppCompatActivity implements
                     return null;
                 });
     }
-    void updateToFireStore() {
-
+    public void showEditDialog(int layoutResId) {
+        BottomSheetSetting bottomSheetSetting = new BottomSheetSetting(layoutResId);
+        bottomSheetSetting.show(getSupportFragmentManager(),"TAG");
     }
+    public void openLink(String Link)
+    {
+        String url = Link;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
+    public void setUpUserName(String newName){
+        usernameInput.setText(newName);
+    }
+    public void updateToFireStore() {
+        String userId = FirebaseUtils.currentUserID();
+        if (userId != null) {
+            DocumentReference userRef = FirebaseUtils.allUserCollectionReference().document(userId); // Tham chiếu đến tài liệu người dùng
+            userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                    if (e != null) {
+                        Log.w(TAG, "Listen failed.", e);
+                        return;
+                    }
 
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        String newName = documentSnapshot.getString("username");
+                        // Gọi phương thức setUpUserName để cập nhật giao diện
+                        setUpUserName(newName);
+                    } else {
+                        Log.d(TAG, "Current data: null");
+                    }
+                }
+            });
+        }
+    }
 }

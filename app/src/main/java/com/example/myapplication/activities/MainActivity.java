@@ -94,30 +94,7 @@ public class MainActivity extends AppCompatActivity implements
             startCamera(cameraFacing);
         }
 
-        btnSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
-
-                if (currentUser == null) {
-                    FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            currentUser = task.getResult().toObject(User.class);
-                            if (currentUser != null) {
-                                AndroidUtils.passUserModelAsIntent(intent, currentUser);
-                                startActivity(intent);
-                                CustomIntent.customType(MainActivity.this,"right-to-left");
-                            }
-
-                        }
-                    });
-                }else{
-                    AndroidUtils.passUserModelAsIntent(intent, currentUser);
-                    startActivity(intent);
-                    CustomIntent.customType(MainActivity.this,"right-to-left");
-                }
-            }
-        });
+        btnSetting.setOnClickListener(v->transactionSettingsActivity());
         btnRecentChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,9 +141,8 @@ public class MainActivity extends AppCompatActivity implements
         switch (direction) {
 
             case SimpleGestureFilter.SWIPE_RIGHT:
-                showToastMessage = "You have Swiped Right.";Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                CustomIntent.customType(MainActivity.this, "right-to-left");
+                showToastMessage = "You have Swiped Right.";
+                transactionSettingsActivity();
                 break;
             case SimpleGestureFilter.SWIPE_LEFT:
                 showToastMessage = "You have Swiped Left.";
@@ -308,4 +284,26 @@ public class MainActivity extends AppCompatActivity implements
 
 
     }
-}
+    private void transactionSettingsActivity (){
+        Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
+
+        if (currentUser == null) {
+            FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    currentUser = task.getResult().toObject(User.class);
+                    if (currentUser != null) {
+                        AndroidUtils.passUserModelAsIntent(intent, currentUser);
+                        startActivity(intent);
+                        CustomIntent.customType(MainActivity.this,"right-to-left");
+                    }
+
+                }
+            });
+        }else{
+            AndroidUtils.passUserModelAsIntent(intent, currentUser);
+            startActivity(intent);
+            CustomIntent.customType(MainActivity.this,"right-to-left");
+        }
+    }
+ }
+

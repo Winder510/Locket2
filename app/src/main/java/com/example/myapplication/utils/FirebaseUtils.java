@@ -1,6 +1,13 @@
 package com.example.myapplication.utils;
 
-import com.example.myapplication.models.User;
+import static androidx.camera.core.impl.utils.ContextUtil.getApplicationContext;
+
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -13,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class FirebaseUtils {
+
     public static String currentUserID(){
         return FirebaseAuth.getInstance().getUid();
     }

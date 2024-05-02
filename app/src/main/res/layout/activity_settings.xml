@@ -95,37 +95,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:text="Tiện ích"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color"
-                    android:textSize="20dp"
-                    android:drawableLeft="@drawable/ic_hearttext"
-                    android:drawablePadding="15dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="25dp"
-                    />
-                <ImageButton
-                    android:layout_width="170dp"
-                    android:layout_height="170dp"
-                    android:background="@drawable/tienich_trans"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="20dp"
-                    android:scaleType="centerCrop"
-                    android:layout_marginTop="10dp"></ImageButton>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
@@ -200,25 +169,12 @@
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_email"
                     android:drawableRight="@drawable/ic_choose"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@color/btn_color"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:text="Cách thêm tiện ích"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_plus"
-                    android:drawableRight="@drawable/ic_choose"/>
+
                 <Button
                     android:id="@+id/btnListBlock"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/btn_color"
+                    android:background="@drawable/custom_btn2"
                     android:baselineAligned="false"
                     android:padding="7dp"
                     android:scaleType="centerCrop"
@@ -228,20 +184,6 @@
                     android:textColor="@color/st_setting_color2"
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_block"
-                    android:drawableRight="@drawable/ic_choose"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/custom_btn2"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:text="Khôi phục đơn hàng"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_transaction"
                     android:drawableRight="@drawable/ic_choose"/>
 
             </LinearLayout>
@@ -265,6 +207,7 @@
                     android:layout_marginTop="25dp"
                     />
                 <Button
+                    android:id="@+id/btnEditReport"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/custom_btn"
@@ -281,6 +224,7 @@
                     android:drawableRight="@drawable/ic_choose"/>
 
                 <Button
+                    android:id="@+id/btnEditSuggestion"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/custom_btn2"
@@ -315,6 +259,7 @@
                     android:gravity="center_vertical"
                     android:layout_marginTop="25dp"/>
                 <Button
+                    android:id="@+id/btnOpenTiktok"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/custom_btn"
@@ -330,6 +275,7 @@
                     android:drawableLeft="@drawable/ic_tiktok"
                     android:drawableRight="@drawable/ic_choose"/>
                 <Button
+                    android:id="@+id/btnOpenIG"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@color/btn_color"
@@ -344,6 +290,7 @@
                     android:drawableLeft="@drawable/ic_instagram"
                     android:drawableRight="@drawable/ic_choose"/>
                 <Button
+                    android:id="@+id/btnOpenTwitter"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@color/btn_color"
@@ -357,35 +304,9 @@
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_twitter"
                     android:drawableRight="@drawable/ic_choose"/>
+
                 <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@color/btn_color"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:text="Chia sẻ"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_share"
-                    android:drawableRight="@drawable/ic_choose"/>
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@color/btn_color"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:text="Đánh giá Locket"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_star"
-                    android:drawableRight="@drawable/ic_choose"/>
-                <Button
+                    android:id="@+id/btnOpenService"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@color/btn_color"
@@ -400,6 +321,7 @@
                     android:drawableLeft="@drawable/ic_service"
                     android:drawableRight="@drawable/ic_choose"/>
                 <Button
+                    android:id="@+id/btnOpenPolicy"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:background="@drawable/custom_btn2"
