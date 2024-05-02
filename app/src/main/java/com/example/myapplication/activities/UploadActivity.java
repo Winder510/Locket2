@@ -27,9 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
-import com.example.myapplication.adapter.ChatRecyclerAdapter;
 import com.example.myapplication.adapter.UserRecyclerAdapter;
-import com.example.myapplication.models.ChatMessage;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;

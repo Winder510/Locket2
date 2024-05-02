@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.RecentChatRecyclerAdapter;
 import com.example.myapplication.models.Chatroom;
-import com.example.myapplication.models.User;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
