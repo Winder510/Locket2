@@ -8,14 +8,16 @@ public class User {
     private Timestamp createdTimestamp;
 
     private String userId;
+    private String birthDay;
     public User() {
     }
 
-    public User(String phone, String username, Timestamp createdTimestamp,String userId) {
+    public User(String phone, String username, Timestamp createdTimestamp,String userId, String Bday) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.userId = userId;
+        this.birthDay = Bday;
     }
 
     public String getUserId() {
@@ -45,7 +47,7 @@ public class User {
     public Timestamp getCreatedTimestamp() {
         return createdTimestamp;
     }
-
+    public String getBirthday() {return birthDay;}
     public void setCreatedTimestamp(Timestamp createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }

@@ -51,7 +51,7 @@
         android:padding="20dp">
 
         <EditText
-            android:id="@+id/login_otp"
+            android:id="@+id/monthBday_edit"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
@@ -65,7 +65,7 @@
             android:layout_marginRight="15dp"/>
 
         <EditText
-            android:id="@+id/b"
+            android:id="@+id/dateBday_edit"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_weight="1"
@@ -79,7 +79,7 @@
 
     </LinearLayout>
     <Button
-        android:id="@+id/login_next_btn"
+        android:id="@+id/btnSave_Bday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/primary_color"

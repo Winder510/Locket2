@@ -49,12 +49,6 @@ public class SettingsActivity extends AppCompatActivity implements
     Uri selectedImageUri;
     ImageButton btnBack;
     User currentUser;
-    View mainView;
-    // Khai báo một request code
-    private static final int BOTTOM_SHEET_REQUEST_CODE = 100;
-
-    // Khai báo một biến để lưu trữ dữ liệu cần cập nhật
-    private String newName;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
