@@ -1,18 +1,5 @@
 package com.example.myapplication.activities;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Size;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
-
-import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -27,9 +14,17 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
 import com.example.myapplication.models.User;
@@ -41,53 +36,55 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
-import maes.tech.intentanim.CustomIntent;
-
 public class MainActivity extends AppCompatActivity {
-
-    ImageButton btnCapture, btnToggleFlash, btnFlipCamera, btnSetting, btnRecentChat;
+    ImageButton capture, toggleFlash, flipCamera, btnSetting, btnRecentChat;
     Button btnSearchUser;
     private PreviewView previewView;
     // for <setting layout>
     User currentUser;
     Uri uriImage;
     ///>
-    int cameraFacing = CameraSelector.LENS_FACING_BACK;
 
+    int cameraFacing = CameraSelector.LENS_FACING_BACK;
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
         public void onActivityResult(Boolean result) {
             if (result) {
                 startCamera(cameraFacing);
             }
-
         }
     });
-
-    @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
         previewView = findViewById(R.id.cameraPreview);
-        btnCapture = findViewById(R.id.btnCapture);
-        btnFlipCamera = findViewById(R.id.btnFlipCamera);
-        btnToggleFlash = findViewById(R.id.btnToggleFlash);
+        capture = findViewById(R.id.btnCapture);
+        toggleFlash = findViewById(R.id.btnToggleFlash);
+        flipCamera = findViewById(R.id.btnFlipCamera);
         btnSetting = findViewById(R.id.btnSetting);
         btnSearchUser = findViewById(R.id.btnSearchUser);
         btnRecentChat = findViewById(R.id.btnRecentChat);
+
 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
             startCamera(cameraFacing);
         }
+
+        flipCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cameraFacing == CameraSelector.LENS_FACING_BACK) {
+                    cameraFacing = CameraSelector.LENS_FACING_FRONT;
+                } else {
+                    cameraFacing = CameraSelector.LENS_FACING_BACK;
+                }
+                startCamera(cameraFacing);
+            }
+        });
 
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, RecentChatActivity.class);
                 startActivity(intent);
 
-                CustomIntent.customType(MainActivity.this, "right-to-left");
             }
         });
         btnSearchUser.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        btnFlipCamera.setOnClickListener(new View.OnClickListener() {
+        flipCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (cameraFacing == CameraSelector.LENS_FACING_BACK) {
@@ -123,29 +119,21 @@ public class MainActivity extends AppCompatActivity {
                 startCamera(cameraFacing);
             }
         });
+
     }
 
-
     public void startCamera(int cameraFacing) {
-
+        int aspectRatio = aspectRatio(previewView.getWidth(), previewView.getHeight());
         ListenableFuture<ProcessCameraProvider> listenableFuture = ProcessCameraProvider.getInstance(this);
 
         listenableFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = (ProcessCameraProvider) listenableFuture.get();
 
-                Preview preview = new Preview.Builder()
-                        .setTargetRotation(previewView.getDisplay().getRotation()) // Sử dụng setTargetRotation để đặt tỉ lệ khung hình
-                        .build();
-                Size previewSize = new Size(previewView.getWidth(), previewView.getHeight());
+                Preview preview = new Preview.Builder().setTargetAspectRatio(aspectRatio).build();
 
-//                ImageCapture imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-//                        .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()).build();
-                ImageCapture imageCapture = new ImageCapture.Builder()
-                        .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                        .setTargetResolution(previewSize)
-                        .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation())
-                        .build();
+                ImageCapture imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                        .setTargetRotation(getWindowManager().getDefaultDisplay().getRotation()).build();
 
                 CameraSelector cameraSelector = new CameraSelector.Builder()
                         .requireLensFacing(cameraFacing).build();
@@ -153,27 +141,27 @@ public class MainActivity extends AppCompatActivity {
                 cameraProvider.unbindAll();
 
                 Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-                btnCapture.setOnClickListener(new View.OnClickListener() {
+                capture.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                             activityResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE);
                         }
+
                         takePicture(imageCapture);
 
                     }
                 });
 
-                btnToggleFlash.setOnClickListener(new View.OnClickListener() {
+                toggleFlash.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(View view) {
                         setFlashIcon(camera);
                     }
                 });
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -194,8 +182,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 startCamera(cameraFacing);
-
-
             }
 
             @Override
@@ -207,9 +193,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 startCamera(cameraFacing);
-
             }
-
         });
     }
 
@@ -217,10 +201,10 @@ public class MainActivity extends AppCompatActivity {
         if (camera.getCameraInfo().hasFlashUnit()) {
             if (camera.getCameraInfo().getTorchState().getValue() == 0) {
                 camera.getCameraControl().enableTorch(true);
-                btnToggleFlash.setImageResource(R.drawable.ic_flash_on);
+                toggleFlash.setImageResource(R.drawable.ic_flash_on);
             } else {
                 camera.getCameraControl().enableTorch(false);
-                btnToggleFlash.setImageResource(R.drawable.ic_flash_off);
+                toggleFlash.setImageResource(R.drawable.ic_flash_off);
             }
         } else {
             runOnUiThread(new Runnable() {
@@ -239,21 +223,24 @@ public class MainActivity extends AppCompatActivity {
         }
         return AspectRatio.RATIO_16_9;
     }
-
     private void handleAfterTakePicture(File file) {
-        // Tạo Intent để chuyển sang Activity mới
-        Intent intent = new Intent(MainActivity.this, UploadActivity.class);
+        // Tạo một Bundle và đính kèm đường dẫn của tệp ảnh vào đó
+        Bundle bundle = new Bundle();
+        bundle.putString("imageFilePath", file.getAbsolutePath());
 
-        // Đính kèm dữ liệu cần truyền qua Intent
-        intent.putExtra("imagePath", file.getPath());
-
-        // Khởi chạy Activity mới với Intent đã tạo
-        startActivity(intent);
+        // Tạo một instance của FragmentUpload và gắn Bundle vào đó
+        UploadFragment fragmentUpload = new UploadFragment();
+        fragmentUpload.setArguments(bundle);
 
 
+        // Thêm FragmentUpload vào BackStack và hiển thị nó trên giao diện người dùng
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.main, fragmentUpload)
+                .addToBackStack(null)
+                .commit();
     }
     private void handleClickSettingButton(){
-        Toast.makeText(MainActivity.this, "Chuyển đến màn hình cài đặt", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
 
         if (currentUser == null) {
@@ -263,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
                     if (currentUser != null) {
                         AndroidUtils.passUserModelAsIntent(intent, currentUser);
                         startActivity(intent);
-                        CustomIntent.customType(MainActivity.this,"right-to-left");
+
                     }
 
                 }
@@ -271,9 +258,10 @@ public class MainActivity extends AppCompatActivity {
         }else{
             AndroidUtils.passUserModelAsIntent(intent, currentUser);
             startActivity(intent);
-            CustomIntent.customType(MainActivity.this,"right-to-left");
+
         }
 
 
     }
+
 }
