@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchUserActivity.class);
                 startActivity(intent);
+
+                CustomIntent.customType(MainActivity.this, "right-to-left");
             }
         });
         btnFlipCamera.setOnClickListener(new View.OnClickListener() {
