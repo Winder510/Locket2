@@ -2,16 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:src="@drawable/ic_userintr"
-        android:background="@drawable/btn_oval_no_stroke"
-        android:padding="4dp"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:padding="5dp"
         android:backgroundTint="@color/black"
         android:layout_centerInParent="true"
         android:id="@+id/profile_pic_image_view"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        app:shapeAppearanceOverlay="@style/circular"
+        app:strokeWidth="3dp"
+        app:strokeColor="@color/btn_color"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/ic_userintr"
+        />
 </RelativeLayout>

@@ -4,34 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchUserActivity">
+    android:background="@color/black"
+    tools:context=".activities.SearchUserActivity"
+    android:fitsSystemWindows="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_color"
+        android:background="@color/black"
         android:padding="10dp"
         android:id="@+id/toolbar">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search User"
+            android:layout_alignParentStart="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="135dp"
+            android:text="Your Friends"
+            android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_marginStart="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/back_btn"/>
+            android:id="@+id/textviewAddFriend"/>
 
-        <ImageButton
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/ic_left_arrow"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/white"
-            android:layout_centerVertical="true"
-            android:id="@+id/back_btn"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textviewAddFriend"
+            android:layout_alignParentStart="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="105dp"
+            android:layout_marginTop="2dp"
+            android:text="You can add n more people"
+            android:textColor="@color/st_setting_color"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
 
     </RelativeLayout>
 
@@ -40,30 +48,34 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
         android:layout_margin="10dp"
+        android:background="@color/black"
         android:id="@+id/search_user_layout">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_rounded_corner"
-            android:layout_margin="10dp"
-            android:hint="Username"
-            android:padding="10dp"
-            android:elevation="4dp"
-            android:layout_toLeftOf="@id/search_user_btn"
-            android:id="@+id/seach_username_input"
-            />
-        <ImageButton
+        <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_search"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
+            android:layout_marginStart="81dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="271dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/black"
-            android:padding="4dp"
-            android:layout_margin="10dp"
-            android:id="@+id/search_user_btn"/>
+            android:elevation="5dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_search" />
+
+        <EditText
+            android:id="@+id/seach_username_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/login_edit_text"
+            android:elevation="4dp"
+            android:gravity="center"
+            android:hint="Add someone new"
+            android:padding="10dp"
+            android:textColorHint="@color/st_setting_color" />
 
     </RelativeLayout>
 
@@ -72,8 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/search_user_layout"
         android:padding="10dp"
-        android:id="@+id/search_user_recycler_view"
-        />
+        android:id="@+id/search_user_recycler_view" />
 
 
 </RelativeLayout>

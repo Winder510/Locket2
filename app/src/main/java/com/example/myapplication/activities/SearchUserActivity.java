@@ -31,13 +31,13 @@ public class SearchUserActivity extends AppCompatActivity {
 
         searchInput = findViewById(R.id.seach_username_input);
 
-        backButton = findViewById(R.id.back_btn);
+      //  backButton = findViewById(R.id.back_btn);
         recyclerView = findViewById(R.id.search_user_recycler_view);
 
         searchInput.requestFocus();
-        backButton.setOnClickListener(v -> {
-            onBackPressed();
-        });
+//        backButton.setOnClickListener(v -> {
+//            onBackPressed();
+//        });
 //
 //        searchButton.setOnClickListener(v -> {
 //            String searchTerm = searchInput.getText().toString();

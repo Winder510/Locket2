@@ -92,28 +92,7 @@ public class MainActivity extends AppCompatActivity {
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "Chuyển đến màn hình cài đặt", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
-
-                if (currentUser == null) {
-                    FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            currentUser = task.getResult().toObject(User.class);
-                            if (currentUser != null) {
-                                AndroidUtils.passUserModelAsIntent(intent, currentUser);
-                                startActivity(intent);
-                                CustomIntent.customType(MainActivity.this,"right-to-left");
-                            }
-
-                        }
-                    });
-                }else{
-                    AndroidUtils.passUserModelAsIntent(intent, currentUser);
-                    startActivity(intent);
-                    CustomIntent.customType(MainActivity.this,"right-to-left");
-                }
-
-
+                handleClickSettingButton();
 
             }
         });
@@ -270,6 +249,30 @@ public class MainActivity extends AppCompatActivity {
 
         // Khởi chạy Activity mới với Intent đã tạo
         startActivity(intent);
+
+
+    }
+    private void handleClickSettingButton(){
+        Toast.makeText(MainActivity.this, "Chuyển đến màn hình cài đặt", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent (MainActivity.this, SettingsActivity.class);
+
+        if (currentUser == null) {
+            FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    currentUser = task.getResult().toObject(User.class);
+                    if (currentUser != null) {
+                        AndroidUtils.passUserModelAsIntent(intent, currentUser);
+                        startActivity(intent);
+                        CustomIntent.customType(MainActivity.this,"right-to-left");
+                    }
+
+                }
+            });
+        }else{
+            AndroidUtils.passUserModelAsIntent(intent, currentUser);
+            startActivity(intent);
+            CustomIntent.customType(MainActivity.this,"right-to-left");
+        }
 
 
     }

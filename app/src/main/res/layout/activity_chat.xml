@@ -4,52 +4,60 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchUserActivity">
+    android:background="@color/black"
+    tools:context=".activities.ChatActivity"
+    android:fitsSystemWindows="true"
+  >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_color"
+        android:background="@color/black"
         android:padding="10dp"
         android:id="@+id/toolbar">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_marginStart="10dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/profile_pic_layout"
-            android:id="@+id/other_username"
-            />
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:gravity="center">
 
-        <include
-            android:id="@+id/profile_pic_layout"
-            layout="@layout/profile_pic_view"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_toRightOf="@id/back_btn" />
+            <include layout="@layout/profile_pic_view"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:id="@+id/profile_pic_layout"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:id="@+id/other_username"
+                />
+        </LinearLayout>
 
         <ImageButton
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_left_arrow"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/white"
+            android:background="@drawable/btn_oval_no_stroke"
             android:layout_centerVertical="true"
             android:id="@+id/back_btn"/>
 
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
         android:layout_above="@id/bottom_layout"
-        android:id="@+id/chat_recycler_view"/>
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="-2dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -61,30 +69,32 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_toLeftOf="@id/message_send_btn"
-            android:background="@drawable/edit_text_rounded_corner"
+            android:background="@drawable/edit_text_rounded_corner2"
             android:elevation="4dp"
             android:hint="Write message here"
             android:padding="10dp"
-            android:id="@+id/chat_message_input"/>
+            android:textColorHint="@color/st_setting_color"
+            android:id="@+id/chat_message_input"
+            android:textColor="@color/white"/>
 
         <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_send"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="@color/black"
             android:id="@+id/message_send_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="13dp"
+            android:background="@drawable/btn_oval_custom1"
+            android:elevation="5dp"
             android:padding="8dp"
-            android:layout_marginStart="10dp"
-            />
+            android:src="@drawable/pngwing" />
 
     </RelativeLayout>
 
