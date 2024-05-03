@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.ChatRecyclerAdapter;
-import com.example.myapplication.adapter.SearchUserRecyclerAdapter;
 import com.example.myapplication.models.ChatMessage;
 import com.example.myapplication.models.Chatroom;
 import com.example.myapplication.models.User;
@@ -28,8 +27,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.util.Arrays;
 

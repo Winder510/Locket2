@@ -2,18 +2,28 @@ package com.example.myapplication.models;
 
 import com.google.firebase.Timestamp;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class User {
     private String phone;
     private String username;
     private Timestamp createdTimestamp;
+
+    private List<String> friends;
     private String userId;
 
     public User() {
     }
 
-    public User(String phone, String username, Timestamp createdTimestamp,String userId) {
+    public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId) {
+        this.phone = phone;
+        this.username = username;
+        this.createdTimestamp = createdTimestamp;
+        this.friends = friends;
+        this.userId = userId;
+    }
+
+    public User(String phone, String username, Timestamp createdTimestamp, String userId) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
@@ -52,5 +62,11 @@ public class User {
         this.createdTimestamp = createdTimestamp;
     }
 
+    public List<String> getFriends() {
+        return friends;
+    }
 
+    public void setFriends(List<String> friends) {
+        this.friends = friends;
+    }
 }
