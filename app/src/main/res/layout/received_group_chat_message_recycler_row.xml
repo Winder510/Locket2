@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_rounded_corner"
+        android:backgroundTint="@color/chat_color_receiver"
+        android:padding="8dp"
+        android:id="@+id/left_chat_layout"
+        android:layout_toRightOf="@id/profile_pic_chat"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:id="@+id/left_chat_textview" />
+
+    </LinearLayout>
+    <include
+        layout="@layout/profile_pic_view"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="1dp"
+        android:id="@+id/profile_pic_chat"
+        android:visibility="invisible"
+        />
+
+</RelativeLayout>
