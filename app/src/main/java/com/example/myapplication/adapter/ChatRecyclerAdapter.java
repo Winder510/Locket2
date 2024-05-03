@@ -1,12 +1,9 @@
 package com.example.myapplication.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,48 +16,106 @@ import com.example.myapplication.utils.FirebaseUtils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, RecyclerView.ViewHolder> {
 
-public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, ChatRecyclerAdapter.ChatModelViewHolder> {
+    private static final int TYPE_SEND = 0;
+    private static final int TYPE_RECEIVE_SINGLE = 1;
+    private static final int TYPE_RECEIVE_GROUP = 2;
 
     Context context;
 
     public ChatRecyclerAdapter(@NonNull FirestoreRecyclerOptions<ChatMessage> options, Context context) {
         super(options);
         this.context = context;
+
+    }
+    private boolean isLatestMessage(int position) {
+        return position == getItemCount() - 1;
     }
 
+
     @Override
-    protected void onBindViewHolder(@NonNull ChatModelViewHolder holder, int position, @NonNull ChatMessage model) {
-        if(model.getSenderId().equals(FirebaseUtils.currentUserID())){
-            holder.leftChatLayout.setVisibility(View.GONE);
-            holder.rightChatLayout.setVisibility(View.VISIBLE);
-            holder.rightChatTextview.setText(model.getMessage());
-        }else{
-            holder.rightChatLayout.setVisibility(View.GONE);
-            holder.leftChatLayout.setVisibility(View.VISIBLE);
-            holder.leftChatTextview.setText(model.getMessage());
+    public int getItemViewType(int position) {
+        ChatMessage currentMessage = getItem(position);
+        boolean isReceived = !currentMessage.getSenderId().equals(FirebaseUtils.currentUserID());
+
+        if (isReceived && isLatestMessage(position)) {
+            return TYPE_RECEIVE_SINGLE; // This is a single message with avatar
+        } else if (isReceived) {
+            // Check if the previous message is from the same sender
+            if (position > 0) {
+                ChatMessage previousMessage = getItem(position - 1);
+                if (previousMessage.getSenderId().equals(currentMessage.getSenderId())) {
+                    return TYPE_RECEIVE_GROUP; // This is a group message without avatar
+                }
+            }
+            return TYPE_RECEIVE_SINGLE; // This is a single message with avatar
+        } else {
+            // Check if the next message is from the same sender
+            if (position < getItemCount() - 1) {
+                ChatMessage nextMessage = getItem(position + 1);
+                if (nextMessage.getSenderId().equals(currentMessage.getSenderId())) {
+                    return TYPE_SEND; // This is a group message
+                }
+            }
+            return TYPE_SEND; // This is a single message
         }
     }
 
     @NonNull
     @Override
-    public ChatModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.chat_message_recycler_row,parent,false);
-        return new ChatModelViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view;
+        switch (viewType) {
+            case TYPE_SEND:
+                view = LayoutInflater.from(context).inflate(R.layout.send_chat_message_recycler_row, parent, false);
+                return new ChatModelViewHolder(view);
+            case TYPE_RECEIVE_SINGLE:
+                view = LayoutInflater.from(context).inflate(R.layout.received_chat_message_recycler_row, parent, false);
+                return new GroupChatModelViewHolder(view);
+            case TYPE_RECEIVE_GROUP:
+                view = LayoutInflater.from(context).inflate(R.layout.received_group_chat_message_recycler_row, parent, false);
+                return new GroupChatModelViewHolder(view);
+            default:
+                throw new IllegalArgumentException("Invalid view type");
+        }
     }
 
-    class ChatModelViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    protected void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull ChatMessage model) {
+        if (holder.getItemViewType() == TYPE_SEND) {
+            ChatModelViewHolder viewHolder = (ChatModelViewHolder) holder;
+            viewHolder.rightChatLayout.setVisibility(View.VISIBLE);
+            viewHolder.rightChatTextview.setText(model.getMessage());
+        } else {
+            GroupChatModelViewHolder viewHolder = (GroupChatModelViewHolder) holder;
+            viewHolder.leftChatLayout.setVisibility(View.VISIBLE);
+            viewHolder.leftChatTextview.setText(model.getMessage());
+        }
+    }
 
-        LinearLayout leftChatLayout,rightChatLayout;
-        TextView leftChatTextview,rightChatTextview;
+    class ChatModelViewHolder extends RecyclerView.ViewHolder {
+
+        LinearLayout rightChatLayout;
+        TextView rightChatTextview;
 
         public ChatModelViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            leftChatLayout = itemView.findViewById(R.id.left_chat_layout);
             rightChatLayout = itemView.findViewById(R.id.right_chat_layout);
-            leftChatTextview = itemView.findViewById(R.id.left_chat_textview);
             rightChatTextview = itemView.findViewById(R.id.right_chat_textview);
+        }
+    }
+
+    class GroupChatModelViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout leftChatLayout;
+        TextView leftChatTextview;
+
+        public GroupChatModelViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            leftChatLayout = itemView.findViewById(R.id.left_chat_layout);
+            leftChatTextview = itemView.findViewById(R.id.left_chat_textview);
         }
     }
 }
