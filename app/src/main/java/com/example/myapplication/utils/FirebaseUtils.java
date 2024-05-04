@@ -29,7 +29,9 @@ public class FirebaseUtils {
     public static CollectionReference allUserCollectionReference(){
         return FirebaseFirestore.getInstance().collection("users");
     }
-
+    public static DocumentReference getFriendDetail(String id) {
+        return FirebaseFirestore.getInstance().collection("users").document(id);
+    }
     public static DocumentReference getChatroomReference(String chatroomId){
          return FirebaseFirestore.getInstance().collection("chatrooms").document(chatroomId);
     }
@@ -66,9 +68,15 @@ public class FirebaseUtils {
         return FirebaseStorage.getInstance().getReference().child("profile_pic")
                 .child(FirebaseUtils.currentUserID());
     }
-
+    public static StorageReference getCurrentPostImageStorageRef(){
+        return FirebaseStorage.getInstance().getReference().child("userPostImage")
+                .child(FirebaseUtils.currentUserID());
+    }
     public static StorageReference  getOtherProfilePicStorageRef(String otherUserId){
         return FirebaseStorage.getInstance().getReference().child("profile_pic")
                 .child(otherUserId);
+    }
+    public static CollectionReference getPostsCollectionReference(){
+        return FirebaseFirestore.getInstance().collection("posts");
     }
 }

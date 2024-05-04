@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color"
     android:padding="0dp"
-    tools:context=".activities.UploadFragment">
+    tools:context=".fragments.UploadFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                 android:scaleType="fitXY" />
 
             <EditText
-                android:id="@+id/statusText"
+                android:id="@+id/captionText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -66,6 +66,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:visibility="visible"
+                android:maxLines="2"
                 tools:ignore="RtlSymmetry" />
 
         </RelativeLayout>
@@ -104,11 +105,18 @@
                     tools:ignore="NestedWeights" />
 
                 <ImageButton
-                    android:id="@+id/btnCapture"
+                    android:id="@+id/btUpPost"
                     android:layout_width="104dp"
                     android:layout_height="104dp"
                     android:background="@drawable/btn_oval_no_stroke"
                     android:src="@drawable/ic_send" />
+
+                <ProgressBar
+                    android:id="@+id/progressbar"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/primary_color" />
 
                 <Space
                     android:layout_width="0dp"

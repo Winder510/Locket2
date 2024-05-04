@@ -22,71 +22,85 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapter.UserViewHolder> {
 
-public class UserRecyclerAdapter extends FirestoreRecyclerAdapter<User, UserRecyclerAdapter.listUserViewHolder> {
+    private final ArrayList<User> userList;
+    private final Context context;
+    private final Set<Integer> selectedItems = new HashSet<>(); // Danh sách các phần tử được chọn
+    boolean fisrtSelected=false;
 
-    Context context;
-    private Set<Integer> selectedItems = new HashSet<>(); // Danh sách các item được chọn
-    public UserRecyclerAdapter(@NonNull FirestoreRecyclerOptions<User> options, Context context) {
-        super(options);
+    public UserRecyclerAdapter(ArrayList<User> userList, Context context) {
+        this.userList = userList;
         this.context = context;
-    }
-
-    @Override
-    protected void onBindViewHolder(@NonNull listUserViewHolder holder, @SuppressLint("RecyclerView") int position, @NonNull User model) {
-        holder.usernameText.setText(model.getUsername());
-        final int currentPosition = position;
-        holder.itemView.setSelected(selectedItems.contains(currentPosition));
-        if (selectedItems.contains(currentPosition)) {
-            handleSelectedItem( holder.usernameText,holder.profilePic,true);
-        } else {
-            handleSelectedItem( holder.usernameText,holder.profilePic,false);
+        if (selectedItems.isEmpty() && !userList.isEmpty()) {
+            selectedItems.add(0); // Thêm vị trí của phần tử đầu tiên vào danh sách selectedItems
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectedItems.contains(currentPosition)) {
-                    selectedItems.remove(currentPosition);
-                    handleSelectedItem( holder.usernameText,holder.profilePic,false);
-                } else {
-                    selectedItems.add(currentPosition);
-                    handleSelectedItem( holder.usernameText,holder.profilePic,true);
-
-                }
-                notifyItemChanged(currentPosition);
-            }
-        });
     }
 
     @NonNull
     @Override
-    public listUserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.user_item,parent,false);
-        return new listUserViewHolder(view);
+    public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.user_item, parent, false);
+        return new UserViewHolder(view);
     }
 
-    class listUserViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public void onBindViewHolder(@NonNull UserViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        User user = userList.get(position);
+        holder.usernameText.setText(user.getUsername());
+
+        if (selectedItems.contains(position)) {
+            handleSelectedItem(holder.usernameText, holder.profilePic, true);
+        } else {
+            handleSelectedItem(holder.usernameText, holder.profilePic, false);
+        }
+
+        // Xử lý sự kiện khi người dùng chọn một item
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedItems.contains(position)) {
+                    selectedItems.remove(position);
+                } else {
+                    if(position==0)
+                    {
+                        selectedItems.removeAll(selectedItems);
+                        selectedItems.add(position);
+                    }else{
+                        selectedItems.remove(0);
+                        selectedItems.add(position);
+                    }
+                }
+                notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return userList.size();
+    }
+
+    public class UserViewHolder extends RecyclerView.ViewHolder {
         TextView usernameText;
         ShapeableImageView profilePic;
 
-
-        public listUserViewHolder(@NonNull View itemView) {
+        public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             profilePic = itemView.findViewById(R.id.profile_pic_image_view);
             usernameText = itemView.findViewById(R.id.username);
         }
     }
-    void handleSelectedItem(TextView usernameText , ShapeableImageView profilePic, boolean isSelected){
-        if(isSelected){
+
+    void handleSelectedItem(TextView usernameText, ShapeableImageView profilePic, boolean isSelected) {
+        if (isSelected) {
             usernameText.setTextColor(Color.parseColor("#EEAB01"));
             profilePic.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#EEAB01")));
-
-        }
-        else{
+        } else {
             usernameText.setTextColor(Color.parseColor("#99555453"));
             profilePic.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#99555453")));
         }
-
     }
 }
