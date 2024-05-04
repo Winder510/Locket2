@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:padding="0dp">
+    android:padding="0dp"
+    tools:context=".activities.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,8 +22,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            >
+            android:layout_marginStart="20dp">
 
             <ImageButton
                 android:layout_width="45dp"
@@ -33,7 +33,8 @@
                 android:padding="7dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_user"
-                android:id="@+id/btnSetting"/>
+                android:id="@+id/btnSetting" />
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -46,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="0dp"
                 android:backgroundTint="@color/btn_color"
-                android:text="Tất cả bạn bè"
+                android:text="Bạn bè"
                 android:textSize="15dp"
                 app:icon="@drawable/ic_friend"
                 tools:ignore="NestedWeights" />
@@ -57,7 +58,7 @@
                 android:layout_weight="1"
                 tools:ignore="NestedWeights" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnRecentChat"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -65,9 +66,7 @@
                 android:background="@drawable/btn_oval_no_stroke"
                 android:padding="7dp"
                 android:scaleType="centerCrop"
-                android:text="..."
-                android:textSize="20dp"
-                android:textAlignment="center"/>
+                android:src="@drawable/ic_message" />
 
 
         </LinearLayout>
@@ -81,7 +80,7 @@
                 android:id="@+id/cameraPreview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/primary_color"
                 android:scaleType="fitCenter" >
             </androidx.camera.view.PreviewView>
 
@@ -90,83 +89,20 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/radius_trans"
                 android:scaleType="fitXY" />
-            <EditText
-                android:id="@+id/statusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/rounded_edittext"
-                android:hint="Add a message"
-                android:padding="3dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:visibility="visible"
-                tools:ignore="RtlSymmetry" />
         </RelativeLayout>
 
-
         <LinearLayout
+            android:id="@+id/bottomFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@color/bg_color"
-                android:src="@drawable/ic_user"
-                android:scaleType="centerCrop"/>
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="20dp"
-                android:text="Ten"
-                android:textColor="@color/white"/>
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="20dp"
-                android:text="Time"
-                android:textColor="@color/white"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.1"
-            android:gravity="center|top"
+            android:layout_weight="3.1"
             android:orientation="vertical">
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp"/>
-            <EditText
-                android:id="@+id/name_edit"
-                android:layout_width="370dp"
-                android:layout_height="60dp"
-                android:background="@drawable/login_edit_text"
-                android:hint="Gửi tin nhắn..."
-                android:inputType="textPersonName"
-                android:paddingStart="15dp"
-                android:textColor="@color/white"
-                android:textColorHint="#888888"
-                android:textSize="20sp" />
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            >
+            android:layout_weight="2"
+            android:gravity="center">
 
-            <ImageButton
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:padding="7dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/menu"/>
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -174,8 +110,23 @@
                 tools:ignore="NestedWeights" />
 
             <ImageButton
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+                android:id="@+id/btnToggleFlash"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@color/transparent_color"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_flash_off" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                tools:ignore="NestedWeights" />
+
+            <ImageButton
+                android:id="@+id/btnCapture"
+                android:layout_width="104dp"
+                android:layout_height="104dp"
                 android:background="@drawable/btn_capture" />
 
             <Space
@@ -185,13 +136,42 @@
                 tools:ignore="NestedWeights" />
 
             <ImageButton
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_margin="3dp"
-                android:padding="7dp"
+                android:id="@+id/btnFlipCamera"
+                android:layout_width="44dp"
+                android:layout_height="41dp"
+                android:background="@color/transparent_color"
                 android:scaleType="centerCrop"
-                android:background="@drawable/ic_share" />
+                android:src="@drawable/ic_retake" />
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                tools:ignore="NestedWeights" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center|top"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lịch sử"
+                android:textSize="25dp" />
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="27dp"
+                android:layout_marginTop="7dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_down"
+                />
+
+        </LinearLayout>
 
         </LinearLayout>
 
@@ -199,4 +179,4 @@
     </LinearLayout>
 
 
-</RelativeLayout>
+</FrameLayout>

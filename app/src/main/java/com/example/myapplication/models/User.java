@@ -3,8 +3,10 @@ package com.example.myapplication.models;
 import com.google.firebase.Timestamp;
 
 import java.util.List;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
     private String phone;
     private String username;
     private Timestamp createdTimestamp;
@@ -24,6 +26,10 @@ public class User {
     }
 
     public User(String phone, String username, Timestamp createdTimestamp, String userId) {
+    public User(String username) {
+        this.username = username;
+    }
+    public User(String phone, String username, Timestamp createdTimestamp,String userId) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
