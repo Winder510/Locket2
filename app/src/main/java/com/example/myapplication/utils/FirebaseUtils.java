@@ -47,10 +47,6 @@ public class FirebaseUtils {
     public static DocumentReference getFriendDetail(String id) {
         return FirebaseFirestore.getInstance().collection("users").document(id);
     }
-    public static DocumentReference getChatroomReference(String chatroomId){
-         return FirebaseFirestore.getInstance().collection("chatrooms").document(chatroomId);
-    }
-
 
     public static CollectionReference getChatroomMessageReference(String chatroomId) {
         return getChatroomReference(chatroomId).collection("chats");

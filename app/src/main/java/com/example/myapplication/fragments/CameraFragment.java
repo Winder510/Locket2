@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,7 +30,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
+import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.activities.RecentChatActivity;
 import com.example.myapplication.activities.SearchUserActivity;
 import com.example.myapplication.activities.SettingsActivity;
@@ -41,14 +44,16 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class CameraFragment extends Fragment {
+import maes.tech.intentanim.CustomIntent;
+
+public class CameraFragment extends Fragment{
     ImageButton capture, toggleFlash, flipCamera, btnSetting, btnRecentChat;
     Button btnSearchUser;
     private PreviewView previewView;
@@ -59,7 +64,6 @@ public class CameraFragment extends Fragment {
 
     //for <uploadFragment>
     ArrayList<User> userList = new ArrayList<>();
-
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
@@ -106,6 +110,8 @@ public class CameraFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(requireContext(), RecentChatActivity.class);
                 startActivity(intent);
+                CustomIntent.customType(requireContext(), "left-to-right");
+
 
             }
         });
@@ -114,6 +120,7 @@ public class CameraFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(requireContext(), SearchUserActivity.class);
                 startActivity(intent);
+                CustomIntent.customType(requireContext(), "left-to-right");
             }
         });
         flipCamera.setOnClickListener(new View.OnClickListener() {
@@ -127,11 +134,12 @@ public class CameraFragment extends Fragment {
                 startCamera(cameraFacing);
             }
         });
-
     }
 
     private void handleClickSettingButton() {
+
         Intent intent = new Intent(requireContext(), SettingsActivity.class);
+
 
         if (currentUser == null) {
             FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
@@ -140,6 +148,7 @@ public class CameraFragment extends Fragment {
                     if (currentUser != null) {
                         AndroidUtils.passUserModelAsIntent(intent, currentUser);
                         startActivity(intent);
+                        CustomIntent.customType(requireContext(), "right-to-left");
 
                     }
 
@@ -148,6 +157,7 @@ public class CameraFragment extends Fragment {
         } else {
             AndroidUtils.passUserModelAsIntent(intent, currentUser);
             startActivity(intent);
+            CustomIntent.customType(requireContext(), "right-to-left");
 
         }
 
@@ -255,7 +265,6 @@ public class CameraFragment extends Fragment {
         }
         return AspectRatio.RATIO_16_9;
     }
-
     private void handleAfterTakePicture(File file) {
         if(userList.isEmpty()){
             getListUserForRecyclerView(new OnSuccessListener<ArrayList<User>>() {

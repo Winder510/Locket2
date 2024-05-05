@@ -25,10 +25,10 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public User(String phone, String username, Timestamp createdTimestamp, String userId) {
     public User(String username) {
-        this.username = username;
-    }
+            this.username = username;
+        }
+
     public User(String phone, String username, Timestamp createdTimestamp,String userId) {
         this.phone = phone;
         this.username = username;
