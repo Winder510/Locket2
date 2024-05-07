@@ -1,5 +1,6 @@
 package com.example.myapplication.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -53,6 +54,7 @@ public class RecentChatActivity extends AppCompatActivity {
         adapter.stopListening();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onResume() {
         super.onResume();

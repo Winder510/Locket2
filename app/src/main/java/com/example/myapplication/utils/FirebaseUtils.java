@@ -1,5 +1,8 @@
 package com.example.myapplication.utils;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.myapplication.models.User;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +13,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FirebaseUtils {
@@ -79,4 +83,29 @@ public class FirebaseUtils {
     public static CollectionReference getPostsCollectionReference(){
         return FirebaseFirestore.getInstance().collection("posts");
     }
+    public static LiveData<List<User>> getFriendUsersLiveData(List<String> friendIds) {
+        MutableLiveData<List<User>> friendUsersLiveData = new MutableLiveData<>();
+        List<User> friendUsers = new ArrayList<>();
+
+        // Thực hiện các truy vấn Firestore để lấy thông tin người dùng từ danh sách friendIds
+        for (String friendId : friendIds) {
+            FirebaseUtils.getFriendDetail(friendId).get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    User friendUser = documentSnapshot.toObject(User.class);
+                    if (friendUser != null) {
+                        friendUsers.add(friendUser);
+                    }
+                }
+                // Kiểm tra nếu đã lấy thông tin của tất cả bạn bè, sau đó cập nhật LiveData
+                if (friendUsers.size() == friendIds.size()) {
+                    friendUsersLiveData.setValue(friendUsers);
+                }
+            }).addOnFailureListener(e -> {
+                // Xử lý lỗi nếu có
+            });
+        }
+
+        return friendUsersLiveData;
+    }
+
 }

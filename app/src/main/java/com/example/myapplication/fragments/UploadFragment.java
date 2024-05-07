@@ -1,6 +1,7 @@
     package com.example.myapplication.fragments;
 
     import android.Manifest;
+    import android.annotation.SuppressLint;
     import android.content.ContentResolver;
     import android.content.ContentValues;
     import android.content.pm.PackageManager;
@@ -63,50 +64,7 @@
         ProgressBar progressBar;
         ArrayList<User> userList = new ArrayList<>();
         private static final int REQUEST_CODE = 1;
-    //    @Override
-    //    protected void onCreate(@Nullable Bundle savedInstanceState) {
-    //        super.onCreate(savedInstanceState);
-    //        EdgeToEdge.enable(this);
-    //        setContentView(R.layout.activity_upload);
-    //        Intent intent = getIntent();
-    //        if (intent != null && intent.hasExtra("imagePath")) {
-    //
-    //            String imagePath = intent.getStringExtra("imagePath");
-    //
-    //             imagePreview = findViewById(R.id.imagePreview);
-    //            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
-    //
-    //            // Kiểm tra và xử lý thông tin xoay của ảnh
-    //            int rotation = ImageUtils.getExifOrientation(imagePath);
-    //            Matrix matrix = new Matrix();
-    //            matrix.postRotate(rotation);
-    //
-    //            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-    //            imagePreview.setImageBitmap(rotatedBitmap);
-    //        }
-    //        recyclerView = findViewById(R.id.list_user_recycler_view);
-    //        btnClose = findViewById(R.id.btnClose);
-    //        btnSave = findViewById(R.id.btnSave);
-    //
-    //        btnClose.setOnClickListener(v -> {
-    //            finish();
-    //        });
-    //        btnSave.setOnClickListener(new View.OnClickListener() {
-    //            @Override
-    //            public void onClick(View v) {
-    //                if(ContextCompat.checkSelfPermission(UploadActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
-    //                    saveImage();
-    //                }
-    //                else{
-    //                    ActivityCompat.requestPermissions(UploadActivity.this,new String[]{
-    //                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    //                    },REQUEST_CODE);
-    //                }
-    //            }
-    //        });
-    //        setupChatRecyclerView();
-    //
-    //    }
+
 
         void saveImage() {
             Uri images;
@@ -225,7 +183,7 @@
                 if (task.isSuccessful()) {
                     imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                         String imageUrl = uri.toString();
-                        createAndUploadPost(imageUrl);
+                        createAndUploadPost(imageUrl,adapter.getIdAllowedFriend());
                     });
                 } else {
                     // Xảy ra lỗi khi tải lên ảnh
@@ -236,14 +194,20 @@
             });
         }
 
-        void createAndUploadPost(String imageUrl) {
+        void createAndUploadPost(String imageUrl,ArrayList<String> allowedUser) {
 
             Post post = new Post();
             post.setPostCaption(captionText.getText().toString());
             post.setUserId(FirebaseUtils.currentUserID());
             post.setCreated_at(Timestamp.now()); // Thời gian hiện tại
             post.setPostImg_url(imageUrl); // Danh sách URL ảnh, ở đây chỉ có một URL
-            post.setVisibility("public"); // Hoặc "private" tùy thuộc vào yêu cầu của bạn
+            if(allowedUser.isEmpty()){
+                post.setVisibility("public");
+            }
+            else{
+                post.setVisibility("private");
+                post.setAllowed_users(allowedUser);
+            }
 
 
             FirebaseUtils.getPostsCollectionReference()
@@ -300,6 +264,7 @@
             return inflater.inflate(R.layout.fragment_upload, container, false);
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         public void setupChatRecyclerView() {
             adapter = new UserRecyclerAdapter(userList, getContext());
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));

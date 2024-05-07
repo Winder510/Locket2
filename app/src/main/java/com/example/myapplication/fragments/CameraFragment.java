@@ -28,6 +28,8 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
 import com.example.myapplication.R;
 import com.example.myapplication.activities.RecentChatActivity;
@@ -56,9 +58,6 @@ public class CameraFragment extends Fragment {
     User currentUser;
     Uri uriImage;
     ///>
-
-    //for <uploadFragment>
-    ArrayList<User> userList = new ArrayList<>();
 
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
@@ -257,11 +256,9 @@ public class CameraFragment extends Fragment {
     }
 
     private void handleAfterTakePicture(File file) {
-        if(userList.isEmpty()){
             getListUserForRecyclerView(new OnSuccessListener<ArrayList<User>>() {
                 @Override
                 public void onSuccess(ArrayList<User> list) {
-                    userList.addAll(list);
                     Bundle bundle = new Bundle();
                     bundle.putString("imageFilePath", file.getAbsolutePath());
                     bundle.putSerializable("list", list);
@@ -274,61 +271,29 @@ public class CameraFragment extends Fragment {
                             .commit();
                 }
             });
-
-        }
-        else{
-            Bundle bundle = new Bundle();
-            bundle.putString("imageFilePath", file.getAbsolutePath());
-            bundle.putSerializable("list", userList);
-            UploadFragment fragmentUpload = new UploadFragment();
-            fragmentUpload.setArguments(bundle);
-            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.main, fragmentUpload)
-                    .addToBackStack(null)
-                    .commit();
-        }
-
     }
-
     public void getListUserForRecyclerView(OnSuccessListener<ArrayList<User>> listener) {
-        ArrayList<User> userList = new ArrayList<>();
-        FirebaseUtils.currentUserDetail().get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists() && documentSnapshot.contains("friends")) {
-                    Object friendsObject = documentSnapshot.get("friends");
-                    ArrayList<String> friendsList = (ArrayList<String>) friendsObject;
+        FirebaseUtils.currentUserDetail().get().addOnSuccessListener(documentSnapshot -> {
+            ArrayList<User> userList = new ArrayList<>();
+            if (documentSnapshot.exists() && documentSnapshot.contains("friends")) {
+                Object friendsObject = documentSnapshot.get("friends");
+                ArrayList<String> friendsList = (ArrayList<String>) friendsObject;
 
-                    if (friendsList != null && !friendsList.isEmpty()) {
-                        int friendCount = friendsList.size(); // Get the total number of friends
-                        AtomicInteger friendCounter = new AtomicInteger(0);
-
-                        for (String friendId : friendsList) {
-                            DocumentReference friendUserRef = FirebaseUtils.getFriendDetail(friendId);
-                            friendUserRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot friendDocument) {
-                                    if (friendDocument.exists()) {
-                                        User friendUser = friendDocument.toObject(User.class);
-                                        if (friendUser != null) {
-                                            userList.add(friendUser);
-                                        }
-                                    }
-                                    if (friendCounter.incrementAndGet() == friendCount) {
-                                        userList.add(0, new User("Tất cả"));
-                                        listener.onSuccess(userList);
-                                    }
-                                }
-                            });
+                if (friendsList != null && !friendsList.isEmpty()) {
+                    LiveData<List<User>> friendUsersLiveData = FirebaseUtils.getFriendUsersLiveData(friendsList);
+                    friendUsersLiveData.observeForever(new Observer<List<User>>() {
+                        @Override
+                        public void onChanged(List<User> users) {
+                            userList.addAll(users);
+                            userList.add(0, new User("Tất cả"));
+                            listener.onSuccess(userList);
                         }
-                    } else {
-                        AndroidUtils.showToast(getContext(), "No friend found");
-                    }
+                    });
                 } else {
-                    AndroidUtils.showToast(
-                            getContext(), "Document does not exist or does not contain the 'friends' field");
+                    AndroidUtils.showToast(getContext(), "No friend found");
                 }
+            } else {
+                AndroidUtils.showToast(getContext(), "Document does not exist or does not contain the 'friends' field");
             }
         });
     }

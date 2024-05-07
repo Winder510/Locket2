@@ -62,6 +62,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_edittext"
                 android:hint="Add a message"
+                android:textAlignment="center"
                 android:padding="3dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
