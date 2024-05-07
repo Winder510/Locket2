@@ -90,7 +90,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     Button btnalluser, btnall;
     RelativeLayout layout;
-
+    ImageButton ReactionBtn;
     RecyclerView rcvlistfriend;
     RecentChatRecyclerAdapter adapter;
 
@@ -111,6 +111,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         super.onViewCreated(view, savedInstanceState);
         btnalluser = view.findViewById(R.id.btnalluser);
         layout = view.findViewById(R.id.layout);
+        ReactionBtn = view.findViewById(R.id.btn_Reaction);
 
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +166,13 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
             }
         });
+        ReactionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showReactionDialog();
+                Toast.makeText(requireContext(), "Show button", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private List<User> filterFriends(List<User> data) {
@@ -194,4 +202,22 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_view_post, container, false);
     }
+    private void showReactionDialog() {
+        // Lấy tọa độ của nút gọi và chiều cao của nút
+        int[] buttonLocation = new int[2];
+        ReactionBtn.getLocationOnScreen(buttonLocation);
+        int buttonHeight = ReactionBtn.getHeight();
+
+        // Tính toán lại tọa độ y để hiển thị Dialog phía trên của nút gọi
+        int dialogY = buttonLocation[1] - buttonHeight;
+
+        // Truyền tọa độ của nút gọi và DialogY cho ReactionDialog
+        Bundle args = new Bundle();
+        args.putIntArray("buttonLocation", new int[]{buttonLocation[0], dialogY});
+
+        ReactionDialog reactionDialog = new ReactionDialog();
+        reactionDialog.setArguments(args);
+        reactionDialog.show(getChildFragmentManager(), "ReactionDialog");
+    }
+
 }
