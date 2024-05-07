@@ -41,6 +41,13 @@ import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -74,6 +81,27 @@ public class CameraFragment extends Fragment{
         }
     });
 
+    private int getFriendRequestCount(OnSuccessListener<Integer> onSuccessListener) {
+        DatabaseReference friendRequestsRef = FirebaseDatabase.getInstance().getReference("friend_requests");
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Query query = friendRequestsRef.orderByChild("to_user_id").equalTo(currentUserId);
+        final AtomicInteger friendRequestCount = new AtomicInteger(0);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                friendRequestCount.set((int) snapshot.getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Handle error
+            }
+        });
+
+        return friendRequestCount.get();
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,11 +120,24 @@ public class CameraFragment extends Fragment{
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
 
+
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
             startCamera(cameraFacing);
         }
+
+
+        OnSuccessListener<Integer> onSuccessListener = null;
+        int friendRequestCount = getFriendRequestCount(onSuccessListener);
+        Button btnSearchUser = view.findViewById(R.id.btnSearchUser);
+        btnSearchUser.setText(String.valueOf(friendRequestCount));
+        onSuccessListener = new OnSuccessListener<Integer>() {
+            @Override
+            public void onSuccess(Integer integer) {
+                btnSearchUser.setText(String.valueOf(integer));
+            }
+        };
 
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
