@@ -69,7 +69,7 @@ import java.util.List;
  * Use the {@link ViewPostFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewPostFragment extends Fragment implements AddFriend{
+public class ViewPostFragment extends Fragment implements AddFriend {
     @Override
     public void onAddFriend(String userId, String username, int position) {
         // Implement logic khi thêm bạn bè
@@ -79,6 +79,7 @@ public class ViewPostFragment extends Fragment implements AddFriend{
     public void unFriend(String userId, int position) {
         // Implement logic khi hủy kết bạn
     }
+
     @Override
     public void onClick(User user) {
         // Implement logic khi click vào user
@@ -86,7 +87,8 @@ public class ViewPostFragment extends Fragment implements AddFriend{
         popupWindow.dismiss();
 
     }
-    Button btnalluser,btnall;
+
+    Button btnalluser, btnall;
     RelativeLayout layout;
 
     RecyclerView rcvlistfriend;
@@ -98,32 +100,32 @@ public class ViewPostFragment extends Fragment implements AddFriend{
     View popUpView;
 
 
-
     // TODO: Rename and change types and number of parameters
     public static ViewPostFragment newInstance(String param1, String param2) {
         ViewPostFragment fragment = new ViewPostFragment();
         return fragment;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnalluser=view.findViewById(R.id.btnalluser);
-        layout=view.findViewById(R.id.layout);
+        btnalluser = view.findViewById(R.id.btnalluser);
+        layout = view.findViewById(R.id.layout);
 
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-                popUpView =inflater.inflate(R.layout.activity_allfriend,null);
+                popUpView = inflater.inflate(R.layout.activity_allfriend, null);
 
                 int width = ViewGroup.LayoutParams.MATCH_PARENT;
-                int height=ViewGroup.LayoutParams.MATCH_PARENT;
-                boolean focusable=true;
-                popupWindow= new PopupWindow(popUpView,width,height,focusable);
+                int height = ViewGroup.LayoutParams.MATCH_PARENT;
+                boolean focusable = true;
+                popupWindow = new PopupWindow(popUpView, width, height, focusable);
                 popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
-                rcvlistfriend=popUpView.findViewById(R.id.listfriend);
+                rcvlistfriend = popUpView.findViewById(R.id.listfriend);
                 FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         User user = task.getResult().toObject(User.class);
@@ -143,7 +145,7 @@ public class ViewPostFragment extends Fragment implements AddFriend{
                 });
                 friendAdapter = new FriendAdapter(true, ViewPostFragment.this);
                 rcvlistfriend.setAdapter(friendAdapter);
-                btnall=popUpView.findViewById(R.id.btnall);
+                btnall = popUpView.findViewById(R.id.btnall);
                 btnall.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -164,6 +166,7 @@ public class ViewPostFragment extends Fragment implements AddFriend{
             }
         });
     }
+
     private List<User> filterFriends(List<User> data) {
         ArrayList<User> newList = new ArrayList<>(data);
         for (int i = 0; i < data.size(); i++) {
@@ -176,6 +179,7 @@ public class ViewPostFragment extends Fragment implements AddFriend{
         }
         return newList;
     }
+
 
 
 
