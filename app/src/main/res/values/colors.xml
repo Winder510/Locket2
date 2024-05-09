@@ -10,4 +10,5 @@
     <color name="st_setting_color2">#EBEBEB</color>
     <color name="chat_color_receiver">#99555453</color>
     <color name="chat_color_sender">#EEAB01</color>
+    <color name="list_filter_post">#505050</color>
 </resources>

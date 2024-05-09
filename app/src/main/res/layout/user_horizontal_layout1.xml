@@ -4,7 +4,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="20dp"
-    android:background="@color/black">
+    android:background="@color/list_filter_post">
 
     <TextView
         android:id="@+id/tv_avatar"
@@ -28,5 +28,13 @@
         android:textSize="18sp"
         android:maxLines="2"/>
 
+    <ImageView
+        android:id="@+id/myImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+
+        android:rotation="180"
+        android:src="@drawable/ic_left_arrow" />
 
 </LinearLayout>

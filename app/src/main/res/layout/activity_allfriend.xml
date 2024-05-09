@@ -3,34 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listfriend"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ExtraText"
+>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/list_itemWrapperCard"
+        android:layout_width="342dp"
+        android:layout_height="251dp"
+        android:layout_margin="8dp"
+        android:background="@color/list_filter_post"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.175" />
+        app:layout_constraintVertical_bias="0.181"
+        tools:ignore="MissingConstraints">
 
-    <Button
-        android:id="@+id/btnall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/black"
-        android:text="Mọi người                                                      ."
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.096" />
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listfriend"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/list_filter_post"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

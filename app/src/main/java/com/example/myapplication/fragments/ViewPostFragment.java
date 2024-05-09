@@ -88,7 +88,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     }
 
-    Button btnalluser, btnall;
+    Button btnalluser;
     RelativeLayout layout;
     ImageButton ReactionBtn;
     RecyclerView rcvlistfriend;
@@ -124,8 +124,8 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                 int height = ViewGroup.LayoutParams.MATCH_PARENT;
                 boolean focusable = true;
                 popupWindow = new PopupWindow(popUpView, width, height, focusable);
-                popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
-
+//                popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                popupWindow.showAsDropDown(btnalluser);
                 rcvlistfriend = popUpView.findViewById(R.id.listfriend);
                 FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -141,21 +141,12 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                                     }
                                 });
                             }
+                            friendAdapter.addItem(new User("Tất cả mọi người"));
                         }
                     }
                 });
                 friendAdapter = new FriendAdapter(true, ViewPostFragment.this);
                 rcvlistfriend.setAdapter(friendAdapter);
-                btnall = popUpView.findViewById(R.id.btnall);
-                btnall.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        btnalluser.setText("Tất cả bạn bè");
-                        popupWindow.dismiss();
-                    }
-                });
-
-
                 popUpView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -170,28 +161,10 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             @Override
             public void onClick(View v) {
                 showReactionDialog();
-                Toast.makeText(requireContext(), "Show button", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
-
-    private List<User> filterFriends(List<User> data) {
-        ArrayList<User> newList = new ArrayList<>(data);
-        for (int i = 0; i < data.size(); i++) {
-            for (User user : friendAdapter.getList()) {
-                if (data.get(i).getUserId().equals(user.getUserId())) {
-                    newList.remove(data.get(i));
-                    break;
-                }
-            }
-        }
-        return newList;
-    }
-
-
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
