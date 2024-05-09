@@ -23,6 +23,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import androidx.core.content.ContextCompat;
 
+import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
+import com.example.myapplication.BottomSheetDialog.BottomSheetSetting;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.ChatActivity;
@@ -90,7 +92,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     Button btnalluser, btnall;
     RelativeLayout layout;
-    ImageButton ReactionBtn;
+    ImageButton ReactionBtn,home;
     RecyclerView rcvlistfriend;
     RecentChatRecyclerAdapter adapter;
 
@@ -112,6 +114,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         btnalluser = view.findViewById(R.id.btnalluser);
         layout = view.findViewById(R.id.layout);
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
+        home = view.findViewById(R.id.home);
 
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +174,13 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             public void onClick(View v) {
                 showReactionDialog();
                 Toast.makeText(requireContext(), "Show button", Toast.LENGTH_SHORT).show();
+            }
+        });
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetReaction bottomSheetReaction = new BottomSheetReaction();
+                bottomSheetReaction.show(getChildFragmentManager(),"TAG");
             }
         });
     }

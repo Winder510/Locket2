@@ -94,4 +94,7 @@ public class FirebaseUtils {
     public static CollectionReference getPostsCollectionReference(){
         return FirebaseFirestore.getInstance().collection("posts");
     }
+    public static CollectionReference getPostReactionReference(String chatroomId) {
+        return getChatroomReference(chatroomId).collection("reactions");
+    }
 }

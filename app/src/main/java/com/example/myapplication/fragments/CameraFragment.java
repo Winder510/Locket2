@@ -102,7 +102,7 @@ public class CameraFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 handleClickSettingButton();
-
+                Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
             }
         });
         btnRecentChat.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +139,6 @@ public class CameraFragment extends Fragment{
     private void handleClickSettingButton() {
 
         Intent intent = new Intent(requireContext(), SettingsActivity.class);
-
 
         if (currentUser == null) {
             FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
