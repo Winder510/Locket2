@@ -9,16 +9,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.models.Post;
+import com.example.myapplication.utils.FirebaseUtils;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPostAdapter
         extends RecyclerView.Adapter<ViewPostAdapter
         .ViewHolder> {
-    ArrayList<Post> postItemArrayList;
+    List<Post> posts;
 
+    public ViewPostAdapter(List<Post> posts) {
+        this.posts = posts;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -27,32 +32,45 @@ public class ViewPostAdapter
         return new ViewHolder(view);
     }
 
-    public ViewPostAdapter
-            (ArrayList<Post> postItemArrayList) {
-        this.postItemArrayList = postItemArrayList;
-    }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Post postItem = postItemArrayList.get(position);
-//        holder.imageView.setImageResource(postItem.imageID);
-//        holder.desc.setText(postItem.desc);
+        Post post = posts.get(position);
+
+        Glide.with(holder.imageView)
+                .load(post.getPostImg_url()) // URL của hình ảnh
+                .into(holder.imageView);
+        if (!post.getPostCaption().isEmpty()){
+            holder.captionText.setText(post.getPostCaption());
+            holder.captionText.setVisibility(View.VISIBLE);
+        } else {
+         holder.captionText.setVisibility(View.GONE);
+        }
+        FirebaseUtils.getUserInfor(post.getUserId())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String userName = documentSnapshot.getString("username");
+                        holder.userNameTextview.setText(userName);
+                    }
+                });
+
+
     }
 
     @Override
     public int getItemCount() {
-        return postItemArrayList.size();
+        return posts.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
         ImageView imageView;
-        TextView desc;
-
+        TextView captionText, userNameTextview;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-//            imageView = itemView.findViewById(R.id.imageview);
-//            desc = itemView.findViewById(R.id.textview);
+            imageView = itemView.findViewById(R.id.imageview);
+            captionText = itemView.findViewById(R.id.statusText);
+            userNameTextview = itemView.findViewById(R.id.userNameTextview);
+
         }
     }
 }

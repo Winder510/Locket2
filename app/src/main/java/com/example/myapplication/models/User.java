@@ -3,13 +3,14 @@ package com.example.myapplication.models;
 import com.google.firebase.Timestamp;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable {
     private String phone;
     private String username;
     private Timestamp createdTimestamp;
     private String userId;
+    private List<String> friends;
 
     public User() {
     }
@@ -55,5 +56,11 @@ public class User implements Serializable {
         this.createdTimestamp = createdTimestamp;
     }
 
+    public List<String> getFriends() {
+        return friends;
+    }
 
+    public void setFriends(List<String> friends) {
+        this.friends = friends;
+    }
 }

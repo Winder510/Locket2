@@ -92,15 +92,15 @@ public class SettingsActivity extends AppCompatActivity {
                         }
                     });
         });
-//        if (selectedImageUri != null) {
-//            FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
-//                    .addOnCompleteListener(task -> {
-//                        AndroidUtils.showToast(getApplicationContext(),"hehe");
-//                        updateToFireStore();
-//                    });
-//        } else {
-//            updateToFireStore();
-//        }
+        if (selectedImageUri != null) {
+            FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
+                    .addOnCompleteListener(task -> {
+                        AndroidUtils.showToast(getApplicationContext(),"hehe");
+                        updateToFireStore();
+                    });
+        } else {
+            updateToFireStore();
+        }
 
 
     }

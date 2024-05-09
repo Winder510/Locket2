@@ -9,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.ViewPagerAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnBackToCameraFragmentListener {
     ViewPager2 viewPager2;
     ViewPagerAdapter adapter;
     Boolean canSwipe = true;
@@ -24,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
+    public void onBackToCameraFragment() {
+        viewPager2.setCurrentItem(0);
     }
 }

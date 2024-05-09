@@ -38,6 +38,7 @@ public class Post {
         return postImg_url;
     }
 
+
     public void setPostImg_url(String postImg_url) {
         this.postImg_url = postImg_url;
     }
@@ -58,13 +59,6 @@ public class Post {
         this.startCount = startCount;
     }
 
-    public String isVisibility() {
-        return visibility;
-    }
-
-    public void setVisibility(String visibility) {
-        this.visibility = visibility;
-    }
 
     public ArrayList<String> getAllowed_users() {
         return allowed_users;
@@ -81,4 +75,12 @@ public class Post {
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+    public String getVisibility() {
+        return visibility;
+    }
+
 }

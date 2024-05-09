@@ -30,6 +30,9 @@ public class FirebaseUtils {
     public static DocumentReference currentUserDetail(){
         return FirebaseFirestore.getInstance().collection("users").document(currentUserID());
     }
+    public static DocumentReference getUserInfor(String id){
+        return FirebaseFirestore.getInstance().collection("users").document(id);
+    }
     public static CollectionReference allUserCollectionReference(){
         return FirebaseFirestore.getInstance().collection("users");
     }
@@ -87,7 +90,6 @@ public class FirebaseUtils {
         MutableLiveData<List<User>> friendUsersLiveData = new MutableLiveData<>();
         List<User> friendUsers = new ArrayList<>();
 
-        // Thực hiện các truy vấn Firestore để lấy thông tin người dùng từ danh sách friendIds
         for (String friendId : friendIds) {
             FirebaseUtils.getFriendDetail(friendId).get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
