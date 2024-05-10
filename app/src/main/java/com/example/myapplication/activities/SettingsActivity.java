@@ -134,6 +134,8 @@ public class SettingsActivity extends AppCompatActivity implements
         openTwitterBtn.setOnClickListener(v->openLink("https://twitter.com/locketcamera"));
         openServiceBtn.setOnClickListener(v->openLink("https://locket.camera/terms"));
         openPolicyBtn.setOnClickListener(v->openLink("https://locket.camera/privacy"));
+
+        detector = new SimpleGestureFilter(SettingsActivity.this, this);
     }
     @Override
     public boolean dispatchTouchEvent(MotionEvent me) {
