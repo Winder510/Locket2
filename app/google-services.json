@@ -8,9 +8,104 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:408642036971:android:ffd3e994a9f8c8f5300aae",
+        "android_client_info": {
+          "package_name": "com.example.chatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlSfiL6eHxESLLuq0_F-dUUt5EsRfexu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408642036971:android:769a82fe1dae6308300aae",
+        "android_client_info": {
+          "package_name": "com.example.doanchatapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlSfiL6eHxESLLuq0_F-dUUt5EsRfexu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408642036971:android:e308283716e06812300aae",
+        "android_client_info": {
+          "package_name": "com.example.easychat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlSfiL6eHxESLLuq0_F-dUUt5EsRfexu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:408642036971:android:eef9676d1025e452300aae",
         "android_client_info": {
           "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlSfiL6eHxESLLuq0_F-dUUt5EsRfexu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408642036971:android:c011998ea1c5b1a4300aae",
+        "android_client_info": {
+          "package_name": "com.example.test"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlSfiL6eHxESLLuq0_F-dUUt5EsRfexu4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408642036971:android:ef79f7e307ae670e300aae",
+        "android_client_info": {
+          "package_name": "com.xuanthai.whatapp"
         }
       },
       "oauth_client": [],

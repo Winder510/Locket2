@@ -1,6 +1,7 @@
 package com.example.myapplication.activities;
 import static android.content.ContentValues.TAG;
 
+import com.example.myapplication.BottomSheetDialog.BottomSheetSetting;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.Gesture.SimpleGestureFilter.SimpleGestureListener;
 

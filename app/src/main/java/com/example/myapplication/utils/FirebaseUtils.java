@@ -125,4 +125,7 @@ public class FirebaseUtils {
         return friendUsersLiveData;
     }
 
+    public static CollectionReference getPostReactionReference(String chatroomId) {
+        return getChatroomReference(chatroomId).collection("reactions");
+    }
 }

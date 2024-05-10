@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
+import com.example.myapplication.BottomSheetDialog.BottomSheetSetting;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.ChatActivity;
@@ -100,7 +102,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     Button btnalluser;
     RelativeLayout layout;
-    ImageButton ReactionBtn;
+    ImageButton ReactionBtn,home;
     RecyclerView rcvlistfriend;
     RecentChatRecyclerAdapter adapter;
 
@@ -151,6 +153,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         btnalluser = view.findViewById(R.id.btnalluser);
         layout = view.findViewById(R.id.layout);
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
+        home = view.findViewById(R.id.home);
 
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,6 +241,13 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                     mlistener.onBackToCameraFragment();
 
                 }
+            }
+        });
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetReaction bottomSheetReaction = new BottomSheetReaction();
+                bottomSheetReaction.show(getChildFragmentManager(),"TAG");
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.example.myapplication.activities;
+package com.example.myapplication.BottomSheetDialog;
 
 import static android.content.ContentValues.TAG;
 
