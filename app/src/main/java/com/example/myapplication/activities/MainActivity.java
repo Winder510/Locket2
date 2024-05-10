@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.ViewPagerAdapter;
+import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
 import com.example.myapplication.interfaces.ReactionListener;
 
 public class MainActivity extends AppCompatActivity implements OnBackToCameraFragmentListener,ReactionListener {

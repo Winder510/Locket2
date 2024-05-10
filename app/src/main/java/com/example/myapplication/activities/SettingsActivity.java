@@ -76,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity implements
         openServiceBtn = findViewById(R.id.btnOpenService);
         openPolicyBtn = findViewById(R.id.btnOpenPolicy);
 
-
+        detector = new SimpleGestureFilter(SettingsActivity.this, this);
 
 
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),

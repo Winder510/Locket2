@@ -1,4 +1,4 @@
-package com.example.myapplication.activities;
+package com.example.myapplication.interfaces;
 
 public interface OnBackToCameraFragmentListener {
     void onBackToCameraFragment();

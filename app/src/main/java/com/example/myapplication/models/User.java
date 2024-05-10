@@ -10,19 +10,28 @@ public class User implements Serializable {
     private String phone;
     private String username;
     private Timestamp createdTimestamp;
-
+    private String birthday;
     private List<String> friends;
     private String userId;
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
 
     public User() {
     }
 
-    public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId) {
+    public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.friends = friends;
         this.userId = userId;
+        this.birthday = birthday;
     }
 
     public User(String username) {

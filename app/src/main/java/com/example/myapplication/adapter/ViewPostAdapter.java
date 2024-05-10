@@ -37,7 +37,7 @@ public class ViewPostAdapter
         Post post = posts.get(position);
 
         Glide.with(holder.imageView)
-                .load(post.getPostImg_url()) // URL của hình ảnh
+                .load(post.getPostImg_url())
                 .into(holder.imageView);
         if (!post.getPostCaption().isEmpty()){
             holder.captionText.setText(post.getPostCaption());
@@ -55,6 +55,7 @@ public class ViewPostAdapter
                 });
 
 
+
     }
 
     @Override
@@ -70,7 +71,6 @@ public class ViewPostAdapter
             imageView = itemView.findViewById(R.id.imageview);
             captionText = itemView.findViewById(R.id.statusText);
             userNameTextview = itemView.findViewById(R.id.userNameTextview);
-
         }
     }
 }

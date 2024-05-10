@@ -117,7 +117,7 @@
                 android:textSize="16sp"
                 app:icon="@drawable/ic_shining" />
             <EditText
-                android:id="@+id/name_edit"
+                android:id="@+id/sendmes"
                 android:layout_width="320dp"
                 android:layout_height="60dp"
                 android:background="@drawable/login_edit_text"

@@ -1,17 +1,12 @@
 package com.example.myapplication.fragments;
 
-import static android.content.Context.LAYOUT_INFLATER_SERVICE;
-import static androidx.camera.core.impl.utils.ContextUtil.getApplicationContext;
-import static androidx.core.content.ContextCompat.getSystemService;
-
-import android.content.Intent;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -21,60 +16,32 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
-import com.example.myapplication.BottomSheetDialog.BottomSheetSetting;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
-import com.example.myapplication.activities.ChatActivity;
-import com.example.myapplication.activities.MainActivity;
-import com.example.myapplication.activities.RecentChatActivity;
-import com.example.myapplication.activities.SearchUserActivity;
-import com.example.myapplication.adapter.AddFriendAdapter;
 import com.example.myapplication.adapter.FriendAdapter;
-import com.example.myapplication.adapter.RecentChatRecyclerAdapter;
 import com.example.myapplication.interfaces.AddFriend;
-import com.example.myapplication.models.Chatroom;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.FirebaseUtils;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.firestore.Query;
 
-import android.app.Dialog;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.example.myapplication.activities.OnBackToCameraFragmentListener;
+import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
 import com.example.myapplication.adapter.ViewPostAdapter;
 import com.example.myapplication.models.NestedScrollableHost;
 import com.example.myapplication.models.Post;
 import com.example.myapplication.utils.AndroidUtils;
-import com.example.myapplication.utils.FirebaseUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -111,7 +78,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
     private FriendAdapter friendAdapter;
     PopupWindow popupWindow;
     View popUpView;
-
+    EditText sendmes,btn_Reaction;
     private List<Post> posts;
     ViewPager2 viewPager2;
     ImageView btnBackToCamera;
@@ -164,6 +131,8 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         layout = view.findViewById(R.id.layout);
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
         btnActive= view.findViewById(R.id.btnActive);
+        sendmes=view.findViewById(R.id.sendmes);
+
         nestedScrollableHost.setViewPager2(viewPager2);
 
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -171,10 +140,18 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if (position == 0) {
-
                     nestedScrollableHost.setScrollable(true);
                 } else {
                     nestedScrollableHost.setScrollable(false);
+                }
+                if(posts.get(viewPager2.getCurrentItem()).getUserId().equals(FirebaseUtils.currentUserID())){
+                    btnActive.setVisibility(View.VISIBLE);
+                    ReactionBtn.setVisibility(View.GONE);
+                    sendmes.setVisibility(View.GONE);
+                }else{
+                    btnActive.setVisibility(View.GONE);
+                    ReactionBtn.setVisibility(View.VISIBLE);
+                    sendmes.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -249,6 +226,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
             }
         });
+
     }
 
     private void loadPosts() {
@@ -275,6 +253,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         if (friends == null || friends.isEmpty()) {
             return;
         }
+        friends.add(FirebaseUtils.currentUserID());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", friends)
