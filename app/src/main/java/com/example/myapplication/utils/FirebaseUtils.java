@@ -1,13 +1,21 @@
 package com.example.myapplication.utils;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.myapplication.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -32,6 +40,31 @@ public class FirebaseUtils {
         return FirebaseFirestore.getInstance().collection("users").document(currentUserID());
     }
 
+    public interface UserNameCallback {
+        void onUserNameReceived(String userName);
+    }
+
+    public static void getUserName(UserNameCallback callback) {
+        DocumentReference currentUserDocRef = currentUserDetail();
+        currentUserDocRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Lấy tên người dùng từ tài liệu
+                        String userName = document.getString("username");
+                        // Gọi phương thức callback với tên người dùng
+                        callback.onUserNameReceived(userName);
+                    } else {
+                        Log.d(TAG, "No such document");
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
 
     public static CollectionReference InviteReference() {
         return FirebaseFirestore.getInstance().collection("invites");

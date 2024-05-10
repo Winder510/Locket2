@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LoginOTPActivity extends AppCompatActivity {
     String phoneNumber;
+    String phoneSearch;
     String verificationCode;
     PhoneAuthProvider.ForceResendingToken resendingToken;
     Button nextButton;
@@ -54,6 +56,8 @@ public class LoginOTPActivity extends AppCompatActivity {
         resendOtpTextView = findViewById(R.id.resend_otp_textview);
 
         phoneNumber = Objects.requireNonNull(getIntent().getExtras()).getString("phone");
+        Intent intent=getIntent();
+        phoneSearch=intent.getStringExtra("phonesearch");
 
         sendOtp(phoneNumber, false);
 
@@ -141,6 +145,7 @@ public class LoginOTPActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Intent intent = new Intent(LoginOTPActivity.this, LoginUsernameActivity.class);
                     intent.putExtra("phone", phoneNumber);
+                    intent.putExtra("phonesearch",phoneSearch);
                     startActivity(intent);
                 } else {
                     AndroidUtils.showToast(getApplicationContext(), "OTP verification failed");

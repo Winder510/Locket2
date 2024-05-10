@@ -1,5 +1,7 @@
 package com.example.myapplication.adapter;
 
+import static android.icu.text.DisplayContext.LENGTH_SHORT;
+
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +18,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.interfaces.AddFriend;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.Convert;
+import com.example.myapplication.utils.FirebaseUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,17 +81,58 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         User user = list.get(position);
+
         if (user != null) {
             if (holder instanceof AddFriendViewHolder) {
                 ((AddFriendViewHolder) holder).tvAvatar.setText(Convert.convertName(user.getUsername()));
                 ((AddFriendViewHolder) holder).tvName.setText(user.getUsername());
                 ((AddFriendViewHolder) holder).tvPhone.setText(user.getPhone());
-                ((AddFriendViewHolder) holder).btnAdd.setOnClickListener(v -> addFriend.onAddFriend(user.getUserId(), user.getUsername(), position));
+
+                final String[] name = new String[1];
+                FirebaseUtils.getUserName(new FirebaseUtils.UserNameCallback() {
+                    @Override
+                    public void onUserNameReceived(String userName) {
+                        name[0] = userName;
+                    }
+                });
+
+                ((AddFriendViewHolder) holder).btnAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String uname = name[0];
+                        String usname = user.getUsername();
+                        if (uname.equals(usname)) {
+                            Toast.makeText(v.getContext(), "Không thể thêm bản thân làm bạn bè",Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            int adapterPosition = holder.getAdapterPosition();
+                            if (adapterPosition != RecyclerView.NO_POSITION) {
+                                addFriend.onAddFriend(user.getUserId(), user.getUsername(), adapterPosition);
+                            }
+                        }
+                    }
+                });
             } else if (holder instanceof FriendViewHolder) {
                 ((FriendViewHolder) holder).tvAvatar.setText(Convert.convertName(user.getUsername()));
                 ((FriendViewHolder) holder).tvName.setText(user.getUsername());
-                ((FriendViewHolder) holder).btnUnFiend.setOnClickListener(v -> addFriend.unFriend(user.getUserId(), position));
-                ((FriendViewHolder) holder).itemView.setOnClickListener(v -> addFriend.onClick(user));
+
+                ((FriendViewHolder) holder).btnUnFiend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int adapterPosition = holder.getAdapterPosition();
+                        if (adapterPosition != RecyclerView.NO_POSITION) {
+                            addFriend.unFriend(user.getUserId(), adapterPosition);
+                        }
+                    }
+                });
+
+                ((FriendViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addFriend.onClick(user);
+                    }
+                });
             }
         }
     }

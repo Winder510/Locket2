@@ -8,6 +8,7 @@ import java.util.List;
 
 public class User implements Serializable {
     private String phone;
+    private String phonesearch;
     private String username;
     private Timestamp createdTimestamp;
     private String birthday;
@@ -25,24 +26,26 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday) {
+    public User(String phone, String phonesearch, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.friends = friends;
         this.userId = userId;
         this.birthday = birthday;
+        this.phonesearch=phonesearch;
     }
 
     public User(String username) {
             this.username = username;
         }
 
-    public User(String phone, String username, Timestamp createdTimestamp,String userId) {
+    public User(String phone, String phoneSearch,String username, Timestamp createdTimestamp,String userId) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.userId = userId;
+        this.phonesearch=phoneSearch;
     }
 
     public String getUserId() {
@@ -84,4 +87,14 @@ public class User implements Serializable {
     public void setFriends(List<String> friends) {
         this.friends = friends;
     }
+
+    public String getPhonesearch()
+    {
+        return phonesearch;
+    }
+    public void setPhonesearch(String phonesearch)
+    {
+        this.phonesearch=phonesearch;
+    }
+
 }

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ public class LoginUsernameActivity extends AppCompatActivity {
     String phoneNumber;
     User user;
 
+    String phoneSearch;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +41,8 @@ public class LoginUsernameActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.login_progress_bar);
 
         phoneNumber = getIntent().getExtras().getString("phone");
+        phoneSearch=getIntent().getStringExtra("phonesearch");
+
 
         getUserName();
         nextBtn.setOnClickListener(v -> {
@@ -58,7 +63,7 @@ public class LoginUsernameActivity extends AppCompatActivity {
         if (user != null) {
             user.setUsername(userName);
         } else {
-            user = new User(phoneNumber, userName, Timestamp.now(), FirebaseUtils.currentUserID());
+            user = new User(phoneNumber, phoneSearch,userName, Timestamp.now(), FirebaseUtils.currentUserID());
         }
         FirebaseUtils.currentUserDetail().set(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
