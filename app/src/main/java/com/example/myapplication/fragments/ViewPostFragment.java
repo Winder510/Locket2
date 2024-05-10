@@ -266,12 +266,6 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                     posts.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Post post = document.toObject(Post.class);
-//                        if (document.getString("visibility").equals("public") ||
-//                                (document.getString("visibility").equals("private") &&
-//                                        document.contains("allowed_users") &&
-//                                        document.get("allowed_users", Arrays.class).contains(FirebaseUtils.currentUserID()))) {
-//                            posts.add(post);
-//                        }
                         if(post.getVisibility().equals("public")||
                            post.getVisibility().equals("private")&&post.getAllowed_users().contains(FirebaseUtils.currentUserID())){
                             posts.add(post);

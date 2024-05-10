@@ -186,7 +186,6 @@
                         createAndUploadPost(imageUrl,adapter.getIdAllowedFriend());
                     });
                 } else {
-                    // Xảy ra lỗi khi tải lên ảnh
                     Exception e = task.getException();
                     e.printStackTrace();
 
