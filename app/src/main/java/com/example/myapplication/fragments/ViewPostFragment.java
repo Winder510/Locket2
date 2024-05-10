@@ -50,23 +50,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * create an instance of this fragment.
  */
 public class ViewPostFragment extends Fragment implements AddFriend {
-    @Override
-    public void onAddFriend(String userId, String username, int position) {
-        // Implement logic khi thêm bạn bè
-    }
 
-    @Override
-    public void unFriend(String userId, int position) {
-        // Implement logic khi hủy kết bạn
-    }
-
-    @Override
-    public void onClick(User user) {
-        // Implement logic khi click vào user
-        btnalluser.setText(user.getUsername());
-        popupWindow.dismiss();
-
-    }
 
     Button btnalluser,btnActive;
     RelativeLayout layout;
@@ -186,7 +170,6 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                 int height = ViewGroup.LayoutParams.MATCH_PARENT;
                 boolean focusable = true;
                 popupWindow = new PopupWindow(popUpView, width, height, focusable);
-//                popupWindow.showAtLocation(layout, Gravity.CENTER, 0, 0);
                 popupWindow.showAsDropDown(btnalluser);
                 rcvlistfriend = popUpView.findViewById(R.id.listfriend);
                 FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
@@ -266,14 +249,8 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                     posts.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Post post = document.toObject(Post.class);
-//                        if (document.getString("visibility").equals("public") ||
-//                                (document.getString("visibility").equals("private") &&
-//                                        document.contains("allowed_users") &&
-//                                        document.get("allowed_users", Arrays.class).contains(FirebaseUtils.currentUserID()))) {
-//                            posts.add(post);
-//                        }
-                        if(post.getVisibility().equals("public")||
-                           post.getVisibility().equals("private")&&post.getAllowed_users().contains(FirebaseUtils.currentUserID())){
+                        if(post.getVisibility().equals("public")||(post.getVisibility().equals("private")&&post.getUserId().equals(FirebaseUtils.currentUserID()))||
+                           (post.getVisibility().equals("private")&&post.getAllowed_users().contains(FirebaseUtils.currentUserID()))){
                             posts.add(post);
                         }
                     }
@@ -299,6 +276,23 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         ReactionDialog reactionDialog = new ReactionDialog();
         reactionDialog.setArguments(args);
         reactionDialog.show(getChildFragmentManager(), "ReactionDialog");
+    }
+    @Override
+    public void onAddFriend(String userId, String username, int position) {
+        // Implement logic khi thêm bạn bè
+    }
+
+    @Override
+    public void unFriend(String userId, int position) {
+        // Implement logic khi hủy kết bạn
+    }
+
+    @Override
+    public void onClick(User user) {
+        // Implement logic khi click vào user
+        popupWindow.dismiss();
+//        2
+
     }
 
 }
