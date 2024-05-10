@@ -208,19 +208,42 @@
                 post.setAllowed_users(allowedUser);
             }
 
-
             FirebaseUtils.getPostsCollectionReference()
                     .add(post)
-                    .addOnSuccessListener(aVoid -> {
-                        AndroidUtils.showToast(getContext(), "Thành công");
-                        setInProgress(false);
+                    .addOnSuccessListener(documentReference -> {
+                        // Lấy ID của tài liệu vừa được thêm vào Firestore
+                        String idString = documentReference.getId();
+
+                        // Cập nhật ID vào trường của bài đăng
+                        post.setPostId(idString);
+
+                        // Tiến hành cập nhật bài đăng đã có ID
+                        updatePostWithId(post);
                     })
                     .addOnFailureListener(e -> {
                         AndroidUtils.showToast(getContext(), "failed");
                         setInProgress(false);
                     });
+
+
         }
 
+        private void updatePostWithId(Post post) {
+            // Đây là nơi bạn có thể cập nhật bài đăng đã có ID vào Firestore hoặc làm bất kỳ điều gì khác cần thiết.
+            // Ví dụ:
+            FirebaseUtils.getPostsCollectionReference()
+                    .document(post.getPostId())
+                    .set(post)
+                    .addOnSuccessListener(aVoid -> {
+
+                        setInProgress(false);
+                    })
+                    .addOnFailureListener(e -> {
+
+                        AndroidUtils.showToast(getContext(), "failed to update post with ID");
+                        setInProgress(false);
+                    });
+        }
         void setInProgress(boolean inProgress) {
             if (inProgress) {
                 btnClose.setVisibility(View.GONE);

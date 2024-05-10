@@ -12,6 +12,7 @@ public class Post {
     private String visibility;
     private ArrayList<String> allowed_users;
     private Timestamp created_at;
+    private String postId;
 
     public Post(){
 
@@ -24,6 +25,14 @@ public class Post {
         this.visibility = visibility;
         this.allowed_users = allowed_users;
         this.created_at = created_at;
+    }
+
+    public String getPostId() {
+        return postId;
+    }
+
+    public void setPostId(String postId) {
+        this.postId = postId;
     }
 
     public String getPostCaption() {

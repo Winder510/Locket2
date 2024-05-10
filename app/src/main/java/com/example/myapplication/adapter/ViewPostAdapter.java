@@ -49,8 +49,13 @@ public class ViewPostAdapter
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String userName = documentSnapshot.getString("username");
-                        holder.userNameTextview.setText(userName);
+                        if(documentSnapshot.getString("userId").equals(FirebaseUtils.currentUserID())){
+                            holder.userNameTextview.setText("Bạn");
+                        }
+                        else {
+                            String userName = documentSnapshot.getString("username");
+                            holder.userNameTextview.setText(userName);
+                        }
                     }
                 });
 

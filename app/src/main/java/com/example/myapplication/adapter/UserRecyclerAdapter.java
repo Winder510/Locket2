@@ -106,7 +106,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     public ArrayList<String> getIdAllowedFriend() {
         ArrayList<String> tmp = new ArrayList<>();
         for (Integer number : selectedItems) {
-            if(number!=0) {
+            if(number!=0){
                 tmp.add(userList.get(number).getUserId());
             }
         }
