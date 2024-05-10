@@ -120,7 +120,7 @@ public class SettingsActivity extends AppCompatActivity implements
         } else {
             updateToFireStore();
         }
-        detector = new SimpleGestureFilter(SettingsActivity.this, this);
+
 
         editMailBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_email));
         editNameBtn.setOnClickListener(v->showEditDialog(R.layout.edit_name));

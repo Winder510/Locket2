@@ -8,6 +8,19 @@
     android:background="@color/bg_color"
     android:padding="0dp">
 
+    <com.example.myapplication.models.NestedScrollableHost
+        android:id="@+id/nestedScrollableHost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewpager2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:ignore="MissingClass" />
+    </com.example.myapplication.models.NestedScrollableHost>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -76,34 +89,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3.9">
-
-            <androidx.camera.view.PreviewView
-                android:id="@+id/cameraPreview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:scaleType="fitCenter" >
-            </androidx.camera.view.PreviewView>
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/radius_trans"
-                android:scaleType="fitXY" />
-            <EditText
-                android:id="@+id/statusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/rounded_edittext"
-                android:hint="Add a message"
-                android:padding="3dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:visibility="visible"
-                tools:ignore="RtlSymmetry" />
         </RelativeLayout>
 
 
@@ -112,22 +97,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@color/bg_color"
-                android:src="@drawable/ic_user"
-                android:scaleType="centerCrop"/>
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="20dp"
-                android:text="Ten"
-                android:textColor="@color/white"/>
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="20dp"
-                android:text="Time"
-                android:textColor="@color/white"/>
         </LinearLayout>
 
         <LinearLayout
@@ -146,15 +115,7 @@
                 android:paddingStart="15dp"
                 android:textColor="@color/white"
                 android:textColorHint="#888888"
-                android:textSize="20sp"
-                android:layout_gravity="center"/>
-            <ImageButton
-                android:id="@+id/btn_Reaction"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:background="@drawable/login_edit_text"
-                android:src="@drawable/ic_addemoji"
-                android:layout_gravity="center"/>
+                android:textSize="20sp" />
 
         </LinearLayout>
         <LinearLayout
@@ -180,6 +141,7 @@
                 tools:ignore="NestedWeights" />
 
             <ImageButton
+                android:id="@+id/btnBackToCamera"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:background="@drawable/btn_capture" />

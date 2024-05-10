@@ -10,13 +10,16 @@ import com.example.myapplication.fragments.CameraFragment;
 import com.example.myapplication.fragments.ViewPostFragment;
 
 public class ViewPagerAdapter  extends FragmentStateAdapter  {
-    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+    boolean canSwipe;
+    public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity,boolean canSwipe) {
         super(fragmentActivity);
+        this.canSwipe = canSwipe;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
+
         switch (position){
             case 0: return new CameraFragment();
             case 1:
@@ -25,6 +28,7 @@ public class ViewPagerAdapter  extends FragmentStateAdapter  {
                 return  new CameraFragment();
         }
     }
+
 
     @Override
     public int getItemCount() {

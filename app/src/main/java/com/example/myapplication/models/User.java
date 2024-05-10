@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.List;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class User implements Serializable {
     private String phone;
@@ -13,6 +13,7 @@ public class User implements Serializable {
 
     private List<String> friends;
     private String userId;
+    private List<String> friends;
 
     public User() {
     }

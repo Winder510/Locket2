@@ -28,7 +28,6 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     private final ArrayList<User> userList;
     private final Context context;
     private final Set<Integer> selectedItems = new HashSet<>(); // Danh sách các phần tử được chọn
-    boolean fisrtSelected=false;
 
     public UserRecyclerAdapter(ArrayList<User> userList, Context context) {
         this.userList = userList;
@@ -58,6 +57,7 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
 
         // Xử lý sự kiện khi người dùng chọn một item
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
                 if (selectedItems.contains(position)) {
@@ -101,5 +101,13 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
             usernameText.setTextColor(Color.parseColor("#99555453"));
             profilePic.setStrokeColor(ColorStateList.valueOf(Color.parseColor("#99555453")));
         }
+    }
+
+    public ArrayList<String> getIdAllowedFriend() {
+        ArrayList<String> tmp = new ArrayList<>();
+        for (Integer number : selectedItems) {
+          tmp.add(userList.get(number).getUserId());
+        }
+        return  tmp;
     }
 }

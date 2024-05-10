@@ -1,5 +1,6 @@
 package com.example.myapplication.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -61,6 +62,7 @@ public class RecentChatActivity extends AppCompatActivity implements SimpleGestu
         adapter.stopListening();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onResume() {
         super.onResume();
