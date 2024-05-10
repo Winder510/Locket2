@@ -13,6 +13,7 @@ public class User implements Serializable {
     private String birthday;
     private List<String> friends;
     private String userId;
+    private String profilePicUrl;
 
     public String getBirthday() {
         return birthday;
@@ -25,13 +26,14 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday) {
+    public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday, String avaUrl) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
         this.friends = friends;
         this.userId = userId;
         this.birthday = birthday;
+        this.profilePicUrl = profilePicUrl;
     }
 
     public User(String username) {
@@ -83,5 +85,12 @@ public class User implements Serializable {
 
     public void setFriends(List<String> friends) {
         this.friends = friends;
+    }
+    public String getProfilePicUrl() {
+        return profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
     }
 }

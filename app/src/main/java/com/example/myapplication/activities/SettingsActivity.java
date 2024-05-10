@@ -1,6 +1,9 @@
 package com.example.myapplication.activities;
+
 import static android.content.ContentValues.TAG;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.BottomSheetDialog.BottomSheetSetting;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.Gesture.SimpleGestureFilter.SimpleGestureListener;
@@ -50,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity implements
     Uri selectedImageUri;
     ImageButton btnBack;
     User currentUser;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +82,6 @@ public class SettingsActivity extends AppCompatActivity implements
 
         detector = new SimpleGestureFilter(SettingsActivity.this, this);
 
-
         imagePickerLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -86,10 +89,33 @@ public class SettingsActivity extends AppCompatActivity implements
                         if (data != null && data.getData() != null) {
                             selectedImageUri = data.getData();
                             AndroidUtils.setProfilePic(getApplicationContext(), selectedImageUri, profilePic);
+                            if (selectedImageUri != null) {
+                                FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
+                                        .addOnCompleteListener(task -> {
+                                            AndroidUtils.showToast(getApplicationContext(), "hehe");
+                                            FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                                                    .addOnSuccessListener(uri -> {
+                                                        // Cập nhật URL của ảnh vào tài liệu người dùng trong Firestore
+                                                        FirebaseUtils.allUserCollectionReference().document(FirebaseUtils.currentUserID())
+                                                                .update("profilePicUrl", uri.toString())
+                                                                .addOnSuccessListener(aVoid -> {
+                                                                    AndroidUtils.showToast(getApplicationContext(), "Profile picture updated successfully");
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    AndroidUtils.showToast(getApplicationContext(), "Failed to update profile picture");
+                                                                });
+                                                    });
+                                        });
+
+                            } else {
+                            }
                         }
                     }
                 });
-
+        FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(this,uri,profilePic);
+                });
         setUpUserName(currentUser.getUsername());
 
 
@@ -112,98 +138,88 @@ public class SettingsActivity extends AppCompatActivity implements
         profilePic.setOnClickListener(v -> pickImage());
         profilePicBtn.setOnClickListener(v -> pickImage());
 
-        if (selectedImageUri != null) {
-            FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
-                    .addOnCompleteListener(task -> {
-                        AndroidUtils.showToast(getApplicationContext(),"hehe");
-                        updateToFireStore();
-                    });
-        } else {
-            updateToFireStore();
-        }
-
 
         editMailBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_email));
-        editNameBtn.setOnClickListener(v->showEditDialog(R.layout.edit_name));
-        editBdayBtn.setOnClickListener(v->showEditDialog(R.layout.edit_birthday));
-        listBlockBtn.setOnClickListener(v->showEditDialog(R.layout.edit_block));
-        editReportBtn.setOnClickListener(v->showEditDialog(R.layout.edit_report));
-        editSuggestionBtn.setOnClickListener(v->showEditDialog(R.layout.edit_suggestion));
-        openTiktokBtn.setOnClickListener(v->openLink("https://www.tiktok.com/@locketcamera"));
-        openIgBtn.setOnClickListener(v->openLink("https://www.instagram.com/locketcamera/"));
-        openTwitterBtn.setOnClickListener(v->openLink("https://twitter.com/locketcamera"));
-        openServiceBtn.setOnClickListener(v->openLink("https://locket.camera/terms"));
-        openPolicyBtn.setOnClickListener(v->openLink("https://locket.camera/privacy"));
+        editNameBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_name));
+        editBdayBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_birthday));
+        listBlockBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_block));
+        editReportBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_report));
+        editSuggestionBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_suggestion));
+        openTiktokBtn.setOnClickListener(v -> openLink("https://www.tiktok.com/@locketcamera"));
+        openIgBtn.setOnClickListener(v -> openLink("https://www.instagram.com/locketcamera/"));
+        openTwitterBtn.setOnClickListener(v -> openLink("https://twitter.com/locketcamera"));
+        openServiceBtn.setOnClickListener(v -> openLink("https://locket.camera/terms"));
+        openPolicyBtn.setOnClickListener(v -> openLink("https://locket.camera/privacy"));
 
         detector = new SimpleGestureFilter(SettingsActivity.this, this);
+        updateToFireStore();
     }
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent me) {
-        // Call onTouchEvent of SimpleGestureFilter class
-        this.detector.onTouchEvent(me);
-        return super.dispatchTouchEvent(me);
-    }
-
-    @Override
-    public void onSwipe(int direction) {
-        switch (direction) {
-            case SimpleGestureFilter.SWIPE_RIGHT:
-                break;
-            case SimpleGestureFilter.SWIPE_LEFT:
-                onBackPressed();
-                CustomIntent.customType(SettingsActivity.this, "left-to-right");
-                break;
-            case SimpleGestureFilter.SWIPE_DOWN:
-                break;
-            case SimpleGestureFilter.SWIPE_UP:
-                break;
+        @Override
+        public boolean dispatchTouchEvent (MotionEvent me){
+            // Call onTouchEvent of SimpleGestureFilter class
+            this.detector.onTouchEvent(me);
+            return super.dispatchTouchEvent(me);
         }
-    }
-    public void pickImage() {
-        ImagePicker.with(this)
-                .cropSquare()
-                .compress(512)
-                .maxResultSize(512, 512)
-                .createIntent(intent -> {
-                    imagePickerLauncher.launch(intent);
-                    return null;
+
+        @Override
+        public void onSwipe ( int direction){
+            switch (direction) {
+                case SimpleGestureFilter.SWIPE_RIGHT:
+                    break;
+                case SimpleGestureFilter.SWIPE_LEFT:
+                    onBackPressed();
+                    CustomIntent.customType(SettingsActivity.this, "left-to-right");
+                    break;
+                case SimpleGestureFilter.SWIPE_DOWN:
+                    break;
+                case SimpleGestureFilter.SWIPE_UP:
+                    break;
+            }
+        }
+        public void pickImage () {
+            ImagePicker.with(this)
+                    .cropSquare()
+                    .compress(512)
+                    .maxResultSize(512, 512)
+                    .createIntent(intent -> {
+                        imagePickerLauncher.launch(intent);
+                        return null;
+                    });
+        }
+        public void showEditDialog ( int layoutResId){
+            BottomSheetSetting bottomSheetSetting = new BottomSheetSetting(layoutResId);
+            bottomSheetSetting.show(getSupportFragmentManager(), "TAG");
+        }
+        public void openLink (String Link)
+        {
+            String url = Link;
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        }
+        public void setUpUserName (String newName){
+            usernameInput.setText(newName);
+        }
+        public void updateToFireStore () {
+            String userId = FirebaseUtils.currentUserID();
+            if (userId != null) {
+                DocumentReference userRef = FirebaseUtils.allUserCollectionReference().document(userId); // Tham chiếu đến tài liệu người dùng
+                userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listen failed.", e);
+                            return;
+                        }
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            String newName = documentSnapshot.getString("username");
+                            setUpUserName(newName);
+                        } else {
+                            Log.d(TAG, "Current data: null");
+                        }
+                    }
                 });
-    }
-    public void showEditDialog(int layoutResId) {
-        BottomSheetSetting bottomSheetSetting = new BottomSheetSetting(layoutResId);
-        bottomSheetSetting.show(getSupportFragmentManager(),"TAG");
-    }
-    public void openLink(String Link)
-    {
-        String url = Link;
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        startActivity(intent);
-    }
-    public void setUpUserName(String newName){
-        usernameInput.setText(newName);
-    }
-    public void updateToFireStore() {
-        String userId = FirebaseUtils.currentUserID();
-        if (userId != null) {
-            DocumentReference userRef = FirebaseUtils.allUserCollectionReference().document(userId); // Tham chiếu đến tài liệu người dùng
-            userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                    if (e != null) {
-                        Log.w(TAG, "Listen failed.", e);
-                        return;
-                    }
-
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
-                        String newName = documentSnapshot.getString("username");
-                        // Gọi phương thức setUpUserName để cập nhật giao diện
-                        setUpUserName(newName);
-                    } else {
-                        Log.d(TAG, "Current data: null");
-                    }
-                }
-            });
+            }
         }
     }
-}

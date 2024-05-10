@@ -1,13 +1,13 @@
 package com.example.myapplication.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +15,22 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.myapplication.R;
-import com.example.myapplication.interfaces.ReactionListener;
+import com.example.myapplication.utils.AndroidUtils;
+import com.example.myapplication.utils.FirebaseUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +38,9 @@ import javax.annotation.Nullable;
 public class ReactionDialog extends DialogFragment implements View.OnClickListener {
     View view;
     ImageView likeReact, loveReact, loveloveReact, hahaReact, wowReact, sadReact, angryReact;
+    String currentID, Reaction, userID;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    DocumentReference documentReference;
 
     @Nullable
     @Override
@@ -52,6 +68,9 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
         sadReact.setOnClickListener(this);
         angryReact.setOnClickListener(this);
 
+        userID = FirebaseUtils.currentUserID();
+        documentReference = db.collection("posts").document(currentID);
+
     }
 
     @Nullable
@@ -64,27 +83,29 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
     public void onClick(View v) {
         int viewId = v.getId();
         if (viewId == R.id.img_like) {
-            listener.onReactionSelected(0);
+            Reaction = "like";
+            AndroidUtils.showToast(getContext(),"check"+currentID);
             getDialog().dismiss();
         } else if (viewId == R.id.img_love) {
-            listener.onReactionSelected(1);
+            Reaction = "love";
             getDialog().dismiss();
         } else if (viewId == R.id.img_lovelove) {
-            listener.onReactionSelected(2);
+            Reaction = "lovelove";
             getDialog().dismiss();
         } else if (viewId == R.id.img_wow) {
-            listener.onReactionSelected(3);
+            Reaction = "wow";
             getDialog().dismiss();
         } else if (viewId == R.id.img_haha) {
-            listener.onReactionSelected(4);
+            Reaction = "haha";
             getDialog().dismiss();
         } else if (viewId == R.id.img_sad) {
-            listener.onReactionSelected(5);
+            Reaction = "sad";
             getDialog().dismiss();
         } else if (viewId == R.id.img_angry) {
-            listener.onReactionSelected(6);
+            Reaction = "angry";
             getDialog().dismiss();
         }
+        saveReaction();
     }
 
     public void onResume() {
@@ -103,6 +124,7 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
 
         // Lấy tọa độ của nút gọi từ arguments
         Bundle args = getArguments();
+        currentID = args.get("currentPostID").toString();
         if (args != null && args.containsKey("buttonLocation")) {
             int[] buttonLocation = args.getIntArray("buttonLocation");
             if (buttonLocation != null && buttonLocation.length == 2) {
@@ -121,18 +143,73 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
         // Thiết lập cho Dialog có thể huỷ bằng cách chạm bên ngoài của nó.
         dialog.setCanceledOnTouchOutside(true);
     }
-
-    ReactionListener listener;
-
-    @Override
-    public void onAttach(@NonNull Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof ReactionListener) {
-            listener = (ReactionListener) activity;
-        } else {
-            throw new ClassCastException(activity.toString() + " must implement ReactionListener");
-        }
+    private void saveReaction() {
+        // Kiểm tra xem có document nào trong collection "reactions" chứa userID của người dùng không
+        documentReference.collection("reactions")
+                .whereEqualTo("userId", userID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                // Nếu đã có document chứa userID của người dùng
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    // Cập nhật biểu cảm mới vào document đã tồn tại
+                                    document.getReference().update("reaction", Reaction)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    // Cập nhật thành công
+                                                    Log.d("TAG", "Reaction updated successfully");
+                                                    dismiss();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // Xảy ra lỗi khi cập nhật
+                                                    Log.w("TAG", "Error updating reaction", e);
+                                                    Toast.makeText(requireContext(), "Error updating reaction", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                }
+                            } else {
+                                // Nếu không có document chứa userID của người dùng
+                                // Thêm một document mới chứa userID và biểu cảm vào collection "reactions"
+                                Map<String, Object> reactionData = new HashMap<>();
+                                reactionData.put("userId", userID);
+                                reactionData.put("reaction", Reaction);
+                                documentReference.collection("reactions")
+                                        .add(reactionData)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                // Thêm thành công
+                                                Log.d("TAG", "Reaction added successfully");
+                                                dismiss();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                // Xảy ra lỗi khi thêm
+                                                Log.w("TAG", "Error adding reaction", e);
+                                                Toast.makeText(requireContext(), "Error adding reaction", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        } else {
+                            // Xảy ra lỗi khi truy vấn
+                            Log.w("TAG", "Error getting documents", task.getException());
+                            Toast.makeText(requireContext(), "Error getting documents", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
+
+
 }
 
 

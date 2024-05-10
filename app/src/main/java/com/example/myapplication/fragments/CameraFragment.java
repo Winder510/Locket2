@@ -140,8 +140,6 @@ public class CameraFragment extends Fragment{
     private void handleClickSettingButton() {
 
         Intent intent = new Intent(requireContext(), SettingsActivity.class);
-
-        if (currentUser == null) {
             FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     currentUser = task.getResult().toObject(User.class);
@@ -154,12 +152,7 @@ public class CameraFragment extends Fragment{
 
                 }
             });
-        } else {
-            AndroidUtils.passUserModelAsIntent(intent, currentUser);
-            startActivity(intent);
-            CustomIntent.customType(requireContext(), "right-to-left");
 
-        }
 
 
     }

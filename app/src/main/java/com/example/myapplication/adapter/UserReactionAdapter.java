@@ -10,8 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.models.UserReaction;
+import com.example.myapplication.utils.AndroidUtils;
+import com.example.myapplication.utils.FirebaseUtils;
 
 import java.util.List;
 
@@ -40,7 +43,10 @@ public class UserReactionAdapter extends RecyclerView.Adapter<UserReactionAdapte
         if(user == null){
             return;
         }
-        holder.imgUser.setImageResource(user.getProfileImgID());
+        FirebaseUtils.getOtherProfilePicStorageRef(user.getUid()).getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(mContext,uri,holder.imgUser);
+                });
         holder.tvName.setText(user.getName());
         holder.reactType.setImageResource(user.getReactionType());
     }

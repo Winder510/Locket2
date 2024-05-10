@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color"
     android:padding="0dp">
+
     <com.example.myapplication.models.NestedScrollableHost
         android:id="@+id/nestedScrollableHost"
         android:layout_width="match_parent"
@@ -19,6 +20,7 @@
             android:orientation="vertical"
             tools:ignore="MissingClass" />
     </com.example.myapplication.models.NestedScrollableHost>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,13 +31,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            >
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:gravity="center">
 
             <ImageButton
+                android:id="@+id/btnSetting"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
@@ -43,8 +45,8 @@
                 android:baselineAligned="false"
                 android:padding="7dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_user"
-                android:id="@+id/btnSetting"/>
+                android:src="@drawable/ic_user" />
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -77,8 +79,8 @@
                 android:padding="7dp"
                 android:scaleType="centerCrop"
                 android:text="..."
-                android:textSize="20dp"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:textSize="20dp" />
 
 
         </LinearLayout>
@@ -104,7 +106,13 @@
             android:layout_height="0dp"
             android:layout_weight="1.1"
             android:gravity="center|top"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="10">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/btnActive"
@@ -115,47 +123,54 @@
                 android:fontFamily="@font/varelaround_regular"
                 android:text="Hoạt động"
                 android:textSize="16sp"
+                android:visibility="gone"
                 app:icon="@drawable/ic_shining" />
+
             <EditText
                 android:id="@+id/sendmes"
-                android:layout_width="320dp"
+                android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:background="@drawable/login_edit_text"
+                android:layout_gravity="center"
+                android:layout_weight="7"
+                android:background="@drawable/comment_edit_text"
                 android:hint="Gửi tin nhắn..."
                 android:inputType="textPersonName"
                 android:paddingStart="15dp"
                 android:textColor="@color/white"
                 android:textColorHint="#888888"
-                android:layout_gravity="center"
-                android:textSize="20sp"
-                android:visibility="gone" />
+                android:textSize="20sp" />
 
             <ImageButton
                 android:id="@+id/btn_Reaction"
-                android:layout_width="60dp"
+                android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:background="@drawable/login_edit_text"
-                android:src="@drawable/ic_addemoji"
-                android:visibility="gone" />
+                android:layout_weight="1"
+                android:background="@drawable/emoji_edit_text"
+                android:src="@drawable/ic_addemoji" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            >
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:gravity="center">
 
             <ImageButton
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
+                android:background="@drawable/menu"
                 android:padding="7dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/menu"/>
+                android:scaleType="centerCrop" />
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="1dp"
@@ -178,22 +193,23 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
+                android:background="@drawable/ic_share"
                 android:padding="7dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/ic_share" />
+                android:scaleType="centerCrop" />
 
 
         </LinearLayout>
 
 
     </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </RelativeLayout>
