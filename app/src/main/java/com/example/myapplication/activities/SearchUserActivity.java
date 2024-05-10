@@ -20,13 +20,20 @@ import com.example.myapplication.adapter.AddFriendAdapter;
 import com.example.myapplication.adapter.FriendRequestAdapter;
 import com.example.myapplication.interfaces.AddFriend;
 import com.example.myapplication.interfaces.ConfirmFriendRequest;
+import com.example.myapplication.models.Chatroom;
 import com.example.myapplication.models.FriendRequest;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.FirebaseUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SearchUserActivity extends AppCompatActivity implements ConfirmFriendRequest, AddFriend {
@@ -39,6 +46,8 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     private String searchTerm = "";
 
     private Thread threadFilter;
+    String chatroomId;
+    Chatroom chatroom;
 
 
     @Override
@@ -262,6 +271,24 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
                 );
         FirebaseUtils.currentUserDetail().update("friends", FieldValue.arrayUnion(senderId));
         FirebaseUtils.allUserCollectionReference().document(senderId).update("friends", FieldValue.arrayUnion(receiveId));
+        chatroomId = FirebaseUtils.getChatroomId(FirebaseUtils.currentUserID(), senderId);
+        FirebaseUtils.getChatroomReference(chatroomId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    chatroom= task.getResult().toObject(Chatroom.class);
+                    if (chatroom == null) {
+                        chatroom = new Chatroom(
+                                chatroomId,
+                                Arrays.asList(FirebaseUtils.currentUserID(), senderId),
+                                Timestamp.now(),
+                                "","");
+                        FirebaseUtils.getChatroomReference(chatroomId).set(chatroom);
+                    }
+                }
+
+            }
+        });
     }
 
     @Override
@@ -282,7 +309,6 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("username", user.getUsername());
         intent.putExtra("userId", user.getUserId());
-        intent.putExtra("phone", user.getPhone());
         startActivity(intent);
     }
 
