@@ -13,7 +13,6 @@ public class User implements Serializable {
 
     private List<String> friends;
     private String userId;
-    private List<String> friends;
 
     public User() {
     }

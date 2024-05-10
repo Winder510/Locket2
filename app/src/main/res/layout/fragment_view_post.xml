@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:background="@color/bg_color"
     android:padding="0dp">
-
     <com.example.myapplication.models.NestedScrollableHost
         android:id="@+id/nestedScrollableHost"
         android:layout_width="match_parent"
@@ -20,7 +19,6 @@
             android:orientation="vertical"
             tools:ignore="MissingClass" />
     </com.example.myapplication.models.NestedScrollableHost>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -89,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3.9">
+
         </RelativeLayout>
 
 
@@ -97,6 +96,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center">
+
         </LinearLayout>
 
         <LinearLayout
@@ -105,6 +105,17 @@
             android:layout_weight="1.1"
             android:gravity="center|top"
             android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnActive"
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:background="@drawable/active_button"
+                android:fontFamily="@font/varelaround_regular"
+                android:text="Hoạt động"
+                android:textSize="16sp"
+                app:icon="@drawable/ic_shining" />
             <EditText
                 android:id="@+id/name_edit"
                 android:layout_width="320dp"
@@ -115,7 +126,18 @@
                 android:paddingStart="15dp"
                 android:textColor="@color/white"
                 android:textColorHint="#888888"
-                android:textSize="20sp" />
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/btn_Reaction"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/login_edit_text"
+                android:src="@drawable/ic_addemoji"
+                android:visibility="gone" />
 
         </LinearLayout>
         <LinearLayout
@@ -167,8 +189,8 @@
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>

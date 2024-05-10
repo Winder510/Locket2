@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -100,11 +101,11 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     }
 
-    Button btnalluser;
+    Button btnalluser,btnActive;
     RelativeLayout layout;
     ImageButton ReactionBtn,home;
     RecyclerView rcvlistfriend;
-    RecentChatRecyclerAdapter adapter;
+    ViewPostAdapter adapter;
 
     private SimpleGestureFilter detector;
     private FriendAdapter friendAdapter;
@@ -112,7 +113,6 @@ public class ViewPostFragment extends Fragment implements AddFriend {
     View popUpView;
 
     private List<Post> posts;
-    private ViewPostAdapter adapter;
     ViewPager2 viewPager2;
     ImageView btnBackToCamera;
     private OnBackToCameraFragmentListener mlistener;
@@ -141,19 +141,62 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_view_post, container, false);
         viewPager2 = rootView.findViewById(R.id.viewpager2);
-
         adapter = new ViewPostAdapter(posts);
         viewPager2.setAdapter(adapter);
         return rootView;
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        posts = new ArrayList<>();
+        loadPosts();
+    }
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        NestedScrollableHost nestedScrollableHost = view.findViewById(R.id.nestedScrollableHost);
+        btnBackToCamera = view.findViewById(R.id.btnBackToCamera);
         btnalluser = view.findViewById(R.id.btnalluser);
         layout = view.findViewById(R.id.layout);
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
-        home = view.findViewById(R.id.home);
+        btnActive= view.findViewById(R.id.btnActive);
+        nestedScrollableHost.setViewPager2(viewPager2);
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if (position == 0) {
+
+                    nestedScrollableHost.setScrollable(true);
+                } else {
+                    nestedScrollableHost.setScrollable(false);
+                }
+            }
+        });
+        btnBackToCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mlistener != null) {
+                    viewPager2.setCurrentItem(0);
+                    mlistener.onBackToCameraFragment();
+
+                }
+            }
+        });
+        btnActive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetReaction bottomSheetReaction = new BottomSheetReaction();
+                bottomSheetReaction.show(getChildFragmentManager(),"TAG");
+            }
+        });
+
+
 
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,50 +247,6 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             public void onClick(View v) {
                 showReactionDialog();
 
-            }
-        });
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        posts = new ArrayList<>();
-        loadPosts();
-    }
-
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        NestedScrollableHost nestedScrollableHost = view.findViewById(R.id.nestedScrollableHost);
-        btnBackToCamera = view.findViewById(R.id.btnBackToCamera);
-        nestedScrollableHost.setViewPager2(viewPager2);
-        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                if (position == 0) {
-
-                    nestedScrollableHost.setScrollable(true);
-                } else {
-                    nestedScrollableHost.setScrollable(false);
-                }
-            }
-        });
-        btnBackToCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mlistener != null) {
-                    viewPager2.setCurrentItem(0);
-                    mlistener.onBackToCameraFragment();
-
-                }
-            }
-        });
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomSheetReaction bottomSheetReaction = new BottomSheetReaction();
-                bottomSheetReaction.show(getChildFragmentManager(),"TAG");
             }
         });
     }
