@@ -292,7 +292,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         // Implement logic khi click vào user
         popupWindow.dismiss();
 //        2
-
+        btnalluser.setText(user.getUsername());
     }
 
 }
