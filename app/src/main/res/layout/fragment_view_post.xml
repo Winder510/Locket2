@@ -136,6 +136,16 @@
             android:layout_weight="1.1"
             android:gravity="center|top"
             android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_Active"
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:background="@drawable/active_button"
+                android:layout_gravity="center"
+                android:text="Hoạt động"
+                android:textSize="16sp"
+                android:fontFamily="@font/varelaround_regular"
+                app:icon="@drawable/ic_shining"/>
             <EditText
                 android:id="@+id/name_edit"
                 android:layout_width="320dp"
@@ -147,14 +157,16 @@
                 android:textColor="@color/white"
                 android:textColorHint="#888888"
                 android:textSize="20sp"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:visibility="gone"/>
             <ImageButton
                 android:id="@+id/btn_Reaction"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:background="@drawable/login_edit_text"
                 android:src="@drawable/ic_addemoji"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:visibility="gone"/>
 
         </LinearLayout>
         <LinearLayout

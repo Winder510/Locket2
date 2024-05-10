@@ -4,7 +4,6 @@ package com.example.myapplication.activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,10 +19,8 @@ import com.example.myapplication.utils.AndroidUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -86,23 +83,8 @@ public class LoginOTPActivity extends AppCompatActivity {
 
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
-                                String errorMessage = "OTP verification failed";
-                                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                                    // Xử lý khi số điện thoại không hợp lệ hoặc lỗi xác thực
-                                    errorMessage = "Invalid phone number. Please enter a valid phone number.";
-                                } else if (e instanceof FirebaseTooManyRequestsException) {
-                                    // Xử lý khi đã vượt quá số lần yêu cầu xác thực
-                                    errorMessage = "Quota exceeded. Please try again later.";
-                                } else {
-                                    // Xử lý các lỗi xác thực khác
-                                    errorMessage = e.getMessage(); // Lấy thông điệp lỗi chi tiết
-                                }
-
-                                // Hiển thị thông báo lỗi cho người dùng
-                                AndroidUtils.showToast(getApplicationContext(), errorMessage);
+                                AndroidUtils.showToast(getApplicationContext(), "OTP verification failed");
                                 setInProgress(false);
-                                // Ghi thông điệp lỗi ra Logcat
-                                Log.e("OTP Verification", "Error: " + errorMessage);
                             }
 
                             @Override

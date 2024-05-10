@@ -22,11 +22,11 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void run() {
                 startActivity(new Intent(SplashScreen.this, LoginPhoneNumberActivity.class));
-                /*if (FirebaseUtils.isLoggedIn()) {
+                if (FirebaseUtils.isLoggedIn()) {
                     startActivity(new Intent(SplashScreen.this, MainActivity.class));
                 } else {
                     startActivity(new Intent(SplashScreen.this, LoginPhoneNumberActivity.class));
-              }*/
+              }
                 finish();
             }
         }, 1000);

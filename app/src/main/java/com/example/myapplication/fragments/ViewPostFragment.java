@@ -90,7 +90,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     }
 
-    Button btnalluser, btnall;
+    Button btnalluser, btnall, btnactive;
     RelativeLayout layout;
     ImageButton ReactionBtn,home;
     RecyclerView rcvlistfriend;
@@ -114,7 +114,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         btnalluser = view.findViewById(R.id.btnalluser);
         layout = view.findViewById(R.id.layout);
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
-        home = view.findViewById(R.id.home);
+        btnactive = view.findViewById(R.id.btn_Active);
 
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -176,7 +176,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                 Toast.makeText(requireContext(), "Show button", Toast.LENGTH_SHORT).show();
             }
         });
-        home.setOnClickListener(new View.OnClickListener() {
+        btnactive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BottomSheetReaction bottomSheetReaction = new BottomSheetReaction();
