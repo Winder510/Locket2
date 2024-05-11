@@ -40,6 +40,8 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
 
     private Thread threadFilter;
 
+    public static int receiveItemCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         search();
         getListFiend();
     }
+
+
 
     private void getListFiend() {
         FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
@@ -198,6 +202,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             reciveAdapter.setData(task.getResult().toObjects(FriendRequest.class));
+                            SearchUserActivity.receiveItemCount = reciveAdapter.getItemCount();
                         } else {
                             if (task.getException() != null) {
                                 task.getException().printStackTrace();

@@ -1,6 +1,7 @@
 package com.example.myapplication.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -36,6 +38,9 @@ import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.activities.RecentChatActivity;
 import com.example.myapplication.activities.SearchUserActivity;
 import com.example.myapplication.activities.SettingsActivity;
+import com.example.myapplication.adapter.FriendRequestAdapter;
+import com.example.myapplication.interfaces.ConfirmFriendRequest;
+import com.example.myapplication.models.FriendRequest;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
@@ -47,6 +52,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,13 +64,14 @@ public class CameraFragment extends Fragment{
     ImageButton capture, toggleFlash, flipCamera, btnSetting, btnRecentChat;
     Button btnSearchUser;
     private PreviewView previewView;
+    TextView badge;
     // for <setting layout>
     User currentUser;
     Uri uriImage;
     ///>
 
     //for <uploadFragment>
-    ArrayList<User> userList = new ArrayList<>();
+    ArrayList<User> userList;
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
@@ -91,12 +99,16 @@ public class CameraFragment extends Fragment{
         btnSetting = view.findViewById(R.id.btnSetting);
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
+        badge = view.findViewById(R.id.badge);
+
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
             startCamera(cameraFacing);
         }
+
+
 
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +146,12 @@ public class CameraFragment extends Fragment{
                 startCamera(cameraFacing);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        badge.setText(String.valueOf(SearchUserActivity.receiveItemCount));
     }
 
     private void handleClickSettingButton() {
