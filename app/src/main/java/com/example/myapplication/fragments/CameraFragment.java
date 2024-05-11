@@ -151,7 +151,12 @@ public class CameraFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-        badge.setText(String.valueOf(SearchUserActivity.receiveItemCount));
+        if (SearchUserActivity.receiveItemCount == 0) {
+            badge.setVisibility(View.GONE);
+        } else {
+            badge.setVisibility(View.VISIBLE);
+            badge.setText(String.valueOf(SearchUserActivity.receiveItemCount));
+        }
     }
 
     private void handleClickSettingButton() {
