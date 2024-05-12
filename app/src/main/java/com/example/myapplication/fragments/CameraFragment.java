@@ -1,13 +1,11 @@
 package com.example.myapplication.fragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,15 +30,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
-import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.activities.RecentChatActivity;
 import com.example.myapplication.activities.SearchUserActivity;
 import com.example.myapplication.activities.SettingsActivity;
-import com.example.myapplication.adapter.FriendRequestAdapter;
-import com.example.myapplication.interfaces.ConfirmFriendRequest;
-import com.example.myapplication.models.FriendRequest;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
@@ -52,10 +45,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import maes.tech.intentanim.CustomIntent;
@@ -144,6 +136,37 @@ public class CameraFragment extends Fragment{
                     cameraFacing = CameraSelector.LENS_FACING_BACK;
                 }
                 startCamera(cameraFacing);
+            }
+        });
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                // Fetch the data for the badge from the Firestore database
+                FirebaseUtils.InviteReference()
+                        .whereEqualTo("receiverId", FirebaseUtils.currentUserID())
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                final int badgeCount = task.getResult().size();
+                                // Update the badge in the UI thread
+                                requireActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (badgeCount == 0) {
+                                            badge.setVisibility(View.GONE);
+                                        } else {
+                                            badge.setVisibility(View.VISIBLE);
+                                            badge.setText(String.valueOf(badgeCount));
+                                        }
+                                    }
+                                });
+                            } else {
+                                if (task.getException() != null) {
+                                    task.getException().printStackTrace();
+                                }
+                            }
+                        });
             }
         });
     }
