@@ -41,6 +41,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.EventListener;
 
 
 import java.io.File;
@@ -140,48 +143,42 @@ public class CameraFragment extends Fragment{
         });
 
 
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                // Fetch the data for the badge from the Firestore database
-                FirebaseUtils.InviteReference()
-                        .whereEqualTo("receiverId", FirebaseUtils.currentUserID())
-                        .get()
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                final int badgeCount = task.getResult().size();
-                                // Update the badge in the UI thread
-                                requireActivity().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (badgeCount == 0) {
-                                            badge.setVisibility(View.GONE);
-                                        } else {
-                                            badge.setVisibility(View.VISIBLE);
-                                            badge.setText(String.valueOf(badgeCount));
-                                        }
-                                    }
-                                });
-                            } else {
-                                if (task.getException() != null) {
-                                    task.getException().printStackTrace();
-                                }
-                            }
-                        });
-            }
-        });
+
+
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (SearchUserActivity.receiveItemCount == 0) {
-            badge.setVisibility(View.GONE);
-        } else {
-            badge.setVisibility(View.VISIBLE);
-            badge.setText(String.valueOf(SearchUserActivity.receiveItemCount));
-        }
+
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        executorService.submit(new Runnable() {
+            public void run() {
+                // Fetch the data for the badge from the Firestore database
+                FirebaseUtils.InviteReference()
+                        .whereEqualTo("receiverId", FirebaseUtils.currentUserID())
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                if (e != null) {
+                                    // Handle error
+                                    e.printStackTrace();
+                                    return;
+                                }
+
+                                // Update the badge with the new data
+                                final int badgeCount = queryDocumentSnapshots.getDocuments().size();
+                                if (badgeCount == 0) {
+                                    badge.setVisibility(View.GONE);
+                                } else {
+                                    badge.setVisibility(View.VISIBLE);
+                                    badge.setText(String.valueOf(badgeCount));
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     private void handleClickSettingButton() {
