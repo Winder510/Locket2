@@ -138,6 +138,8 @@ public class CameraFragment extends Fragment{
                 startCamera(cameraFacing);
             }
         });
+
+
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         executorService.submit(new Runnable() {
             @Override
