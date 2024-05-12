@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.EventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,6 +53,8 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     String chatroomId;
     Chatroom chatroom;
 
+    public static int receiveItemCount = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,8 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         search();
         getListFiend();
     }
+
+
 
     private void getListFiend() {
         FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
@@ -180,43 +188,46 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     }
 
     private void getSend() {
-        Thread thread = new Thread(() -> {
-            FirebaseUtils.InviteReference()
-                    .whereEqualTo("senderId", FirebaseUtils.currentUserID())
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            sendAdapter.setData(task.getResult().toObjects(FriendRequest.class));
-                        } else {
-                            if (task.getException() != null) {
-                                task.getException().printStackTrace();
-                            }
+        FirebaseUtils.InviteReference()
+                .whereEqualTo("senderId", FirebaseUtils.currentUserID())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            // Handle error
+                            e.printStackTrace();
+                            return;
                         }
-                    });
-        });
 
-        thread.start();
+                        // Update the adapter with the new friend requests
+                        if (queryDocumentSnapshots != null) {
+                            sendAdapter.setData(queryDocumentSnapshots.toObjects(FriendRequest.class));
+                        }
+                    }
+                });
     }
 
     private void getRecive() {
-        Thread thread = new Thread(() -> {
-            FirebaseUtils.InviteReference()
-                    .whereEqualTo("receiverId", FirebaseUtils.currentUserID())
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            reciveAdapter.setData(task.getResult().toObjects(FriendRequest.class));
-                        } else {
-                            if (task.getException() != null) {
-                                task.getException().printStackTrace();
-                            }
+        FirebaseUtils.InviteReference()
+                .whereEqualTo("receiverId", FirebaseUtils.currentUserID())
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            // Handle error
+                            e.printStackTrace();
+                            return;
                         }
-                    });
 
-        });
-
-
-        thread.start();
+                        // Update the adapter with the new friend requests
+                        if (queryDocumentSnapshots != null) {
+                            reciveAdapter.setData(queryDocumentSnapshots.toObjects(FriendRequest.class));
+                            SearchUserActivity.receiveItemCount = reciveAdapter.getItemCount();
+                        }
+                    }
+                });
     }
 
     @Override

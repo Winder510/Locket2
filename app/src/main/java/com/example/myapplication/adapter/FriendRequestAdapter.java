@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -52,7 +53,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.list = list;
         notifyDataSetChanged();
     }
-
     @Override
     public int getItemViewType(int position) {
         if (Objects.equals(list.get(position).getReceiverId(), FirebaseUtils.currentUserID())) {
@@ -96,7 +96,6 @@ public class FriendRequestAdapter extends RecyclerView.Adapter<RecyclerView.View
     public int getItemCount() {
         return list.size();
     }
-
     @SuppressLint("NotifyDataSetChanged")
     public void removeItem(String inviteId) {
         for (int i = 0; i < list.size(); i++) {

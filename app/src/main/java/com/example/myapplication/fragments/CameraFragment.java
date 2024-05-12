@@ -6,12 +6,12 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -32,9 +32,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
-import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
-import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.activities.RecentChatActivity;
 import com.example.myapplication.activities.SearchUserActivity;
 import com.example.myapplication.activities.SettingsActivity;
@@ -45,6 +43,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.EventListener;
 
 
 import java.io.File;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import maes.tech.intentanim.CustomIntent;
@@ -60,11 +62,14 @@ public class CameraFragment extends Fragment{
     ImageButton capture, toggleFlash, flipCamera, btnSetting, btnRecentChat;
     Button btnSearchUser;
     private PreviewView previewView;
+    TextView badge;
     // for <setting layout>
     User currentUser;
     Uri uriImage;
     ///>
 
+    //for <uploadFragment>
+    ArrayList<User> userList;
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
         @Override
@@ -92,12 +97,16 @@ public class CameraFragment extends Fragment{
         btnSetting = view.findViewById(R.id.btnSetting);
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
+        badge = view.findViewById(R.id.badge);
+
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
         } else {
             startCamera(cameraFacing);
         }
+
+
 
         btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,6 +142,44 @@ public class CameraFragment extends Fragment{
                     cameraFacing = CameraSelector.LENS_FACING_BACK;
                 }
                 startCamera(cameraFacing);
+            }
+        });
+
+
+
+
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        executorService.submit(new Runnable() {
+            public void run() {
+                // Fetch the data for the badge from the Firestore database
+                FirebaseUtils.InviteReference()
+                        .whereEqualTo("receiverId", FirebaseUtils.currentUserID())
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                if (e != null) {
+                                    // Handle error
+                                    e.printStackTrace();
+                                    return;
+                                }
+
+                                // Update the badge with the new data
+                                final int badgeCount = queryDocumentSnapshots.getDocuments().size();
+                                if (badgeCount == 0) {
+                                    badge.setVisibility(View.GONE);
+                                } else {
+                                    badge.setVisibility(View.VISIBLE);
+                                    badge.setText(String.valueOf(badgeCount));
+                                }
+                            }
+                        });
             }
         });
     }

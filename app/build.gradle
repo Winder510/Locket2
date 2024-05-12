@@ -45,6 +45,9 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -90,5 +93,7 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //badge
+    implementation 'androidx.core:core:1.9.0'
 
 }
