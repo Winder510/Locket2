@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,9 +31,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
-import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
-import com.example.myapplication.activities.MainActivity;
 import com.example.myapplication.activities.RecentChatActivity;
 import com.example.myapplication.activities.SearchUserActivity;
 import com.example.myapplication.activities.SettingsActivity;
@@ -43,16 +40,12 @@ import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -64,6 +57,7 @@ public class CameraFragment extends Fragment{
     User currentUser;
     Uri uriImage;
     ///>
+    private boolean canInteract = true;
 
     int cameraFacing = CameraSelector.LENS_FACING_BACK;
     private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
@@ -78,6 +72,7 @@ public class CameraFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
@@ -112,8 +107,6 @@ public class CameraFragment extends Fragment{
                 Intent intent = new Intent(requireContext(), RecentChatActivity.class);
                 startActivity(intent);
                 CustomIntent.customType(requireContext(), "left-to-right");
-
-
             }
         });
         btnSearchUser.setOnClickListener(new View.OnClickListener() {
@@ -136,7 +129,6 @@ public class CameraFragment extends Fragment{
             }
         });
     }
-
     private void handleClickSettingButton() {
 
         Intent intent = new Intent(requireContext(), SettingsActivity.class);
@@ -265,6 +257,8 @@ public class CameraFragment extends Fragment{
         }
         return AspectRatio.RATIO_16_9;
     }
+
+
     private void handleAfterTakePicture(File file) {
             getListUserForRecyclerView(new OnSuccessListener<ArrayList<User>>() {
                 @Override
@@ -273,12 +267,14 @@ public class CameraFragment extends Fragment{
                     bundle.putString("imageFilePath", file.getAbsolutePath());
                     bundle.putSerializable("list", list);
                     UploadFragment fragmentUpload = new UploadFragment();
+                    AndroidUtils.showToast(getContext(),"PHong");
                     fragmentUpload.setArguments(bundle);
                     FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                     fragmentManager.beginTransaction()
                             .replace(R.id.main, fragmentUpload)
                             .addToBackStack(null)
                             .commit();
+
                 }
             });
     }
@@ -286,14 +282,12 @@ public class CameraFragment extends Fragment{
         FirebaseUtils.currentUserDetail().get().addOnSuccessListener(documentSnapshot -> {
             ArrayList<User> userList = new ArrayList<>();
             if (documentSnapshot.exists() && documentSnapshot.contains("friends")) {
-                Object friendsObject = documentSnapshot.get("friends");
-                ArrayList<String> friendsList = (ArrayList<String>) friendsObject;
+                ArrayList<String> friendsList = (ArrayList<String>) documentSnapshot.toObject(User.class).getFriends();
 
                 if (friendsList != null && !friendsList.isEmpty()) {
-                    LiveData<List<User>> friendUsersLiveData = FirebaseUtils.getFriendUsersLiveData(friendsList);
-                    friendUsersLiveData.observeForever(new Observer<List<User>>() {
+                    FirebaseUtils.getFriendUsers(friendsList, new OnSuccessListener<List<User>>() {
                         @Override
-                        public void onChanged(List<User> users) {
+                        public void onSuccess(List<User> users) {
                             userList.addAll(users);
                             userList.add(0, new User("Tất cả"));
                             listener.onSuccess(userList);
@@ -307,5 +301,7 @@ public class CameraFragment extends Fragment{
             }
         });
     }
+
+
 
 }

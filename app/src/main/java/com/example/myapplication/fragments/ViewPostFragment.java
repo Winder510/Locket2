@@ -4,44 +4,48 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.FriendAdapter;
-import com.example.myapplication.interfaces.AddFriend;
-import com.example.myapplication.models.User;
-import com.example.myapplication.utils.FirebaseUtils;
-
-import android.view.MotionEvent;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
+import com.example.myapplication.adapter.AllPostAdapter;
 import com.example.myapplication.adapter.ViewPostAdapter;
+import com.example.myapplication.interfaces.AddFriend;
+import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
 import com.example.myapplication.models.NestedScrollableHost;
 import com.example.myapplication.models.Post;
+import com.example.myapplication.models.User;
 import com.example.myapplication.utils.AndroidUtils;
+import com.example.myapplication.utils.FirebaseUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -54,15 +58,16 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     Button btnalluser,btnActive;
     RelativeLayout layout;
-    ImageButton ReactionBtn,home;
+    ImageButton ReactionBtn,allPost;
     RecyclerView rcvlistfriend;
     ViewPostAdapter adapter;
-
+    TextView noPostTextView;
+    LinearLayout action1,action2;
     private SimpleGestureFilter detector;
     private FriendAdapter friendAdapter;
     PopupWindow popupWindow;
     View popUpView;
-    EditText sendmes,btn_Reaction;
+    EditText sendmes;
     private List<Post> posts;
     ViewPager2 viewPager2;
     ImageView btnBackToCamera;
@@ -116,6 +121,11 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
         btnActive= view.findViewById(R.id.btnActive);
         sendmes=view.findViewById(R.id.sendmes);
+        noPostTextView = view.findViewById(R.id.noPostTextView);
+        allPost = view.findViewById(R.id.allPost);
+        action1 =view.findViewById(R.id.action1Layout);
+        action2 = view.findViewById(R.id.action2Layout);
+
 
         nestedScrollableHost.setViewPager2(viewPager2);
 
@@ -123,12 +133,20 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                if(posts.isEmpty()){
+                    noPostTextView.setVisibility(View.VISIBLE);
+                    sendmes.setVisibility(View.GONE);
+                    ReactionBtn.setVisibility(View.GONE);
+                }
+                else{
+                    noPostTextView.setVisibility(View.GONE);
+                }
                 if (position == 0) {
                     nestedScrollableHost.setScrollable(true);
                 } else {
                     nestedScrollableHost.setScrollable(false);
                 }
-                if(posts.get(viewPager2.getCurrentItem()).getUserId().equals(FirebaseUtils.currentUserID())){
+                if(!posts.isEmpty()&&posts.get(viewPager2.getCurrentItem()).getUserId().equals(FirebaseUtils.currentUserID())){
                     btnActive.setVisibility(View.VISIBLE);
                     ReactionBtn.setVisibility(View.GONE);
                     sendmes.setVisibility(View.GONE);
@@ -137,6 +155,18 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                     ReactionBtn.setVisibility(View.VISIBLE);
                     sendmes.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+        allPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AllPostFragment fragmentUpload = new AllPostFragment();
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.viewAllPost, fragmentUpload)
+                        .addToBackStack(null)
+                        .commit();
+
             }
         });
         btnBackToCamera.setOnClickListener(new View.OnClickListener() {
@@ -157,21 +187,19 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             }
         });
 
-
-
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                 popUpView = inflater.inflate(R.layout.activity_allfriend, null);
-
                 int width = ViewGroup.LayoutParams.MATCH_PARENT;
                 int height = ViewGroup.LayoutParams.MATCH_PARENT;
                 boolean focusable = true;
                 popupWindow = new PopupWindow(popUpView, width, height, focusable);
                 popupWindow.showAsDropDown(btnalluser);
                 rcvlistfriend = popUpView.findViewById(R.id.listfriend);
+
                 FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         User user = task.getResult().toObject(User.class);
@@ -185,8 +213,12 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                                         }
                                     }
                                 });
+                                if (i == user.getFriends().size() - 1) {
+                                    friendAdapter.addItem(new User("Tất cả mọi người"));
+                                    friendAdapter.addItem(new User("Bạn"));
+                                }
                             }
-                            friendAdapter.addItem(new User("Tất cả mọi người"));
+
                         }
                     }
                 });
@@ -211,7 +243,23 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         });
 
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
+    private void  handleSetVisibleSomeLayout(boolean isVisible){
+        if(isVisible){
+            action1.setVisibility(View.VISIBLE);
+            action2.setVisibility(View.VISIBLE);
+        }
+        else {
+            action1.setVisibility(View.GONE);
+            action2.setVisibility(View.GONE);
+        }
+
+
+    }
     private void loadPosts() {
         AtomicReference<ArrayList<String>> friendsList = new AtomicReference<>();
         FirebaseUtils.currentUserDetail().addSnapshotListener((documentSnapshot, error) -> {
@@ -241,6 +289,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", friends)
                 .whereIn("visibility", Arrays.asList("public", "private"))
+                .orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         // Xử lý lỗi nếu có
@@ -254,9 +303,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                             posts.add(post);
                         }
                     }
-                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
                     adapter.notifyDataSetChanged();
-
 
                 });
     }
@@ -290,9 +337,43 @@ public class ViewPostFragment extends Fragment implements AddFriend {
     @Override
     public void onClick(User user) {
         // Implement logic khi click vào user
+        btnalluser.setText(user.getUsername());
         popupWindow.dismiss();
-//        2
-
+        if (user.getUsername().equals("Tất cả mọi người")) {
+            loadPosts();
+        }
+        else if(user.getUsername().equals("Bạn")){
+            handlefilterPost(FirebaseUtils.currentUserID());
+        }
+        else{
+            handlefilterPost(user.getUserId());
+        }
     }
+
+    private void handlefilterPost(String userId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference postsRef = db.collection("posts");
+        postsRef.whereIn("userId", Collections.singletonList(userId))
+                .whereIn("visibility", Arrays.asList("public", "private"))
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        return;
+                    }
+                    posts.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Post post = document.toObject(Post.class);
+                        if (post.getVisibility().equals("public") || (post.getVisibility().equals("private") && post.getUserId().equals(FirebaseUtils.currentUserID())) ||
+                                (post.getVisibility().equals("private") && post.getAllowed_users().contains(FirebaseUtils.currentUserID()))) {
+                            posts.add(post);
+                        }
+                    }
+                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
+                    adapter.notifyDataSetChanged();
+
+
+                });
+    }
+
+
 
 }

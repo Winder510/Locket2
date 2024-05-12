@@ -19,6 +19,10 @@
             android:orientation="vertical"
             tools:ignore="MissingClass" />
     </com.example.myapplication.models.NestedScrollableHost>
+    <FrameLayout
+        android:id="@+id/viewAllPost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -86,7 +90,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3.9">
+            android:layout_weight="3.9"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/noPostTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No posts yet"
+                android:textColor="@color/white"
+                android:textSize="20sp"/>
 
         </RelativeLayout>
 
@@ -100,6 +113,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/action1Layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.1"
@@ -141,6 +155,7 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/action2Layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -150,6 +165,7 @@
             >
 
             <ImageButton
+                android:id="@+id/allPost"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
