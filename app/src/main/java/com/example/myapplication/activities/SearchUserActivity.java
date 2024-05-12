@@ -144,8 +144,8 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
             try {
                 Thread.sleep(100L);
                 FirebaseUtils.allUserCollectionReference()
-                        .whereGreaterThanOrEqualTo("phone", searchTerm.trim())
-                        .whereLessThanOrEqualTo("phone", searchTerm.trim() + "\uf8ff")
+                        .whereGreaterThanOrEqualTo("phonesearch", searchTerm.trim())
+                        .whereLessThanOrEqualTo("phonesearch", searchTerm.trim() + "\uf8ff")
                         .get()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
