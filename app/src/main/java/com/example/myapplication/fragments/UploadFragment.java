@@ -60,34 +60,6 @@
         ArrayList<User> userList = new ArrayList<>();
         private static final int REQUEST_CODE = 1;
 
-
-        void saveImage() {
-            Uri images;
-            ContentResolver contentResolver = requireActivity().getContentResolver();
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                images = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
-            } else {
-                images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-            }
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, System.currentTimeMillis() + ".jpg");
-            contentValues.put(MediaStore.Images.Media.MIME_TYPE, "iamges/*");
-            Uri uri = contentResolver.insert(images, contentValues);
-
-            try {
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) imagePreview.getDrawable();
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-                OutputStream outputStream = contentResolver.openOutputStream(Objects.requireNonNull(uri));
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-                Objects.requireNonNull(outputStream);
-                AndroidUtils.showToast(requireContext(), "Image save succesfully");
-
-            } catch (Exception e) {
-                AndroidUtils.showToast(requireContext(), "Image not saved ");
-                e.printStackTrace();
-            }
-        }
-
         public UploadFragment() {
             // Required empty public constructor
         }
@@ -294,6 +266,32 @@
                 }
             }
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+        void saveImage() {
+            Uri images;
+            ContentResolver contentResolver = requireActivity().getContentResolver();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                images = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+            } else {
+                images = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            }
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, System.currentTimeMillis() + ".jpg");
+            contentValues.put(MediaStore.Images.Media.MIME_TYPE, "iamges/*");
+            Uri uri = contentResolver.insert(images, contentValues);
+
+            try {
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) imagePreview.getDrawable();
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                OutputStream outputStream = contentResolver.openOutputStream(Objects.requireNonNull(uri));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                Objects.requireNonNull(outputStream);
+                AndroidUtils.showToast(requireContext(), "Image save succesfully");
+
+            } catch (Exception e) {
+                AndroidUtils.showToast(requireContext(), "Image not saved ");
+                e.printStackTrace();
+            }
         }
 
     }

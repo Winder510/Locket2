@@ -3,6 +3,8 @@ package com.example.myapplication.fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +34,7 @@ import com.example.myapplication.adapter.AllPostAdapter;
 import com.example.myapplication.adapter.ViewPostAdapter;
 import com.example.myapplication.interfaces.AddFriend;
 import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
+import com.example.myapplication.interfaces.OnDataPassListener;
 import com.example.myapplication.models.NestedScrollableHost;
 import com.example.myapplication.models.Post;
 import com.example.myapplication.models.User;
@@ -53,16 +56,15 @@ import java.util.concurrent.atomic.AtomicReference;
  * Use the {@link ViewPostFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewPostFragment extends Fragment implements AddFriend {
-
+public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassListener {
 
     Button btnalluser,btnActive;
     RelativeLayout layout;
-    ImageButton ReactionBtn,allPost;
+    ImageButton ReactionBtn,allPost,optionPost;
     RecyclerView rcvlistfriend;
     ViewPostAdapter adapter;
     TextView noPostTextView;
-    LinearLayout action1,action2;
+    LinearLayout action1,topLayout;
     private SimpleGestureFilter detector;
     private FriendAdapter friendAdapter;
     PopupWindow popupWindow;
@@ -71,6 +73,9 @@ public class ViewPostFragment extends Fragment implements AddFriend {
     private List<Post> posts;
     ViewPager2 viewPager2;
     ImageView btnBackToCamera;
+    User currentUserFilter;
+
+
     private OnBackToCameraFragmentListener mlistener;
 
     public ViewPostFragment() {
@@ -123,12 +128,11 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         sendmes=view.findViewById(R.id.sendmes);
         noPostTextView = view.findViewById(R.id.noPostTextView);
         allPost = view.findViewById(R.id.allPost);
+        optionPost = view.findViewById(R.id.optionPost);
         action1 =view.findViewById(R.id.action1Layout);
-        action2 = view.findViewById(R.id.action2Layout);
-
+        topLayout =view.findViewById(R.id.topLayout);
 
         nestedScrollableHost.setViewPager2(viewPager2);
-
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -160,12 +164,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         allPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AllPostFragment fragmentUpload = new AllPostFragment();
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.viewAllPost, fragmentUpload)
-                        .addToBackStack(null)
-                        .commit();
+                switchF();
 
             }
         });
@@ -173,9 +172,8 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             @Override
             public void onClick(View v) {
                 if (mlistener != null) {
-                    viewPager2.setCurrentItem(0);
+                    viewPager2.setCurrentItem(0,false);
                     mlistener.onBackToCameraFragment();
-
                 }
             }
         });
@@ -243,23 +241,24 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         });
 
     }
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void switchF(){
+        AllPostFragment fragmentUpload = new AllPostFragment();
+        Bundle bundle;
+        if(currentUserFilter!=null){
+            bundle = new Bundle();
+            bundle.putSerializable("currentUserFilter", currentUserFilter);
+            fragmentUpload.setArguments(bundle);
+        }
+        fragmentUpload.setOnDataPassListener(this);
+        handleSetVisibleSomeLayout(false);
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.viewAllPost, fragmentUpload)
+                .addToBackStack(null)
+                .commit();
     }
 
-    private void  handleSetVisibleSomeLayout(boolean isVisible){
-        if(isVisible){
-            action1.setVisibility(View.VISIBLE);
-            action2.setVisibility(View.VISIBLE);
-        }
-        else {
-            action1.setVisibility(View.GONE);
-            action2.setVisibility(View.GONE);
-        }
-
-
-    }
     private void loadPosts() {
         AtomicReference<ArrayList<String>> friendsList = new AtomicReference<>();
         FirebaseUtils.currentUserDetail().addSnapshotListener((documentSnapshot, error) -> {
@@ -292,7 +291,6 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                 .orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
-                        // Xử lý lỗi nếu có
                         return;
                     }
                     posts.clear();
@@ -337,6 +335,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
     @Override
     public void onClick(User user) {
         // Implement logic khi click vào user
+        currentUserFilter = new User(user);
         btnalluser.setText(user.getUsername());
         popupWindow.dismiss();
         if (user.getUsername().equals("Tất cả mọi người")) {
@@ -369,11 +368,42 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                     }
                     AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
                     adapter.notifyDataSetChanged();
-
-
                 });
     }
 
 
+    @Override
+    public void onDataPass(Integer data,boolean visible) {
+        viewPager2.setCurrentItem(data,false);
+        handleSetVisibleSomeLayout(visible);
+    }
 
+    @Override
+    public void onFnUserFilterPass(User user) {
+        btnalluser.setText(user.getUsername());
+        if (user.getUsername().equals("Tất cả mọi người")) {
+            loadPosts();
+        }
+        else if(user.getUsername().equals("Bạn")){
+            handlefilterPost(FirebaseUtils.currentUserID());
+        }
+        else{
+            handlefilterPost(user.getUserId());
+        }
+    }
+
+    private void  handleSetVisibleSomeLayout(boolean isVisible){
+        if(isVisible){
+            action1.setVisibility(View.VISIBLE);
+            allPost.setVisibility(View.VISIBLE);
+            optionPost.setVisibility(View.VISIBLE);
+            topLayout.setVisibility(View.VISIBLE);
+        }
+        else {
+            action1.setVisibility(View.INVISIBLE);
+            allPost.setVisibility(View.INVISIBLE);
+            optionPost.setVisibility(View.INVISIBLE);
+            topLayout.setVisibility(View.INVISIBLE);
+        }
+    }
 }
