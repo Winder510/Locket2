@@ -58,6 +58,7 @@ public class FriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         notifyItemInserted(list.size() - 1);
     }
 
+
     @SuppressLint("NotifyDataSetChanged")
     public void removeItemAt(int position) {
         list.remove(position);

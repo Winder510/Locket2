@@ -4,16 +4,27 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
@@ -36,15 +47,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
+import com.example.myapplication.adapter.AllPostAdapter;
 import com.example.myapplication.adapter.ViewPostAdapter;
+import com.example.myapplication.interfaces.AddFriend;
+import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
+import com.example.myapplication.interfaces.OnDataPassListener;
 import com.example.myapplication.models.NestedScrollableHost;
 import com.example.myapplication.models.Post;
+import com.example.myapplication.models.User;
 import com.example.myapplication.utils.AndroidUtils;
+import com.example.myapplication.utils.FirebaseUtils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import maes.tech.intentanim.CustomIntent;
@@ -54,25 +75,28 @@ import maes.tech.intentanim.CustomIntent;
  * Use the {@link ViewPostFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewPostFragment extends Fragment implements AddFriend {
-
+public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassListener {
 
     Button btnalluser,btnActive;
     RelativeLayout layout;
-    ImageButton ReactionBtn,home,btnSetting;
+    ImageButton ReactionBtn,allPost,optionPost;
     RecyclerView rcvlistfriend;
     ViewPostAdapter adapter;
-
+    TextView noPostTextView;
+    LinearLayout action1,topLayout;
     private SimpleGestureFilter detector;
     private FriendAdapter friendAdapter;
     PopupWindow popupWindow;
     View popUpView;
-    EditText sendmes,btn_Reaction;
+    EditText sendmes;
     private List<Post> posts;
     ViewPager2 viewPager2;
     ImageView btnBackToCamera;
     User currentUser;
     ImageView profile_pic_image_view;
+    User currentUserFilter;
+
+
     private OnBackToCameraFragmentListener mlistener;
 
     public ViewPostFragment() {
@@ -130,19 +154,31 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         btnSetting = view.findViewById(R.id.btnSetting);
         profile_pic_image_view = view.findViewById(R.id.profile_pic_image_view);
 
+        noPostTextView = view.findViewById(R.id.noPostTextView);
+        allPost = view.findViewById(R.id.allPost);
+        optionPost = view.findViewById(R.id.optionPost);
+        action1 =view.findViewById(R.id.action1Layout);
+        topLayout =view.findViewById(R.id.topLayout);
 
         nestedScrollableHost.setViewPager2(viewPager2);
-
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                if(posts.isEmpty()){
+                    noPostTextView.setVisibility(View.VISIBLE);
+                    sendmes.setVisibility(View.GONE);
+                    ReactionBtn.setVisibility(View.GONE);
+                }
+                else{
+                    noPostTextView.setVisibility(View.GONE);
+                }
                 if (position == 0) {
                     nestedScrollableHost.setScrollable(true);
                 } else {
                     nestedScrollableHost.setScrollable(false);
                 }
-                if(posts.get(viewPager2.getCurrentItem()).getUserId().equals(FirebaseUtils.currentUserID())){
+                if(!posts.isEmpty()&&posts.get(viewPager2.getCurrentItem()).getUserId().equals(FirebaseUtils.currentUserID())){
                     btnActive.setVisibility(View.VISIBLE);
                     ReactionBtn.setVisibility(View.GONE);
                     sendmes.setVisibility(View.GONE);
@@ -153,11 +189,18 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                 }
             }
         });
+        allPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchF();
+
+            }
+        });
         btnBackToCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mlistener != null) {
-                    viewPager2.setCurrentItem(0);
+                    viewPager2.setCurrentItem(0,false);
                     mlistener.onBackToCameraFragment();
                 }
             }
@@ -170,21 +213,19 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             }
         });
 
-
-
         btnalluser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
                 popUpView = inflater.inflate(R.layout.activity_allfriend, null);
-
                 int width = ViewGroup.LayoutParams.MATCH_PARENT;
                 int height = ViewGroup.LayoutParams.MATCH_PARENT;
                 boolean focusable = true;
                 popupWindow = new PopupWindow(popUpView, width, height, focusable);
                 popupWindow.showAsDropDown(btnalluser);
                 rcvlistfriend = popUpView.findViewById(R.id.listfriend);
+
                 FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         User user = task.getResult().toObject(User.class);
@@ -198,8 +239,13 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                                         }
                                     }
                                 });
+                                if (i == user.getFriends().size() - 1) {
+                                    friendAdapter.addItem(new User("Tất cả mọi người"));
+                                    friendAdapter.addItem(new User("Bạn"));
+                                }
                             }
                             friendAdapter.addItem(new User("Mọi người"));
+
                         }
                     }
                 });
@@ -245,6 +291,23 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             }
         });
     }
+    private void switchF(){
+        AllPostFragment fragmentUpload = new AllPostFragment();
+        Bundle bundle;
+        if(currentUserFilter!=null){
+            bundle = new Bundle();
+            bundle.putSerializable("currentUserFilter", currentUserFilter);
+            fragmentUpload.setArguments(bundle);
+        }
+        fragmentUpload.setOnDataPassListener(this);
+        handleSetVisibleSomeLayout(false);
+        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.viewAllPost, fragmentUpload)
+                .addToBackStack(null)
+                .commit();
+    }
 
     private void loadPosts() {
         AtomicReference<ArrayList<String>> friendsList = new AtomicReference<>();
@@ -275,9 +338,9 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", friends)
                 .whereIn("visibility", Arrays.asList("public", "private"))
+                .orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
-                        // Xử lý lỗi nếu có
                         return;
                     }
                     posts.clear();
@@ -288,9 +351,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                             posts.add(post);
                         }
                     }
-                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
                     adapter.notifyDataSetChanged();
-
 
                 });
     }
@@ -325,8 +386,75 @@ public class ViewPostFragment extends Fragment implements AddFriend {
     @Override
     public void onClick(User user) {
         // Implement logic khi click vào user
-        popupWindow.dismiss();
-//        2
+        currentUserFilter = new User(user);
         btnalluser.setText(user.getUsername());
+        popupWindow.dismiss();
+        if (user.getUsername().equals("Tất cả mọi người")) {
+            loadPosts();
+        }
+        else if(user.getUsername().equals("Bạn")){
+            handlefilterPost(FirebaseUtils.currentUserID());
+        }
+        else{
+            handlefilterPost(user.getUserId());
+        }
+    }
+
+    private void handlefilterPost(String userId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference postsRef = db.collection("posts");
+        postsRef.whereIn("userId", Collections.singletonList(userId))
+                .whereIn("visibility", Arrays.asList("public", "private"))
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        return;
+                    }
+                    posts.clear();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        Post post = document.toObject(Post.class);
+                        if (post.getVisibility().equals("public") || (post.getVisibility().equals("private") && post.getUserId().equals(FirebaseUtils.currentUserID())) ||
+                                (post.getVisibility().equals("private") && post.getAllowed_users().contains(FirebaseUtils.currentUserID()))) {
+                            posts.add(post);
+                        }
+                    }
+                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
+                    adapter.notifyDataSetChanged();
+                });
+    }
+
+
+    @Override
+    public void onDataPass(Integer data,boolean visible) {
+        viewPager2.setCurrentItem(data,false);
+        handleSetVisibleSomeLayout(visible);
+    }
+
+    @Override
+    public void onFnUserFilterPass(User user) {
+        btnalluser.setText(user.getUsername());
+        if (user.getUsername().equals("Tất cả mọi người")) {
+            loadPosts();
+        }
+        else if(user.getUsername().equals("Bạn")){
+            handlefilterPost(FirebaseUtils.currentUserID());
+        }
+        else{
+            handlefilterPost(user.getUserId());
+        }
+    }
+
+    private void  handleSetVisibleSomeLayout(boolean isVisible){
+        if(isVisible){
+            action1.setVisibility(View.VISIBLE);
+            allPost.setVisibility(View.VISIBLE);
+            optionPost.setVisibility(View.VISIBLE);
+            topLayout.setVisibility(View.VISIBLE);
+        }
+        else {
+            action1.setVisibility(View.INVISIBLE);
+            allPost.setVisibility(View.INVISIBLE);
+            optionPost.setVisibility(View.INVISIBLE);
+            topLayout.setVisibility(View.INVISIBLE);
+        }
     }
 }

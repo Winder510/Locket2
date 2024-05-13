@@ -11,12 +11,14 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.myapplication.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -146,16 +148,32 @@ public class FirebaseUtils {
                         friendUsers.add(friendUser);
                     }
                 }
-                // Kiểm tra nếu đã lấy thông tin của tất cả bạn bè, sau đó cập nhật LiveData
                 if (friendUsers.size() == friendIds.size()) {
                     friendUsersLiveData.setValue(friendUsers);
                 }
             }).addOnFailureListener(e -> {
-                // Xử lý lỗi nếu có
+
             });
         }
 
         return friendUsersLiveData;
+    }
+    public static void getFriendUsers(ArrayList<String> friendsList, OnSuccessListener<List<User>> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference usersRef = db.collection("users");
+
+        usersRef.whereIn("userId", friendsList)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<User> users = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        users.add(document.toObject(User.class));
+                    }
+                    listener.onSuccess(users);
+                })
+                .addOnFailureListener(e -> {
+                    // Xử lý lỗi nếu có
+                });
     }
 
 }

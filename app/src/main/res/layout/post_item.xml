@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3.9"
-        android:background="@color/cardview_light_background">
-
+        android:background="@color/cardview_light_background"
+        >
         <ImageView
             android:id="@+id/imageview"
             android:layout_width="match_parent"
@@ -74,5 +74,9 @@
             android:text="Time"
             android:textColor="@color/white" />
     </LinearLayout>
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"/>
 
 </LinearLayout>

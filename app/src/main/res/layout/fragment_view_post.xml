@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/mainPost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:padding="0dp">
-
+    android:padding="0dp"
+    android:clickable="true"
+    android:focusable="true">
     <com.example.myapplication.models.NestedScrollableHost
         android:id="@+id/nestedScrollableHost"
         android:layout_width="match_parent"
@@ -18,7 +19,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:clickable="true"
+            android:focusable="true"
             tools:ignore="MissingClass" />
+        <FrameLayout
+            android:id="@+id/viewAllPost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
     </com.example.myapplication.models.NestedScrollableHost>
 
     <LinearLayout
@@ -29,6 +37,7 @@
         android:weightSum="8">
 
         <LinearLayout
+            android:id="@+id/topLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
@@ -88,7 +97,16 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3.9">
+            android:layout_weight="3.9"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/noPostTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No posts yet"
+                android:textColor="@color/white"
+                android:textSize="20sp"/>
 
         </RelativeLayout>
 
@@ -102,6 +120,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/action1Layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1.1"
@@ -156,6 +175,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/action2Layout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="20dp"
@@ -164,6 +184,7 @@
             android:gravity="center">
 
             <ImageButton
+                android:id="@+id/allPost"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
@@ -190,6 +211,7 @@
                 tools:ignore="NestedWeights" />
 
             <ImageButton
+                android:id="@+id/optionPost"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
@@ -212,4 +234,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-</RelativeLayout>
+
+
+</FrameLayout>

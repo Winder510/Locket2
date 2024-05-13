@@ -24,6 +24,14 @@ public class User implements Serializable {
         this.birthday = birthday;
     }
 
+    public User(User other)  {
+        this.phone = other.phone;
+        this.username = other.username;
+        this.createdTimestamp = other.createdTimestamp;
+        this.friends = other.friends;
+        this.userId = other.userId;
+        this.birthday = other.birthday;
+    }
     public User() {
     }
 
