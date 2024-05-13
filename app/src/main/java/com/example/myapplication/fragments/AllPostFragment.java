@@ -123,7 +123,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
                                     }
                                 });
                                 if (i == user.getFriends().size() - 1) {
-                                    friendAdapter.addItem(new User("Tất cả mọi người"));
+                                    friendAdapter.addItem(new User("Mọi người"));
                                     friendAdapter.addItem(new User("Bạn"));
                                 }
                             }
@@ -203,7 +203,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
         btnalluser.setText(user.getUsername());
         onDataPassListener.onFnUserFilterPass(user);
         popupWindow.dismiss();
-        if (user.getUsername().equals("Tất cả mọi người")) {
+        if (user.getUsername().equals("Mọi người")) {
             loadPosts();
         } else if (user.getUsername().equals("Bạn")) {
             handlefilterPost(FirebaseUtils.currentUserID());
@@ -242,7 +242,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
         Bundle bundle = getArguments();
         if (bundle != null) {
             currentUserFilter = new User((User) Objects.requireNonNull(bundle.getSerializable("currentUserFilter")));
-            if (currentUserFilter.getUsername().equals("Tất cả mọi người")) {
+            if (currentUserFilter.getUsername().equals("Mọi người")) {
                 loadPosts();
             }
             else if(currentUserFilter.getUsername().equals("Bạn")){

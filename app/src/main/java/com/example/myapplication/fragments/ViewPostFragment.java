@@ -385,7 +385,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         currentUserFilter = new User(user);
         btnalluser.setText(user.getUsername());
         popupWindow.dismiss();
-        if (user.getUsername().equals("Tất cả mọi người")) {
+        if (user.getUsername().equals("Mọi người")) {
             loadPosts();
         }
         else if(user.getUsername().equals("Bạn")){
@@ -428,7 +428,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     @Override
     public void onFnUserFilterPass(User user) {
         btnalluser.setText(user.getUsername());
-        if (user.getUsername().equals("Tất cả mọi người")) {
+        if (user.getUsername().equals("Mọi người")) {
             loadPosts();
         }
         else if(user.getUsername().equals("Bạn")){
