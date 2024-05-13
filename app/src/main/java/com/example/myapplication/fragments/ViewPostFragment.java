@@ -79,7 +79,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
 
     Button btnalluser,btnActive;
     RelativeLayout layout;
-    ImageButton ReactionBtn,allPost,optionPost;
+    ImageButton ReactionBtn,allPost,optionPost,btnSetting;
     RecyclerView rcvlistfriend;
     ViewPostAdapter adapter;
     TextView noPostTextView;
@@ -239,14 +239,10 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                                         }
                                     }
                                 });
-                                if (i == user.getFriends().size() - 1) {
-                                    friendAdapter.addItem(new User("Tất cả mọi người"));
-                                    friendAdapter.addItem(new User("Bạn"));
-                                }
                             }
-                            friendAdapter.addItem(new User("Mọi người"));
-
                         }
+                        friendAdapter.addItem(new User("Mọi người"));
+                        friendAdapter.addItem(new User("Bạn"));
                     }
                 });
                 friendAdapter = new FriendAdapter(true, ViewPostFragment.this,getContext());

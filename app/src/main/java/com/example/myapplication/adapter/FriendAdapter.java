@@ -41,6 +41,10 @@ public class FriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.addFriend = addFriend;
         this.context = context;
     }
+    public FriendAdapter(Boolean isFriend, AddFriend addFriend) {
+        this.isFriend = isFriend;
+        this.addFriend = addFriend;
+    }
 
     public FriendAdapter(AddFriend addFriend) {
         this.addFriend = addFriend;
@@ -87,7 +91,7 @@ public class FriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         User user = list.get(position);
         if (user != null) {
-            if (position != 0) {
+            if (position != 0 && position!= 1) {
                 if (holder instanceof AddFriendViewHolder) {
                     FirebaseUtils.getOtherProfilePicStorageRef(user.getUserId()).getDownloadUrl()
                             .addOnSuccessListener(uri -> {
