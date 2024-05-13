@@ -14,6 +14,7 @@ public class User implements Serializable {
     private String birthday;
     private List<String> friends;
     private String userId;
+    private String profilePicUrl;
 
     public String getBirthday() {
         return birthday;
@@ -26,7 +27,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String phone, String phonesearch, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday) {
+    public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday, String avaUrl) {
         this.phone = phone;
         this.username = username;
         this.createdTimestamp = createdTimestamp;
@@ -97,4 +98,11 @@ public class User implements Serializable {
         this.phonesearch=phonesearch;
     }
 
+    public String getProfilePicUrl() {
+        return profilePicUrl;
+    }
+
+    public void setProfilePicUrl(String profilePicUrl) {
+        this.profilePicUrl = profilePicUrl;
+    }
 }

@@ -20,6 +20,7 @@ public class AndroidUtils {
         intent.putExtra("username", model.getUsername());
         intent.putExtra("phone", model.getPhone());
         intent.putExtra("userId", model.getUserId());
+        intent.putExtra("profile", model.getProfilePicUrl());
 
     }
 
@@ -28,6 +29,7 @@ public class AndroidUtils {
         user.setUsername(intent.getStringExtra("username"));
         user.setPhone(intent.getStringExtra("phone"));
         user.setUserId(intent.getStringExtra("userId"));
+        user.setProfilePicUrl(intent.getStringExtra("profile"));
         return user;
     }
     public static void setProfilePic(Context context, Uri imageUri, ImageView imageView){

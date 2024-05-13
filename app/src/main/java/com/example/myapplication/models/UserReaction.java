@@ -1,21 +1,21 @@
 package com.example.myapplication.models;
 
 public class UserReaction {
-    private int profileImgID;
+    private String uId;
     private String name;
     private int reactionType;
 
-    public UserReaction(int profileImgID, String name, int reactionType) {
-        this.profileImgID = profileImgID;
+    public UserReaction(String profileImgID, String name, int reactionType) {
+        this.uId = profileImgID;
         this.name = name;
         this.reactionType = reactionType;
     }
-    public int getProfileImgID() {
-        return profileImgID;
+    public String getUid() {
+        return uId;
     }
 
-    public void setProfileImgID(int profileImgID) {
-        this.profileImgID = profileImgID;
+    public void setUID(String profileImgID) {
+        this.uId = profileImgID;
     }
 
     public String getName() {

@@ -77,7 +77,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         super.onAttach(context);
         if (context instanceof OnBackToCameraFragmentListener) {
             mlistener = (OnBackToCameraFragmentListener) context;
-        } else {
+        }else {
             throw new RuntimeException(context.toString());
         }
     }
@@ -145,14 +145,13 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                 if (mlistener != null) {
                     viewPager2.setCurrentItem(0);
                     mlistener.onBackToCameraFragment();
-
                 }
             }
         });
         btnActive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetReaction bottomSheetReaction = new BottomSheetReaction();
+                BottomSheetReaction bottomSheetReaction = new BottomSheetReaction(posts.get(viewPager2.getCurrentItem()).getPostId());
                 bottomSheetReaction.show(getChildFragmentManager(),"TAG");
             }
         });
@@ -206,7 +205,6 @@ public class ViewPostFragment extends Fragment implements AddFriend {
             @Override
             public void onClick(View v) {
                 showReactionDialog();
-
             }
         });
 
@@ -271,6 +269,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
         // Truyền tọa độ của nút gọi và DialogY cho ReactionDialog
         Bundle args = new Bundle();
+        args.putString("currentPostID",posts.get(viewPager2.getCurrentItem()).getPostId());
         args.putIntArray("buttonLocation", new int[]{buttonLocation[0], dialogY});
 
         ReactionDialog reactionDialog = new ReactionDialog();
@@ -294,5 +293,4 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 //        2
         btnalluser.setText(user.getUsername());
     }
-
 }
