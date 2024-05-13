@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.models.User;
+import com.example.myapplication.utils.AndroidUtils;
+import com.example.myapplication.utils.FirebaseUtils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -48,7 +50,12 @@ public class UserRecyclerAdapter extends RecyclerView.Adapter<UserRecyclerAdapte
     public void onBindViewHolder(@NonNull UserViewHolder holder, @SuppressLint("RecyclerView") int position) {
         User user = userList.get(position);
         holder.usernameText.setText(user.getUsername());
-
+        if (position != 0) {
+            FirebaseUtils.getOtherProfilePicStorageRef(user.getUserId()).getDownloadUrl()
+                    .addOnSuccessListener(uri -> {
+                        AndroidUtils.setProfilePic(context, uri, holder.profilePic);
+                    });
+        }
         if (selectedItems.contains(position)) {
             handleSelectedItem(holder.usernameText, holder.profilePic, true);
         } else {

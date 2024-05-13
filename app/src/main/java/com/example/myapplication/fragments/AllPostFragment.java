@@ -127,11 +127,10 @@ public class AllPostFragment extends Fragment implements AddFriend {
                                     friendAdapter.addItem(new User("Bạn"));
                                 }
                             }
-
                         }
                     }
                 });
-                friendAdapter = new FriendAdapter(true, AllPostFragment.this);
+                friendAdapter = new FriendAdapter(true, AllPostFragment.this,getContext());
                 rcvlistfriend.setAdapter(friendAdapter);
                 popUpView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
