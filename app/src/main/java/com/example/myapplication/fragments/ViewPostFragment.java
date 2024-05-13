@@ -27,9 +27,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.myapplication.BottomSheetDialog.BottomSheetOptions;
 import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
+import com.example.myapplication.activities.RecentChatActivity;
 import com.example.myapplication.activities.SettingsActivity;
 import com.example.myapplication.adapter.FriendAdapter;
 import com.example.myapplication.interfaces.AddFriend;
@@ -79,7 +81,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
 
     Button btnalluser,btnActive;
     RelativeLayout layout;
-    ImageButton ReactionBtn,allPost,optionPost,btnSetting;
+    ImageButton ReactionBtn,allPost,optionPost,btnSetting,btnRecentChat;
     RecyclerView rcvlistfriend;
     ViewPostAdapter adapter;
     TextView noPostTextView;
@@ -153,6 +155,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         sendmes=view.findViewById(R.id.sendmes);
         btnSetting = view.findViewById(R.id.btnSetting);
         profile_pic_image_view = view.findViewById(R.id.profile_pic_image_view);
+        btnRecentChat = view.findViewById(R.id.btnRecentChat);
 
         noPostTextView = view.findViewById(R.id.noPostTextView);
         allPost = view.findViewById(R.id.allPost);
@@ -268,6 +271,21 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
             public void onClick(View v) {
                 handleClickSettingButton();
                 Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btnRecentChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), RecentChatActivity.class);
+                startActivity(intent);
+                CustomIntent.customType(requireContext(), "left-to-right");
+            }
+        });
+        optionPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetOptions bottomSheetOptions = new BottomSheetOptions();
+                bottomSheetOptions.show(getChildFragmentManager(),"TAG");
             }
         });
     }
