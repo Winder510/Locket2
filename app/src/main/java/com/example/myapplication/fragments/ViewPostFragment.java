@@ -2,6 +2,7 @@ package com.example.myapplication.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
 import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
+import com.example.myapplication.activities.SettingsActivity;
 import com.example.myapplication.adapter.FriendAdapter;
 import com.example.myapplication.interfaces.AddFriend;
 import com.example.myapplication.models.User;
@@ -27,6 +29,7 @@ import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +47,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicReference;
 
+import maes.tech.intentanim.CustomIntent;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ViewPostFragment#newInstance} factory method to
@@ -54,7 +59,7 @@ public class ViewPostFragment extends Fragment implements AddFriend {
 
     Button btnalluser,btnActive;
     RelativeLayout layout;
-    ImageButton ReactionBtn,home;
+    ImageButton ReactionBtn,home,btnSetting;
     RecyclerView rcvlistfriend;
     ViewPostAdapter adapter;
 
@@ -66,6 +71,8 @@ public class ViewPostFragment extends Fragment implements AddFriend {
     private List<Post> posts;
     ViewPager2 viewPager2;
     ImageView btnBackToCamera;
+    User currentUser;
+    ImageView profile_pic_image_view;
     private OnBackToCameraFragmentListener mlistener;
 
     public ViewPostFragment() {
@@ -92,8 +99,12 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_view_post, container, false);
         viewPager2 = rootView.findViewById(R.id.viewpager2);
-        adapter = new ViewPostAdapter(posts);
+        adapter = new ViewPostAdapter(posts, getContext());
         viewPager2.setAdapter(adapter);
+        FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                });
         return rootView;
     }
 
@@ -116,6 +127,9 @@ public class ViewPostFragment extends Fragment implements AddFriend {
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
         btnActive= view.findViewById(R.id.btnActive);
         sendmes=view.findViewById(R.id.sendmes);
+        btnSetting = view.findViewById(R.id.btnSetting);
+        profile_pic_image_view = view.findViewById(R.id.profile_pic_image_view);
+
 
         nestedScrollableHost.setViewPager2(viewPager2);
 
@@ -185,11 +199,11 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                                     }
                                 });
                             }
-                            friendAdapter.addItem(new User("Tất cả mọi người"));
+                            friendAdapter.addItem(new User("Mọi người"));
                         }
                     }
                 });
-                friendAdapter = new FriendAdapter(true, ViewPostFragment.this);
+                friendAdapter = new FriendAdapter(true, ViewPostFragment.this,getContext());
                 rcvlistfriend.setAdapter(friendAdapter);
                 popUpView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
@@ -207,7 +221,29 @@ public class ViewPostFragment extends Fragment implements AddFriend {
                 showReactionDialog();
             }
         });
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleClickSettingButton();
+                Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void handleClickSettingButton() {
 
+        Intent intent = new Intent(requireContext(), SettingsActivity.class);
+        FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                currentUser = task.getResult().toObject(User.class);
+                if (currentUser != null) {
+                    AndroidUtils.passUserModelAsIntent(intent, currentUser);
+                    startActivity(intent);
+                    CustomIntent.customType(requireContext(), "right-to-left");
+
+                }
+
+            }
+        });
     }
 
     private void loadPosts() {

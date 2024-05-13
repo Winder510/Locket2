@@ -3,11 +3,13 @@ package com.example.myapplication.adapter;
 import static android.icu.text.DisplayContext.LENGTH_SHORT;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.R;
 import com.example.myapplication.interfaces.AddFriend;
 import com.example.myapplication.models.User;
+import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.Convert;
 import com.example.myapplication.utils.FirebaseUtils;
 
@@ -32,14 +35,17 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public List<User> getList() {
         return list;
     }
+    Context context;
 
-    public AddFriendAdapter(Boolean isFriend, AddFriend addFriend) {
+    public AddFriendAdapter(Boolean isFriend, AddFriend addFriend, Context context) {
         this.isFriend = isFriend;
         this.addFriend = addFriend;
+        this.context = context;
     }
 
-    public AddFriendAdapter(AddFriend addFriend) {
+    public AddFriendAdapter(AddFriend addFriend,Context context) {
         this.addFriend = addFriend;
+        this.context = context;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -84,7 +90,18 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         if (user != null) {
             if (holder instanceof AddFriendViewHolder) {
-                ((AddFriendViewHolder) holder).tvAvatar.setText(Convert.convertName(user.getUsername()));
+                FirebaseUtils.getOtherProfilePicStorageRef(user.getUserId()).getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            // Nếu có URL ảnh đại diện, set ảnh cho holder.profilePic
+                            AndroidUtils.setProfilePic(context, uri, ((AddFriendViewHolder) holder).profile_pic_image_view);
+                            ((AddFriendViewHolder) holder).profile_pic_image_view.setVisibility(View.VISIBLE);
+                            ((AddFriendViewHolder) holder).tvAvatar.setVisibility(View.GONE);
+                        })
+                        .addOnFailureListener(e -> {
+                            ((AddFriendViewHolder) holder).tvAvatar.setText(Convert.convertName(user.getUsername()));
+                            ((AddFriendViewHolder) holder).profile_pic_image_view.setVisibility(View.GONE);
+                            ((AddFriendViewHolder) holder).tvAvatar.setVisibility(View.VISIBLE);
+                        });
                 ((AddFriendViewHolder) holder).tvName.setText(user.getUsername());
                 ((AddFriendViewHolder) holder).tvPhone.setText(user.getPhone());
 
@@ -114,7 +131,18 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     }
                 });
             } else if (holder instanceof FriendViewHolder) {
-                ((FriendViewHolder) holder).tvAvatar.setText(Convert.convertName(user.getUsername()));
+                FirebaseUtils.getOtherProfilePicStorageRef(user.getUserId()).getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            // Nếu có URL ảnh đại diện, set ảnh cho holder.profilePic
+                            AndroidUtils.setProfilePic(context, uri,  ((FriendViewHolder) holder).profile_pic_image_view);
+                            ((FriendViewHolder) holder).profile_pic_image_view.setVisibility(View.VISIBLE);
+                            ((FriendViewHolder) holder).tvAvatar.setVisibility(View.GONE);
+                        })
+                        .addOnFailureListener(e -> {
+                            ((FriendViewHolder) holder).tvAvatar.setText(Convert.convertName(user.getUsername()));
+                            ((FriendViewHolder) holder).profile_pic_image_view.setVisibility(View.GONE);
+                            ((FriendViewHolder) holder).tvAvatar.setVisibility(View.VISIBLE);
+                        });
                 ((FriendViewHolder) holder).tvName.setText(user.getUsername());
 
                 ((FriendViewHolder) holder).btnUnFiend.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +174,7 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class AddFriendViewHolder extends RecyclerView.ViewHolder {
         private TextView tvAvatar, tvName, tvPhone;
         private Button btnAdd;
+        ImageView profile_pic_image_view;
 
         public AddFriendViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -153,6 +182,7 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tvName = itemView.findViewById(R.id.tv_name);
             btnAdd = itemView.findViewById(R.id.btn_add);
             tvPhone = itemView.findViewById(R.id.tv_phone);
+            profile_pic_image_view= itemView.findViewById(R.id.profile_pic_image_view);
         }
     }
 
@@ -160,12 +190,14 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public class FriendViewHolder extends RecyclerView.ViewHolder {
         private TextView tvAvatar, tvName;
         private ImageButton btnUnFiend;
+        ImageView profile_pic_image_view;
 
         public FriendViewHolder(@NonNull View itemView) {
             super(itemView);
             tvAvatar = itemView.findViewById(R.id.tv_avatar);
             tvName = itemView.findViewById(R.id.tv_name);
             btnUnFiend = itemView.findViewById(R.id.btn_un_friend);
+            profile_pic_image_view= itemView.findViewById(R.id.profile_pic_image_view);
         }
     }
 }

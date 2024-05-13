@@ -15,6 +15,7 @@ import com.example.myapplication.R;
 import com.example.myapplication.activities.ChatActivity;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.AndroidUtils;
+import com.example.myapplication.utils.Convert;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -29,6 +30,11 @@ public class SearchUserRecyclerAdapter extends FirestoreRecyclerAdapter<User, Se
 
     @Override
     protected void onBindViewHolder(@NonNull UserModelViewHolder holder, int position, @NonNull User model) {
+        FirebaseUtils.getOtherProfilePicStorageRef(model.getUserId()).getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    // Nếu có URL ảnh đại diện, set ảnh cho holder.profilePic
+                    AndroidUtils.setProfilePic(context, uri, (holder.profilePic));
+                });
         holder.usernameText.setText(model.getUsername());
         holder.phoneText.setText(model.getPhone());
         if(model.getUserId().equals(FirebaseUtils.currentUserID())){

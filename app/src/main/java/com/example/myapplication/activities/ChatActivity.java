@@ -40,7 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton backBtn;
     TextView otherUsername;
     RecyclerView recyclerView;
-    ImageView imageView;
+    ImageView imageView,profile_pic_layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +56,12 @@ public class ChatActivity extends AppCompatActivity {
         otherUsername = findViewById(R.id.other_username);
         recyclerView = findViewById(R.id.chat_recycler_view);
         imageView = findViewById(R.id.profile_pic_image_view);
+        profile_pic_layout = findViewById(R.id.profile_pic_image_view);
+
+        FirebaseUtils.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(this,uri,profile_pic_layout);
+                });
         backBtn.setOnClickListener((v) -> {
             onBackPressed();
         });
@@ -75,7 +81,7 @@ public class ChatActivity extends AppCompatActivity {
         Query query = FirebaseUtils.getChatroomMessageReference(chatroomId).orderBy("timestamp", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<ChatMessage> options = new FirestoreRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
-        adapter = new ChatRecyclerAdapter(options, getApplicationContext());
+        adapter = new ChatRecyclerAdapter(options, getApplicationContext(),otherUser);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);

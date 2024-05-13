@@ -1,5 +1,6 @@
 package com.example.myapplication.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.myapplication.R;
 import com.example.myapplication.models.Post;
+import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 
 import java.util.List;
@@ -20,9 +22,10 @@ public class ViewPostAdapter
         extends RecyclerView.Adapter<ViewPostAdapter
         .ViewHolder> {
     List<Post> posts;
+    Context context;
 
-    public ViewPostAdapter(List<Post> posts) {
-        this.posts = posts;
+    public ViewPostAdapter(List<Post> posts, Context context) {
+        this.posts = posts; this.context=context;
     }
     @NonNull
     @Override
@@ -54,6 +57,11 @@ public class ViewPostAdapter
                         }
                         else {
                             String userName = documentSnapshot.getString("username");
+                            String userId = documentSnapshot.getString("userId");
+                            FirebaseUtils.getOtherProfilePicStorageRef(userId).getDownloadUrl()
+                                    .addOnSuccessListener(uri -> {
+                                        AndroidUtils.setProfilePic(context,uri,holder.profile_pic_image_view);
+                                    });
                             holder.userNameTextview.setText(userName);
                         }
                     }
@@ -69,13 +77,14 @@ public class ViewPostAdapter
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        ImageView imageView,profile_pic_image_view;
         TextView captionText, userNameTextview;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageview);
             captionText = itemView.findViewById(R.id.statusText);
             userNameTextview = itemView.findViewById(R.id.userNameTextview);
+            profile_pic_image_view = itemView.findViewById(R.id.profile_pic_image_view);
         }
     }
 }

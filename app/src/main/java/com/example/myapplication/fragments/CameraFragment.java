@@ -83,6 +83,10 @@ public class CameraFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                });
         return inflater.inflate(R.layout.fragment_camera, container, false);
     }
 
@@ -199,9 +203,6 @@ public class CameraFragment extends Fragment{
 
                 }
             });
-
-
-
     }
 
     public void startCamera(int cameraFacing) {

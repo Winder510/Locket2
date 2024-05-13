@@ -133,16 +133,16 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     private void initView() {
         searchInput = findViewById(R.id.seach_username_input);
         recyclerView = findViewById(R.id.search_user_recycler_view);
-        addFriendAdapter = new AddFriendAdapter(this);
+        addFriendAdapter = new AddFriendAdapter(this,getApplicationContext());
         recyclerView.setAdapter(addFriendAdapter);
         rcvReceive = findViewById(R.id.rcv_receive);
         rcvSend = findViewById(R.id.rcv_send);
-        reciveAdapter = new FriendRequestAdapter(this);
+        reciveAdapter = new FriendRequestAdapter(this,getApplicationContext());
         rcvReceive.setAdapter(reciveAdapter);
-        sendAdapter = new FriendRequestAdapter(this);
+        sendAdapter = new FriendRequestAdapter(this,getApplicationContext());
         rcvSend.setAdapter(sendAdapter);
         rcvUser = findViewById(R.id.user_recycler_view);
-        friendAdapter = new AddFriendAdapter(true, this);
+        friendAdapter = new AddFriendAdapter(true, this,getApplicationContext());
         rcvUser.setAdapter(friendAdapter);
     }
 

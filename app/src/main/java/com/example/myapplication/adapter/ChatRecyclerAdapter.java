@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
 import com.example.myapplication.models.ChatMessage;
+import com.example.myapplication.models.User;
+import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -21,13 +24,14 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
     private static final int TYPE_SEND = 0;
     private static final int TYPE_RECEIVE_SINGLE = 1;
     private static final int TYPE_RECEIVE_GROUP = 2;
+    private User user;
 
     Context context;
 
-    public ChatRecyclerAdapter(@NonNull FirestoreRecyclerOptions<ChatMessage> options, Context context) {
+    public ChatRecyclerAdapter(@NonNull FirestoreRecyclerOptions<ChatMessage> options, Context context, User user) {
         super(options);
         this.context = context;
-
+        this.user = user;
     }
     private boolean isLatestMessage(int position) {
         return position == getItemCount() - 1;
@@ -89,6 +93,10 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
             viewHolder.rightChatTextview.setText(model.getMessage());
         } else {
             GroupChatModelViewHolder viewHolder = (GroupChatModelViewHolder) holder;
+            FirebaseUtils.getOtherProfilePicStorageRef(user.getUserId()).getDownloadUrl()
+                    .addOnSuccessListener(uri -> {
+                        AndroidUtils.setProfilePic(context,uri,viewHolder.profile_pic_image_view);
+                    });
             viewHolder.leftChatLayout.setVisibility(View.VISIBLE);
             viewHolder.leftChatTextview.setText(model.getMessage());
         }
@@ -110,10 +118,11 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
     class GroupChatModelViewHolder extends RecyclerView.ViewHolder {
         LinearLayout leftChatLayout;
         TextView leftChatTextview;
+        ImageView profile_pic_image_view;
 
         public GroupChatModelViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            profile_pic_image_view= itemView.findViewById(R.id.profile_pic_image_view);
             leftChatLayout = itemView.findViewById(R.id.left_chat_layout);
             leftChatTextview = itemView.findViewById(R.id.left_chat_textview);
         }
