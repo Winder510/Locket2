@@ -1,6 +1,7 @@
 package com.example.myapplication.activities;
 
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements OnBackToCameraFra
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         viewPager2 = findViewById(R.id.viewpager2);
         adapter = new ViewPagerAdapter(this,canSwipe);
         viewPager2.setAdapter(adapter);

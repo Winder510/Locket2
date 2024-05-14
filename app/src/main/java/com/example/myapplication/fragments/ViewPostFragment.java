@@ -1,13 +1,17 @@
 package com.example.myapplication.fragments;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -126,6 +130,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         posts = new ArrayList<>();
         loadPosts();
     }
@@ -172,10 +177,12 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                     btnActive.setVisibility(View.VISIBLE);
                     ReactionBtn.setVisibility(View.GONE);
                     chatEditText.setVisibility(View.GONE);
+                    btnSend.setVisibility(View.GONE);
                 }else{
                     btnActive.setVisibility(View.GONE);
                     ReactionBtn.setVisibility(View.VISIBLE);
                     chatEditText.setVisibility(View.VISIBLE);
+                    btnSend.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -260,24 +267,13 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                 Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
             }
         });
-        chatEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    btnSend.setVisibility(View.VISIBLE);
-                    ReactionBtn.setVisibility(View.GONE);
-                } else {
-                    ReactionBtn.setVisibility(View.VISIBLE);
-                    btnSend.setVisibility(View.GONE);
-                }
-            }
-        });
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ReactionBtn.setVisibility(View.VISIBLE);
-                btnSend.setVisibility(View.GONE);
-                sendMessageToUser(chatEditText.getText().toString());
+                if(!chatEditText.getText().toString().isEmpty()){
+                    sendMessageToUser(chatEditText.getText().toString());
+                }
+
             }
         });
     }

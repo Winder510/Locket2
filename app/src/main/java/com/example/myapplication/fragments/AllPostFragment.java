@@ -222,6 +222,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", Collections.singletonList(userId))
                 .whereIn("visibility", Arrays.asList("public", "private"))
+                .orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         return;

@@ -179,7 +179,7 @@
                 android:background="@drawable/emoji_edit_text"
                 android:src="@drawable/pngwing"
                 android:paddingRight="10dp"
-               android:visibility="invisible" />
+                />
             <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
