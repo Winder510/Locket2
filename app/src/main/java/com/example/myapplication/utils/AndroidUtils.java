@@ -21,6 +21,7 @@ public class AndroidUtils {
         intent.putExtra("phone", model.getPhone());
         intent.putExtra("userId", model.getUserId());
         intent.putExtra("profile", model.getProfilePicUrl());
+        intent.putExtra("fcmToken",model.getFcmToken());
 
     }
 
@@ -30,6 +31,7 @@ public class AndroidUtils {
         user.setPhone(intent.getStringExtra("phone"));
         user.setUserId(intent.getStringExtra("userId"));
         user.setProfilePicUrl(intent.getStringExtra("profile"));
+        user.setFcmToken(intent.getStringExtra("fcmToken"));
         return user;
     }
     public static void setProfilePic(Context context, Uri imageUri, ImageView imageView){
