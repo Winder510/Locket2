@@ -105,6 +105,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/radius_trans"
                 android:scaleType="fitXY" />
+
         </RelativeLayout>
 
         <LinearLayout
@@ -124,7 +125,6 @@
                 android:layout_height="1dp"
                 android:layout_weight="1"
                 tools:ignore="NestedWeights" />
-
             <ImageButton
                 android:id="@+id/btnToggleFlash"
                 android:layout_width="50dp"

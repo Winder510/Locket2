@@ -147,7 +147,7 @@
                 app:icon="@drawable/ic_shining" />
 
             <EditText
-                android:id="@+id/sendmes"
+                android:id="@+id/chatEditText"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
@@ -167,7 +167,19 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/emoji_edit_text"
-                android:src="@drawable/ic_addemoji" />
+                android:src="@drawable/ic_addemoji"
+                android:paddingRight="10dp"/>
+
+            <ImageButton
+                android:id="@+id/btnSend"
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/emoji_edit_text"
+                android:src="@drawable/pngwing"
+                android:paddingRight="10dp"
+               android:visibility="invisible" />
             <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

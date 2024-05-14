@@ -4,8 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,8 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -32,32 +30,23 @@ import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.SettingsActivity;
 import com.example.myapplication.adapter.FriendAdapter;
-import com.example.myapplication.interfaces.AddFriend;
-import com.example.myapplication.models.User;
-import com.example.myapplication.utils.FirebaseUtils;
-
-import android.view.MotionEvent;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
-import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
-import com.example.myapplication.adapter.AllPostAdapter;
 import com.example.myapplication.adapter.ViewPostAdapter;
 import com.example.myapplication.interfaces.AddFriend;
 import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
 import com.example.myapplication.interfaces.OnDataPassListener;
+import com.example.myapplication.models.ChatMessage;
+import com.example.myapplication.models.Chatroom;
 import com.example.myapplication.models.NestedScrollableHost;
 import com.example.myapplication.models.Post;
 import com.example.myapplication.models.User;
 import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -77,9 +66,10 @@ import maes.tech.intentanim.CustomIntent;
  */
 public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassListener {
 
+    Chatroom chatroom;
     Button btnalluser,btnActive;
     RelativeLayout layout;
-    ImageButton ReactionBtn,allPost,optionPost,btnSetting;
+    ImageButton ReactionBtn, allPost, optionPost, btnSetting, btnSend;
     RecyclerView rcvlistfriend;
     ViewPostAdapter adapter;
     TextView noPostTextView;
@@ -88,7 +78,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     private FriendAdapter friendAdapter;
     PopupWindow popupWindow;
     View popUpView;
-    EditText sendmes;
+    EditText chatEditText;
     private List<Post> posts;
     ViewPager2 viewPager2;
     ImageView btnBackToCamera;
@@ -150,10 +140,10 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         layout = view.findViewById(R.id.layout);
         ReactionBtn = view.findViewById(R.id.btn_Reaction);
         btnActive= view.findViewById(R.id.btnActive);
-        sendmes=view.findViewById(R.id.sendmes);
+        chatEditText = view.findViewById(R.id.chatEditText);
         btnSetting = view.findViewById(R.id.btnSetting);
         profile_pic_image_view = view.findViewById(R.id.profile_pic_image_view);
-
+        btnSend = view.findViewById(R.id.btnSend);
         noPostTextView = view.findViewById(R.id.noPostTextView);
         allPost = view.findViewById(R.id.allPost);
         optionPost = view.findViewById(R.id.optionPost);
@@ -167,7 +157,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                 super.onPageSelected(position);
                 if(posts.isEmpty()){
                     noPostTextView.setVisibility(View.VISIBLE);
-                    sendmes.setVisibility(View.GONE);
+                    chatEditText.setVisibility(View.GONE);
                     ReactionBtn.setVisibility(View.GONE);
                 }
                 else{
@@ -181,11 +171,11 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                 if(!posts.isEmpty()&&posts.get(viewPager2.getCurrentItem()).getUserId().equals(FirebaseUtils.currentUserID())){
                     btnActive.setVisibility(View.VISIBLE);
                     ReactionBtn.setVisibility(View.GONE);
-                    sendmes.setVisibility(View.GONE);
+                    chatEditText.setVisibility(View.GONE);
                 }else{
                     btnActive.setVisibility(View.GONE);
                     ReactionBtn.setVisibility(View.VISIBLE);
-                    sendmes.setVisibility(View.VISIBLE);
+                    chatEditText.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -268,6 +258,26 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
             public void onClick(View v) {
                 handleClickSettingButton();
                 Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
+            }
+        });
+        chatEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    btnSend.setVisibility(View.VISIBLE);
+                    ReactionBtn.setVisibility(View.GONE);
+                } else {
+                    ReactionBtn.setVisibility(View.VISIBLE);
+                    btnSend.setVisibility(View.GONE);
+                }
+            }
+        });
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReactionBtn.setVisibility(View.VISIBLE);
+                btnSend.setVisibility(View.GONE);
+                sendMessageToUser(chatEditText.getText().toString());
             }
         });
     }
@@ -401,6 +411,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", Collections.singletonList(userId))
                 .whereIn("visibility", Arrays.asList("public", "private"))
+                .orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         return;
@@ -452,5 +463,48 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
             optionPost.setVisibility(View.INVISIBLE);
             topLayout.setVisibility(View.INVISIBLE);
         }
+    }
+
+    void getOrCreateChatRoomModel(String chatroomId, String otherUserId, String message) {
+        FirebaseUtils.getChatroomReference(chatroomId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    chatroom = task.getResult().toObject(Chatroom.class);
+                    if (chatroom == null) {
+                        chatroom = new Chatroom(
+                                chatroomId,
+                                Arrays.asList(FirebaseUtils.currentUserID(), otherUserId),
+                                Timestamp.now(),
+                                "", "");
+                        FirebaseUtils.getChatroomReference(chatroomId).set(chatroom);
+                    }
+                    chatroom.setLastMessageTimestamp(Timestamp.now());
+                    chatroom.setLastMessageSenderId(FirebaseUtils.currentUserID());
+                    chatroom.setLastMessage(message);
+
+                    FirebaseUtils.getChatroomReference(chatroomId).set(chatroom);
+                }
+
+            }
+        });
+    }
+
+    void sendMessageToUser(String message) {
+        String otherUserId = posts.get(viewPager2.getCurrentItem()).getUserId();
+        String chatroomId = FirebaseUtils.getChatroomId(FirebaseUtils.currentUserID(), otherUserId);
+        getOrCreateChatRoomModel(chatroomId, otherUserId, message);
+
+        ChatMessage chatMessage = new ChatMessage(message, FirebaseUtils.currentUserID(), Timestamp.now(), posts.get(viewPager2.getCurrentItem()).getPostImg_url(), "time", posts.get(viewPager2.getCurrentItem()).getPostCaption());
+
+        FirebaseUtils.getChatroomMessageReference(chatroomId).add(chatMessage)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            chatEditText.setText("");
+                        }
+                    }
+                });
     }
 }
