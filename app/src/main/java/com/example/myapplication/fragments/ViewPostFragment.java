@@ -29,7 +29,6 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.myapplication.BottomSheetDialog.BottomSheetOptions;
 import com.example.myapplication.BottomSheetDialog.BottomSheetReaction;
-import com.example.myapplication.Gesture.SimpleGestureFilter;
 import com.example.myapplication.R;
 import com.example.myapplication.activities.RecentChatActivity;
 import com.example.myapplication.activities.SettingsActivity;
@@ -78,7 +77,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     ViewPostAdapter adapter;
     TextView noPostTextView;
     LinearLayout action1,topLayout;
-    private SimpleGestureFilter detector;
     private FriendAdapter friendAdapter;
     PopupWindow popupWindow;
     View popUpView;
@@ -314,7 +312,11 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         optionPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle args = new Bundle();
+                args.putString("currentPostID",posts.get(viewPager2.getCurrentItem()).getPostId());
                 BottomSheetOptions bottomSheetOptions = new BottomSheetOptions();
+
+                bottomSheetOptions.setArguments(args);
                 bottomSheetOptions.show(getChildFragmentManager(),"TAG");
             }
         });
