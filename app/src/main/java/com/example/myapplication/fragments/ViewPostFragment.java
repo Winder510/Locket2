@@ -5,12 +5,14 @@ import static androidx.core.content.ContextCompat.getSystemService;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -116,15 +118,42 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_view_post, container, false);
+
+        // Initialize ViewPager2 and adapter
         viewPager2 = rootView.findViewById(R.id.viewpager2);
         adapter = new ViewPostAdapter(posts, getContext());
         viewPager2.setAdapter(adapter);
+
+        // Initialize EditText
+        chatEditText = rootView.findViewById(R.id.chatEditText);
+
+        // Load profile picture
         FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                    AndroidUtils.setProfilePic(requireContext(), uri, btnSetting);
                 });
+
+        // Listen to layout changes to adjust the EditText position
+        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect r = new Rect();
+                rootView.getWindowVisibleDisplayFrame(r);
+                int screenHeight = rootView.getRootView().getHeight();
+                int keypadHeight = screenHeight - r.bottom;
+
+                if (keypadHeight > screenHeight * 0.15) { // Keyboard is opened
+//                    chatEditText.setTranslationY(screenHeight - keypadHeight - chatEditText.getHeight() - 20); // Adjust position
+                    chatEditText.setTranslationY(100);
+                } else { // Keyboard is closed
+                    chatEditText.setTranslationY(0); // Reset position
+                }
+            }
+        });
+
         return rootView;
     }
+
 
 
     @Override

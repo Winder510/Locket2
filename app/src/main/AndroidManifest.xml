@@ -26,7 +26,7 @@
 
         <activity android:name=".activities.MainActivity"
             android:exported="false"
-            android:windowSoftInputMode="stateVisible|adjustResize|adjustPan"/>
+            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".activities.LoginUsernameActivity"
             android:exported="false"
              />
