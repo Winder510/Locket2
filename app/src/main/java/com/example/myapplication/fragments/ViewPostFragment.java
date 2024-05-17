@@ -1,19 +1,15 @@
 package com.example.myapplication.fragments;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -161,7 +157,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         posts = new ArrayList<>();
         loadPosts();
     }
@@ -303,10 +298,11 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!chatEditText.getText().toString().isEmpty()){
+                if (!chatEditText.getText().toString().isEmpty()) {
                     sendMessageToUser(chatEditText.getText().toString());
                 }
-
+            }
+        });
         btnRecentChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -549,4 +545,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                     }
                 });
     }
+
+
 }
