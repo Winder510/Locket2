@@ -104,7 +104,25 @@ public class AllPostFragment extends Fragment implements AddFriend {
         if(currentUserFilter!=null){
             btnalluser.setText(currentUserFilter.getUsername());
         }
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom,
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                int parentWidth = recyclerView.getWidth();
+                int itemWidth = parentWidth / numberOfColumns ;
+                int itemHeight = itemWidth; // Chiều cao bằng chiều rộng để đảm bảo tỷ lệ 1:1
 
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                for (int i = 0; i < layoutManager.getChildCount(); i++) {
+                    View view = layoutManager.getChildAt(i);
+                    RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) view.getLayoutParams();
+                    params.width = itemWidth-10;
+                    params.height = itemHeight-10;
+                    params.setMargins(10, 10, 10, 10);
+                    view.setLayoutParams(params);
+                }
+            }
+        });
        return rootView;
     }
 

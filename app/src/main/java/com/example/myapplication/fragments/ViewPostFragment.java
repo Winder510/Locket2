@@ -129,24 +129,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                     AndroidUtils.setProfilePic(requireContext(), uri, btnSetting);
                 });
 
-        // Listen to layout changes to adjust the EditText position
-        rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect r = new Rect();
-                rootView.getWindowVisibleDisplayFrame(r);
-                int screenHeight = rootView.getRootView().getHeight();
-                int keypadHeight = screenHeight - r.bottom;
-
-                if (keypadHeight > screenHeight * 0.15) { // Keyboard is opened
-//                    chatEditText.setTranslationY(screenHeight - keypadHeight - chatEditText.getHeight() - 20); // Adjust position
-                    chatEditText.setTranslationY(100);
-                } else { // Keyboard is closed
-                    chatEditText.setTranslationY(0); // Reset position
-                }
-            }
-        });
-
         return rootView;
     }
 

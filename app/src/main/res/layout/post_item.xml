@@ -6,7 +6,7 @@
     android:gravity="center"
     android:orientation="vertical"
     android:weightSum="8"
-    android:background="@color/black">
+   >
 
     <RelativeLayout
         android:layout_width="match_parent"
