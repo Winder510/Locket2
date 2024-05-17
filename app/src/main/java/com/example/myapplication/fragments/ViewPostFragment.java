@@ -37,6 +37,7 @@ import com.example.myapplication.adapter.ViewPostAdapter;
 import com.example.myapplication.interfaces.AddFriend;
 import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
 import com.example.myapplication.interfaces.OnDataPassListener;
+import com.example.myapplication.interfaces.OnPostDeleteListener;
 import com.example.myapplication.models.ChatMessage;
 import com.example.myapplication.models.Chatroom;
 import com.example.myapplication.models.NestedScrollableHost;
@@ -67,7 +68,7 @@ import maes.tech.intentanim.CustomIntent;
  * Use the {@link ViewPostFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassListener {
+public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassListener, OnPostDeleteListener {
 
     Chatroom chatroom;
     Button btnalluser,btnActive;
@@ -294,14 +295,16 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         optionPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle args = new Bundle();
-                args.putString("currentPostID",posts.get(viewPager2.getCurrentItem()).getPostId());
-                BottomSheetOptions bottomSheetOptions = new BottomSheetOptions();
-
-                bottomSheetOptions.setArguments(args);
-                bottomSheetOptions.show(getChildFragmentManager(),"TAG");
+                handleClickAllPostButton();
             }
         });
+    }
+    private void handleClickAllPostButton() {
+        Bundle args = new Bundle();
+        args.putString("currentPostID",posts.get(viewPager2.getCurrentItem()).getPostId());
+        BottomSheetOptions bottomSheetOptions = new BottomSheetOptions(this);
+        bottomSheetOptions.setArguments(args);
+        bottomSheetOptions.show(getChildFragmentManager(),"TAG");
     }
     private void handleClickSettingButton() {
 
@@ -531,4 +534,8 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     }
 
 
+    @Override
+    public void onPostDeleted() {
+        loadPosts();
+    }
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.myapplication.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
@@ -174,6 +175,22 @@ public class FirebaseUtils {
                 .addOnFailureListener(e -> {
                     // Xử lý lỗi nếu có
                 });
+    }
+    public static void deletePostById(String postId, OnSuccessListener<Void> onSuccessListener, OnFailureListener onFailureListener) {
+        DocumentReference postRef = getPostsCollectionReference().document(postId);
+
+        postRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String userId = documentSnapshot.getString("userId");
+                if (userId != null && userId.equals(FirebaseUtils.currentUserID())) {
+                    postRef.delete().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+                } else {
+                    onFailureListener.onFailure(new Exception("You can only delete your own posts"));
+                }
+            } else {
+                onFailureListener.onFailure(new Exception("Post not found"));
+            }
+        }).addOnFailureListener(onFailureListener);
     }
 
 }

@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -26,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.myapplication.R;
+import com.example.myapplication.interfaces.OnPostDeleteListener;
 import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,7 +34,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.OutputStream;
-import java.util.Objects;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,6 +42,12 @@ public class BottomSheetOptions extends BottomSheetDialogFragment {
     Button saveBtn, deleteBtn;
     ImageView imageView;
     String postId, postUrl;
+    private OnPostDeleteListener onPostDeleteListener;
+
+    public BottomSheetOptions(OnPostDeleteListener listener) {
+        this.onPostDeleteListener = listener;
+    }
+
 
     public BottomSheetOptions() {
     }
@@ -76,8 +81,25 @@ public class BottomSheetOptions extends BottomSheetDialogFragment {
                 }
             }
         });
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deletePost();
+            }
+        });
     }
 
+    private void deletePost() {
+        if (postId != null) {
+            FirebaseUtils.deletePostById(postId, unused -> {
+                onPostDeleteListener.onPostDeleted();
+                AndroidUtils.showToast(requireContext(), "Post deleted successfully");
+                dismiss();
+            }, e -> AndroidUtils.showToast(requireContext(), "Failed to delete post: " + e.getMessage()));
+        } else {
+            AndroidUtils.showToast(requireContext(), "Post ID is null");
+        }
+    }
     private void loadImageFromFirebase(String postId) {
         FirebaseUtils.getPostsCollectionReference().document(postId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
