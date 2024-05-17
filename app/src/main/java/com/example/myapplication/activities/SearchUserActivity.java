@@ -159,9 +159,21 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
                             if (task.isSuccessful()) {
                                 if (searchTerm.trim().isEmpty()) return;
                                 List<User> list = task.getResult().toObjects(User.class);
-                                List<User> list1 = sendAdapter.filterList(list);
+
+                                // Lọc bỏ người dùng hiện tại khỏi kết quả
+                                String currentUserId = FirebaseUtils.currentUserID();
+                                List<User> filteredList = new ArrayList<>();
+                                for (User user : list) {
+                                    if (!user.getUserId().equals(currentUserId)) {
+                                        filteredList.add(user);
+                                    }
+                                }
+
+                                // Áp dụng các bộ lọc khác
+                                List<User> list1 = sendAdapter.filterList(filteredList);
                                 List<User> list2 = reciveAdapter.filterList(list1);
                                 List<User> list3 = filterFriends(list2);
+
                                 runOnUiThread(() -> {
                                     addFriendAdapter.setData(list3);
                                 });
@@ -178,6 +190,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         });
         threadFilter.start();
     }
+
 
 
     @Override

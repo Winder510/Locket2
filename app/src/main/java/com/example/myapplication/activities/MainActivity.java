@@ -14,6 +14,8 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.myapplication.R;
 import com.example.myapplication.adapter.ViewPagerAdapter;
 import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
+import com.example.myapplication.utils.FirebaseUtils;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity implements OnBackToCameraFragmentListener {
     ViewPager2 viewPager2;
@@ -29,11 +31,23 @@ public class MainActivity extends AppCompatActivity implements OnBackToCameraFra
         adapter = new ViewPagerAdapter(this,canSwipe);
         viewPager2.setAdapter(adapter);
 
+        getFCMToken();
     }
 
     @Override
     public void onBackToCameraFragment() {
         viewPager2.setCurrentItem(0);
     }
+    void getFCMToken()
+    {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                String token = task.getResult();
+                FirebaseUtils.currentUserDetail().update("fcmToken",token);
+
+            }
+        });
+    }
 
 }
+

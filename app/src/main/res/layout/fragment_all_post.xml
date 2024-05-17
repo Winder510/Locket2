@@ -37,7 +37,7 @@
                 android:layout_margin="3dp"
                 android:background="@drawable/btn_oval_no_stroke"
                 android:baselineAligned="false"
-                android:padding="7dp"
+                android:padding="3dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_user"
                 android:id="@+id/btnSetting"/>

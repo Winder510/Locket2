@@ -16,6 +16,16 @@ public class User implements Serializable {
     private String userId;
     private String profilePicUrl;
 
+    private String fcmToken;
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
+
     public String getBirthday() {
         return birthday;
     }

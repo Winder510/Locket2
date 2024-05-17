@@ -2,13 +2,16 @@ package com.example.myapplication.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +20,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.R;
+import com.example.myapplication.activities.RecentChatActivity;
+import com.example.myapplication.activities.SettingsActivity;
 import com.example.myapplication.adapter.AllPostAdapter;
 import com.example.myapplication.adapter.FriendAdapter;
 import com.example.myapplication.interfaces.AddFriend;
@@ -37,6 +42,8 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import maes.tech.intentanim.CustomIntent;
+
 public class AllPostFragment extends Fragment implements AddFriend {
 
     RecyclerView recyclerView;
@@ -48,7 +55,9 @@ public class AllPostFragment extends Fragment implements AddFriend {
     private OnDataPassListener onDataPassListener;
     private FriendAdapter friendAdapter;
     Button btnalluser;
+    ImageButton btnSetting,btnRecentChat;
     User currentUserFilter;
+    User currentUser;
 
     public void setOnDataPassListener(OnDataPassListener listener) {
         this.onDataPassListener = listener;
@@ -73,6 +82,12 @@ public class AllPostFragment extends Fragment implements AddFriend {
         View rootView = inflater.inflate(R.layout.fragment_all_post, container, false);
         recyclerView = rootView.findViewById(R.id.recyclerView);
         btnalluser = rootView.findViewById(R.id.btnalluser);
+        btnSetting = rootView.findViewById(R.id.btnSetting);
+        btnRecentChat = rootView.findViewById(R.id.btnRecentChat);
+        FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                });
         adapter = new AllPostAdapter(posts, getContext(), new OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -142,8 +157,38 @@ public class AllPostFragment extends Fragment implements AddFriend {
 
             }
         });
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleClickSettingButton();
+                Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btnRecentChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireContext(), RecentChatActivity.class);
+                startActivity(intent);
+                CustomIntent.customType(requireContext(), "left-to-right");
+            }
+        });
     }
+    private void handleClickSettingButton() {
 
+        Intent intent = new Intent(requireContext(), SettingsActivity.class);
+        FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                currentUser = task.getResult().toObject(User.class);
+                if (currentUser != null) {
+                    AndroidUtils.passUserModelAsIntent(intent, currentUser);
+                    startActivity(intent);
+                    CustomIntent.customType(requireContext(), "right-to-left");
+
+                }
+
+            }
+        });
+    }
     private void loadPosts() {
         AtomicReference<ArrayList<String>> friendsList = new AtomicReference<>();
         FirebaseUtils.currentUserDetail().addSnapshotListener((documentSnapshot, error) -> {

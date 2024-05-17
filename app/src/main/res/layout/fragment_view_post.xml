@@ -80,7 +80,7 @@
                 android:layout_weight="1"
                 tools:ignore="NestedWeights" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnRecentChat"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
@@ -88,9 +88,7 @@
                 android:background="@drawable/btn_oval_no_stroke"
                 android:padding="7dp"
                 android:scaleType="centerCrop"
-                android:text="..."
-                android:textAlignment="center"
-                android:textSize="20dp" />
+                android:src="@drawable/ic_message" />
 
 
         </LinearLayout>
