@@ -105,6 +105,16 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/radius_trans"
                 android:scaleType="fitXY" />
+
+            <SeekBar
+                android:id="@+id/zoomSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:max="10"
+                android:min="-10"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"/>
         </RelativeLayout>
 
         <LinearLayout

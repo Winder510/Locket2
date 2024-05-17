@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -61,6 +62,12 @@ import maes.tech.intentanim.CustomIntent;
 public class CameraFragment extends Fragment{
     ImageButton capture, toggleFlash, flipCamera, btnSetting, btnRecentChat;
     Button btnSearchUser;
+    private Camera camera;
+    private ProcessCameraProvider cameraProvider;
+    private CameraSelector cameraSelector;
+    private Preview preview;
+    private ImageCapture imageCapture;
+    private SeekBar zoomSeekBar;
     private PreviewView previewView;
     TextView badge;
     // for <setting layout>
@@ -104,6 +111,8 @@ public class CameraFragment extends Fragment{
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
         badge = view.findViewById(R.id.badge);
+        zoomSeekBar = view.findViewById(R.id.zoomSeekBar);
+
 
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -148,12 +157,35 @@ public class CameraFragment extends Fragment{
                 startCamera(cameraFacing);
             }
         });
+        zoomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (camera != null && fromUser) {
+                    float zoomRatio = getZoomRatio(progress);
+                    camera.getCameraControl().setZoomRatio(zoomRatio);
+                }
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Optional: Implement if needed
+            }
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Optional: Implement if needed
+            }
+        });
+    }
 
+    private float getZoomRatio(int progress) {
+        if (camera != null) {
+            float zoomMin = camera.getCameraInfo().getZoomState().getValue().getMinZoomRatio();
+            float zoomMax = camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
 
-
-
+            return zoomMin + (zoomMax - zoomMin) * (progress / (float) zoomSeekBar.getMax());
+        }
+        return 1.0f;
     }
 
     @Override
@@ -205,24 +237,29 @@ public class CameraFragment extends Fragment{
     }
 
     public void startCamera(int cameraFacing) {
-        int aspectRatio = aspectRatio(previewView.getWidth(), previewView.getHeight());
-        ListenableFuture<ProcessCameraProvider> listenableFuture = ProcessCameraProvider.getInstance(requireContext());
-
-        listenableFuture.addListener(() -> {
+        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
+        cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = (ProcessCameraProvider) listenableFuture.get();
-
-                Preview preview = new Preview.Builder().setTargetAspectRatio(aspectRatio).build();
-
-                ImageCapture imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                        .setTargetRotation(requireActivity().getWindowManager().getDefaultDisplay().getRotation()).build();
-
+                cameraProvider = cameraProviderFuture.get();
+                if (cameraProvider == null) {
+                    return; // Early return if cameraProvider is null
+                }
                 CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(cameraFacing).build();
+                        .requireLensFacing(cameraFacing)
+                        .build();
 
-                cameraProvider.unbindAll();
+                preview = new Preview.Builder()
+                        .build();
 
-                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
+                imageCapture = new ImageCapture.Builder()
+                        .build();
+
+                cameraProvider.unbindAll(); // Unbind use cases before rebinding
+
+                camera = cameraProvider.bindToLifecycle(
+                        this, cameraSelector, preview, imageCapture);
+
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
                 capture.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -244,7 +281,13 @@ public class CameraFragment extends Fragment{
                 });
 
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+                // Inside startCamera, after camera is initialized
+                float maxZoomRatio = camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
+                zoomSeekBar.setMax((int) (maxZoomRatio * 10)); // Adjusting max value as per zoom ratio
+
             } catch (ExecutionException | InterruptedException e) {
+                // Handle exception
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(getContext()));
