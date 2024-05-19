@@ -21,6 +21,7 @@ import com.google.firebase.Timestamp;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class ViewPostAdapter
         extends RecyclerView.Adapter<ViewPostAdapter
@@ -78,7 +79,8 @@ public class ViewPostAdapter
                 System.currentTimeMillis(),
                 DateUtils.MINUTE_IN_MILLIS
         );
-        holder.timeTextView.setText(formatTimeAgo(timeAgo));
+
+        holder.timeTextView.setText(timeAgo);
     }
 
     @Override
@@ -100,29 +102,4 @@ public class ViewPostAdapter
         }
     }
 
-    public String formatTimeAgo(CharSequence timeAgo) {
-        String[] units = {"ph", "g", "ng"};
-        String timeString = timeAgo.toString().trim(); // Loại bỏ khoảng trắng ở đầu và cuối chuỗi
-        String timeValue="";
-        int unitIndex = 0;
-        if (timeString.endsWith("ago")) {
-            timeString = timeString.substring(0, timeString.length() - 4);
-            if (timeString.equals("0 minutes")) {
-                return "Vừa xong";
-            } else if (timeString.endsWith("minutes") || timeString.endsWith("minute")) {
-                unitIndex = 0;
-            } else if (timeString.endsWith("hours") || timeString.endsWith("hour")) {
-                unitIndex = 1;
-            } else if (timeString.endsWith("days") || timeString.endsWith("day")) {
-                unitIndex = 2;
-            }
-            int spaceIndex = timeString.indexOf(" ");
-            timeString = timeString.substring(0, spaceIndex);
-            timeValue = timeString + units[unitIndex];
-            return timeValue;
-        }
-        else {
-            return timeString;
-        }
-    }
 }
