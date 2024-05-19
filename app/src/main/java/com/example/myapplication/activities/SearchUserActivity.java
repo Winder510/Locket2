@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,6 +57,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     private Thread threadFilter;
     String chatroomId;
     Chatroom chatroom;
+    TextView btnxemthem;
 
 
     public static int receiveItemCount = 0;
@@ -71,6 +75,25 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
             Intent intent=new Intent(this,MainActivity.class);
             startActivity(intent);
             CustomIntent.customType(this, "right-to-left");
+        });
+        btnxemthem=findViewById(R.id.btnxemthem);
+        btnxemthem.setOnClickListener(v -> {
+            // Chuyển đổi từ dp sang pixel
+            int height100Dp = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+            int height500Dp = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 500, getResources().getDisplayMetrics());
+
+            // Kiểm tra chiều cao hiện tại của RecyclerView và thay đổi
+            ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
+            if (layoutParams.height == height100Dp) {
+                layoutParams.height = height500Dp;
+                btnxemthem.setText("Ẩn bớt");
+            } else {
+                layoutParams.height = height100Dp;
+                btnxemthem.setText("Xem thêm");
+            }
+            rcvUser.setLayoutParams(layoutParams);
         });
     }
 
