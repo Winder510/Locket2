@@ -3,6 +3,9 @@ package com.example.myapplication.activities;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,13 +28,23 @@ public class RecentChatActivity extends AppCompatActivity implements SimpleGestu
     RecyclerView recyclerView;
     RecentChatRecyclerAdapter adapter;
     private SimpleGestureFilter detector;
+    ImageButton btnBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent_chat);
         recyclerView = findViewById(R.id.recyler_view);
+        btnBack = findViewById(R.id.back_btn);
         setupRecyclerView();
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+                CustomIntent.customType(RecentChatActivity.this, "right-to-left");
+            }
+        });
     }
 
     void setupRecyclerView() {

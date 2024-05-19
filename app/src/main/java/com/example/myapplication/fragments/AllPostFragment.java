@@ -179,7 +179,6 @@ public class AllPostFragment extends Fragment implements AddFriend {
             @Override
             public void onClick(View v) {
                 handleClickSettingButton();
-                Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
             }
         });
         btnRecentChat.setOnClickListener(new View.OnClickListener() {

@@ -102,7 +102,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:padding="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
@@ -121,6 +121,7 @@
                 android:background="#99FFFFFF" />
 
             <TextView
+                android:id="@+id/btnxemthem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/tv_bg"

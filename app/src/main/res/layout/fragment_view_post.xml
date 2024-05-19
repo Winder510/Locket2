@@ -125,7 +125,7 @@
             android:layout_weight="1.1"
             android:gravity="center|top"
             android:orientation="horizontal"
-            android:weightSum="10">
+            android:weightSum="11">
 
             <Space
                 android:layout_width="0dp"
@@ -157,27 +157,26 @@
                 android:textColor="@color/white"
                 android:textColorHint="#888888"
                 android:textSize="20sp" />
-
-            <ImageButton
-                android:id="@+id/btn_Reaction"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@drawable/emoji_edit_text"
-                android:src="@drawable/ic_addemoji"
-                android:paddingRight="10dp"/>
-
             <ImageButton
                 android:id="@+id/btnSend"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:background="@drawable/emoji_edit_text"
+                android:background="@drawable/send_button"
                 android:src="@drawable/pngwing"
-                android:paddingRight="10dp"
-                />
+                android:paddingRight="10dp" />
+
+            <ImageButton
+                android:id="@+id/btn_Reaction"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/happy"
+                android:background="@drawable/emoji_edit_text"
+                android:layout_marginLeft="10dp"/>
+
             <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
