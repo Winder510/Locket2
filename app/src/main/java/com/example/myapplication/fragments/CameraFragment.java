@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.SeekBar;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -59,6 +60,8 @@ public class CameraFragment extends Fragment{
     Button btnSearchUser;
     ImageView imageViewTest;
     private PreviewView previewView;
+
+    private SeekBar zoomSeekBar;
     TextView badge;
     // for <setting layout>
     User currentUser;
@@ -100,6 +103,7 @@ public class CameraFragment extends Fragment{
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
         badge = view.findViewById(R.id.badge);
+        zoomSeekBar = view.findViewById(R.id.zoomSeekBar);
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
@@ -205,19 +209,17 @@ public class CameraFragment extends Fragment{
 
         listenableFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = (ProcessCameraProvider) listenableFuture.get();
-
-                Preview preview = new Preview.Builder().setTargetAspectRatio(aspectRatio).build();
-
-                ImageCapture imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                        .setTargetRotation(requireActivity().getWindowManager().getDefaultDisplay().getRotation()).build();
-
+                ProcessCameraProvider cameraProvider = listenableFuture.get();
                 CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(cameraFacing).build();
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build();
+                Preview preview = new Preview.Builder().build();
+                ImageCapture imageCapture = new ImageCapture.Builder().build();
 
-                cameraProvider.unbindAll();
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
+                cameraProvider.unbindAll(); // Unbind use cases before rebinding
+                Camera camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview, imageCapture);
 
                 capture.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -237,12 +239,32 @@ public class CameraFragment extends Fragment{
                         setFlashIcon(camera);
                     }
                 });
-
+                setupZoomControl(camera);
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(getContext()));
+    }
+
+    public void setupZoomControl(Camera camera) {
+        zoomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float zoomRatio = 1f + (progress / 100f) * (camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio() - 1f);
+                camera.getCameraControl().setZoomRatio(zoomRatio);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Optional: Implement if needed
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Optional: Implement if needed
+            }
+        });
     }
 
     public void takePicture(ImageCapture imageCapture) {

@@ -226,7 +226,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="3dp"
-                android:background="@drawable/ic_share"
+                android:background="@drawable/ic_upload"
                 android:padding="7dp"
                 android:scaleType="centerCrop" />
 
