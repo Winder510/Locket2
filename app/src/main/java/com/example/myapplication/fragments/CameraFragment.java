@@ -13,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.SeekBar;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -60,8 +59,6 @@ public class CameraFragment extends Fragment{
     Button btnSearchUser;
     ImageView imageViewTest;
     private PreviewView previewView;
-
-    private SeekBar zoomSeekBar;
     TextView badge;
     // for <setting layout>
     User currentUser;
@@ -103,7 +100,6 @@ public class CameraFragment extends Fragment{
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
         badge = view.findViewById(R.id.badge);
-        zoomSeekBar = view.findViewById(R.id.zoomSeekBar);
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
@@ -189,18 +185,18 @@ public class CameraFragment extends Fragment{
     private void handleClickSettingButton() {
 
         Intent intent = new Intent(requireContext(), SettingsActivity.class);
-            FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    currentUser = task.getResult().toObject(User.class);
-                    if (currentUser != null) {
-                        AndroidUtils.passUserModelAsIntent(intent, currentUser);
-                        startActivity(intent);
-                        CustomIntent.customType(requireContext(), "right-to-left");
-
-                    }
+        FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                currentUser = task.getResult().toObject(User.class);
+                if (currentUser != null) {
+                    AndroidUtils.passUserModelAsIntent(intent, currentUser);
+                    startActivity(intent);
+                    CustomIntent.customType(requireContext(), "right-to-left");
 
                 }
-            });
+
+            }
+        });
     }
 
     public void startCamera(int cameraFacing) {
@@ -209,17 +205,19 @@ public class CameraFragment extends Fragment{
 
         listenableFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = listenableFuture.get();
+                ProcessCameraProvider cameraProvider = (ProcessCameraProvider) listenableFuture.get();
+
+                Preview preview = new Preview.Builder().setTargetAspectRatio(aspectRatio).build();
+
+                ImageCapture imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                        .setTargetRotation(requireActivity().getWindowManager().getDefaultDisplay().getRotation()).build();
+
                 CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
-                Preview preview = new Preview.Builder().build();
-                ImageCapture imageCapture = new ImageCapture.Builder().build();
+                        .requireLensFacing(cameraFacing).build();
 
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+                cameraProvider.unbindAll();
 
-                cameraProvider.unbindAll(); // Unbind use cases before rebinding
-                Camera camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview, imageCapture);
+                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
 
                 capture.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -239,32 +237,12 @@ public class CameraFragment extends Fragment{
                         setFlashIcon(camera);
                     }
                 });
-                setupZoomControl(camera);
+
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(getContext()));
-    }
-
-    public void setupZoomControl(Camera camera) {
-        zoomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                float zoomRatio = 1f + (progress / 100f) * (camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio() - 1f);
-                camera.getCameraControl().setZoomRatio(zoomRatio);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Optional: Implement if needed
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Optional: Implement if needed
-            }
-        });
     }
 
     public void takePicture(ImageCapture imageCapture) {
@@ -325,23 +303,23 @@ public class CameraFragment extends Fragment{
 
 
     private void handleAfterTakePicture(File file) {
-            getListUserForRecyclerView(new OnSuccessListener<ArrayList<User>>() {
-                @Override
-                public void onSuccess(ArrayList<User> list) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("imageFilePath", file.getAbsolutePath());
-                    bundle.putSerializable("list", list);
-                    UploadFragment fragmentUpload = new UploadFragment();
-                    AndroidUtils.showToast(getContext(),"PHong");
-                    fragmentUpload.setArguments(bundle);
-                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.main, fragmentUpload)
-                            .addToBackStack(null)
-                            .commit();
+        getListUserForRecyclerView(new OnSuccessListener<ArrayList<User>>() {
+            @Override
+            public void onSuccess(ArrayList<User> list) {
+                Bundle bundle = new Bundle();
+                bundle.putString("imageFilePath", file.getAbsolutePath());
+                bundle.putSerializable("list", list);
+                UploadFragment fragmentUpload = new UploadFragment();
+                AndroidUtils.showToast(getContext(),"PHong");
+                fragmentUpload.setArguments(bundle);
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.main, fragmentUpload)
+                        .addToBackStack(null)
+                        .commit();
 
-                }
-            });
+            }
+        });
     }
     public void getListUserForRecyclerView(OnSuccessListener<ArrayList<User>> listener) {
         FirebaseUtils.currentUserDetail().get().addOnSuccessListener(documentSnapshot -> {
