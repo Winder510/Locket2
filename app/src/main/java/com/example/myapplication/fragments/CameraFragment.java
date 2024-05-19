@@ -117,7 +117,6 @@ public class CameraFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 handleClickSettingButton();
-                Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
             }
         });
         btnRecentChat.setOnClickListener(new View.OnClickListener() {
@@ -332,7 +331,6 @@ public class CameraFragment extends Fragment{
                     bundle.putString("imageFilePath", file.getAbsolutePath());
                     bundle.putSerializable("list", list);
                     UploadFragment fragmentUpload = new UploadFragment();
-                    AndroidUtils.showToast(getContext(),"PHong");
                     fragmentUpload.setArguments(bundle);
                     FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
                     fragmentManager.beginTransaction()

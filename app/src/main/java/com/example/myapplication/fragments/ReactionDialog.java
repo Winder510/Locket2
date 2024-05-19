@@ -1,13 +1,18 @@
 package com.example.myapplication.fragments;
 
+import static androidx.camera.core.impl.utils.ContextUtil.getApplicationContext;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -82,31 +88,63 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
+        int iconResId = 0;
+
         if (viewId == R.id.img_like) {
             Reaction = "like";
-            AndroidUtils.showToast(getContext(),"check"+currentID);
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_like;
         } else if (viewId == R.id.img_love) {
             Reaction = "love";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_love;
         } else if (viewId == R.id.img_lovelove) {
             Reaction = "lovelove";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_lovelove;
         } else if (viewId == R.id.img_wow) {
             Reaction = "wow";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_wow;
         } else if (viewId == R.id.img_haha) {
             Reaction = "haha";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_haha;
         } else if (viewId == R.id.img_sad) {
             Reaction = "sad";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_sad;
         } else if (viewId == R.id.img_angry) {
             Reaction = "angry";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_angry;
         }
+
+        if (iconResId != 0) {
+            showToastWithIcon(iconResId);
+        }
+
+        getDialog().dismiss();
         saveReaction();
     }
+
+    private void showToastWithIcon(int iconResId) {
+        Toast toast = Toast.makeText(getContext(), "", Toast.LENGTH_SHORT);
+        ImageView toastIcon = new ImageView(getContext());
+
+        // Set the icon with proper size
+        Drawable icon = ContextCompat.getDrawable(getContext(), iconResId);
+        if (icon != null) {
+            int iconSize = (int) (toastIcon.getHeight() * 2.0); // Adjust the multiplier to make the icon larger
+            icon.setBounds(0, 0, iconSize, iconSize);
+            toastIcon.setImageDrawable(icon);
+        }
+
+        // Set padding around the icon
+        int padding = 16; // Adjust the padding as needed
+        toastIcon.setPadding(padding, padding, padding, padding);
+
+        // Set the modified ImageView as the toast view
+        toast.setView(toastIcon);
+        toast.show();
+    }
+
+
+
+
 
     public void onResume() {
         super.onResume();

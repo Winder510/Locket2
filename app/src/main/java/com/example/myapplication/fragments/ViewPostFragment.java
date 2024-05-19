@@ -273,7 +273,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
             @Override
             public void onClick(View v) {
                 handleClickSettingButton();
-                Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
             }
         });
         btnSend.setOnClickListener(new View.OnClickListener() {
