@@ -48,7 +48,7 @@ public class User implements Serializable {
     {
         if(friends!=null)
         {
-            return friends.size()-1;
+            return friends.size();
         }
         return 0;
     }
