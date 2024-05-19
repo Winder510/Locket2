@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import maes.tech.intentanim.CustomIntent;
+
 public class SearchUserActivity extends AppCompatActivity implements ConfirmFriendRequest, AddFriend {
     EditText searchInput;
     ImageButton backButton;
@@ -53,6 +55,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     String chatroomId;
     Chatroom chatroom;
 
+
     public static int receiveItemCount = 0;
 
 
@@ -63,6 +66,12 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         initView();
         search();
         getListFiend();
+        backButton=findViewById(R.id.btnback);
+        backButton.setOnClickListener(v -> {
+            Intent intent=new Intent(this,MainActivity.class);
+            startActivity(intent);
+            CustomIntent.customType(this, "right-to-left");
+        });
     }
 
 

@@ -12,17 +12,41 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:text="Your Friends"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="26dp">
+
+            <ImageButton
+                android:id="@+id/btnback"
+                android:layout_width="53dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/btn_oval_no_stroke"
+                android:padding="15dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_left_arrow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/yourfriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Friends"
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnback"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.4" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -32,7 +56,6 @@
             android:textColor="@color/st_setting_color"
             android:textSize="15sp"
             android:textStyle="bold" />
-
 
         <LinearLayout
             android:id="@+id/search_user_layout"
@@ -112,7 +135,6 @@
                 android:layout_weight="1"
                 android:background="#99FFFFFF" />
         </LinearLayout>
-
 
         <LinearLayout
             android:layout_width="match_parent"
