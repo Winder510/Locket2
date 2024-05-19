@@ -6,11 +6,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -67,8 +67,9 @@ public class CameraFragment extends Fragment{
     private CameraSelector cameraSelector;
     private Preview preview;
     private ImageCapture imageCapture;
-    private SeekBar zoomSeekBar;
     private PreviewView previewView;
+    private ScaleGestureDetector scaleGestureDetector;
+    private float currentZoomRatio = 1f;
     TextView badge;
     // for <setting layout>
     User currentUser;
@@ -111,7 +112,6 @@ public class CameraFragment extends Fragment{
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
         badge = view.findViewById(R.id.badge);
-        zoomSeekBar = view.findViewById(R.id.zoomSeekBar);
 
 
 
@@ -157,36 +157,23 @@ public class CameraFragment extends Fragment{
                 startCamera(cameraFacing);
             }
         });
-        zoomSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (camera != null && fromUser) {
-                    float zoomRatio = getZoomRatio(progress);
-                    camera.getCameraControl().setZoomRatio(zoomRatio);
-                }
+            public boolean onScale(ScaleGestureDetector detector) {
+                float scaleFactor = detector.getScaleFactor();
+                currentZoomRatio *= scaleFactor;
+                currentZoomRatio = Math.max(1f, Math.min(currentZoomRatio, camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio()));
+                camera.getCameraControl().setZoomRatio(currentZoomRatio);
+                return true;
             }
+        });
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // Optional: Implement if needed
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Optional: Implement if needed
-            }
+        previewView.setOnTouchListener((v, event) -> {
+            scaleGestureDetector.onTouchEvent(event);
+            return true;
         });
     }
 
-    private float getZoomRatio(int progress) {
-        if (camera != null) {
-            float zoomMin = camera.getCameraInfo().getZoomState().getValue().getMinZoomRatio();
-            float zoomMax = camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
-
-            return zoomMin + (zoomMax - zoomMin) * (progress / (float) zoomSeekBar.getMax());
-        }
-        return 1.0f;
-    }
 
     @Override
     public void onResume() {
@@ -279,12 +266,8 @@ public class CameraFragment extends Fragment{
                         setFlashIcon(camera);
                     }
                 });
-
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-                // Inside startCamera, after camera is initialized
-                float maxZoomRatio = camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
-                zoomSeekBar.setMax((int) (maxZoomRatio * 10)); // Adjusting max value as per zoom ratio
 
             } catch (ExecutionException | InterruptedException e) {
                 // Handle exception
