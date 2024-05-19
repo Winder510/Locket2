@@ -162,6 +162,10 @@ public class SettingsActivity extends AppCompatActivity implements SimpleGesture
 
         // Gọi phương thức để lấy thông tin người dùng
         fetchCurrentUser();
+        btnnsonguoiban.setOnClickListener(v -> {
+            Intent intent=new Intent(this, SearchUserActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void fetchCurrentUser() {
