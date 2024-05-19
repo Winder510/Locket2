@@ -279,27 +279,12 @@
                     android:gravity="center_vertical"
                     android:layout_marginTop="25dp"
                     />
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/custom_btn"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:layout_marginTop="10dp"
-                    android:text="Xóa tài khoản"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_bin"
-                    android:drawableRight="@drawable/ic_choose"/>
 
                 <Button
                     android:id="@+id/logout_btn"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@drawable/custom_btn2"
+                    android:background="@drawable/custom_btn3"
                     android:baselineAligned="false"
                     android:padding="7dp"
                     android:scaleType="centerCrop"
