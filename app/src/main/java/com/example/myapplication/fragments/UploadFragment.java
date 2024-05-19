@@ -84,7 +84,6 @@
 
                 Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
-                // Kiểm tra và xử lý thông tin xoay của ảnh
                 int rotation = ImageUtils.getExifOrientation(imagePath);
                 Matrix matrix = new Matrix();
                 matrix.postRotate(rotation);
