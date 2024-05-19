@@ -38,14 +38,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import maes.tech.intentanim.CustomIntent;
 
-public class SettingsActivity extends AppCompatActivity implements
-        SimpleGestureListener {
+public class SettingsActivity extends AppCompatActivity implements SimpleGestureListener {
     private SimpleGestureFilter detector;
     ImageView profilePic;
     TextView usernameInput;
@@ -57,15 +55,13 @@ public class SettingsActivity extends AppCompatActivity implements
     Uri selectedImageUri;
     ImageButton btnBack;
     User currentUser;
+    Button btnnsonguoiban;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_settings);
-
-
-        currentUser = AndroidUtils.getUserModelFromIntent(getIntent());
 
         profilePic = findViewById(R.id.profile_image_view);
         logoutBtn = findViewById(R.id.logout_btn);
@@ -83,6 +79,7 @@ public class SettingsActivity extends AppCompatActivity implements
         openTwitterBtn = findViewById(R.id.btnOpenTwitter);
         openServiceBtn = findViewById(R.id.btnOpenService);
         openPolicyBtn = findViewById(R.id.btnOpenPolicy);
+        btnnsonguoiban=findViewById(R.id.btnnguoiban);
 
         detector = new SimpleGestureFilter(SettingsActivity.this, this);
 
@@ -110,18 +107,15 @@ public class SettingsActivity extends AppCompatActivity implements
                                                                 });
                                                     });
                                         });
-
-                            } else {
                             }
                         }
                     }
                 });
+
         FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    AndroidUtils.setProfilePic(this,uri,profilePic);
+                    AndroidUtils.setProfilePic(this, uri, profilePic);
                 });
-        setUpUserName(currentUser.getUsername());
-
 
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +123,7 @@ public class SettingsActivity extends AppCompatActivity implements
                 FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             FirebaseUtils.logout();
                             Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -137,9 +131,9 @@ public class SettingsActivity extends AppCompatActivity implements
                         }
                     }
                 });
-
             }
         });
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,9 +141,9 @@ public class SettingsActivity extends AppCompatActivity implements
                 CustomIntent.customType(SettingsActivity.this, "left-to-right");
             }
         });
+
         profilePic.setOnClickListener(v -> pickImage());
         profilePicBtn.setOnClickListener(v -> pickImage());
-
 
         editMailBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_email));
         editNameBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_name));
@@ -165,73 +159,108 @@ public class SettingsActivity extends AppCompatActivity implements
 
         detector = new SimpleGestureFilter(SettingsActivity.this, this);
         updateToFireStore();
+
+        // Gọi phương thức để lấy thông tin người dùng
+        fetchCurrentUser();
     }
-        @Override
-        public boolean dispatchTouchEvent (MotionEvent me){
-            // Call onTouchEvent of SimpleGestureFilter class
-            this.detector.onTouchEvent(me);
-            return super.dispatchTouchEvent(me);
-        }
 
-        @Override
-        public void onSwipe ( int direction){
-            switch (direction) {
-                case SimpleGestureFilter.SWIPE_RIGHT:
-                    break;
-                case SimpleGestureFilter.SWIPE_LEFT:
-                    onBackPressed();
-                    CustomIntent.customType(SettingsActivity.this, "left-to-right");
-                    break;
-                case SimpleGestureFilter.SWIPE_DOWN:
-                    break;
-                case SimpleGestureFilter.SWIPE_UP:
-                    break;
-            }
-        }
-        public void pickImage () {
-            ImagePicker.with(this)
-                    .cropSquare()
-                    .compress(512)
-                    .maxResultSize(512, 512)
-                    .createIntent(intent -> {
-                        imagePickerLauncher.launch(intent);
-                        return null;
-                    });
-        }
-        public void showEditDialog ( int layoutResId){
-            BottomSheetSetting bottomSheetSetting = new BottomSheetSetting(layoutResId);
-            bottomSheetSetting.show(getSupportFragmentManager(), "TAG");
-        }
-        public void openLink (String Link)
-        {
-            String url = Link;
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
-        }
-        public void setUpUserName (String newName){
-            usernameInput.setText(newName);
-        }
-        public void updateToFireStore () {
-            String userId = FirebaseUtils.currentUserID();
-            if (userId != null) {
-                DocumentReference userRef = FirebaseUtils.allUserCollectionReference().document(userId); // Tham chiếu đến tài liệu người dùng
-                userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "Listen failed.", e);
-                            return;
+    private void fetchCurrentUser() {
+        String userId = FirebaseUtils.currentUserID();
+        if (userId != null) {
+            DocumentReference userRef = FirebaseUtils.allUserCollectionReference().document(userId);
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            currentUser = document.toObject(User.class);
+                            if (currentUser != null) {
+                                // Tiếp tục các hành động cần thực hiện với currentUser
+                                setUpUserName(currentUser.getUsername());
+                                btnnsonguoiban.setText(String.valueOf(currentUser.CountFriend()) + " người bạn");
+                            }
                         }
+                    } else {
+                        Log.w(TAG, "Error getting user details.", task.getException());
+                    }
+                }
+            });
+        }
+    }
 
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
-                            String newName = documentSnapshot.getString("username");
-                            setUpUserName(newName);
-                        } else {
-                            Log.d(TAG, "Current data: null");
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent me) {
+        // Call onTouchEvent of SimpleGestureFilter class
+        this.detector.onTouchEvent(me);
+        return super.dispatchTouchEvent(me);
+    }
+
+    @Override
+    public void onSwipe(int direction) {
+        switch (direction) {
+            case SimpleGestureFilter.SWIPE_RIGHT:
+                break;
+            case SimpleGestureFilter.SWIPE_LEFT:
+                onBackPressed();
+                CustomIntent.customType(SettingsActivity.this, "left-to-right");
+                break;
+            case SimpleGestureFilter.SWIPE_DOWN:
+                break;
+            case SimpleGestureFilter.SWIPE_UP:
+                break;
+        }
+    }
+
+    public void pickImage() {
+        ImagePicker.with(this)
+                .cropSquare()
+                .compress(512)
+                .maxResultSize(512, 512)
+                .createIntent(intent -> {
+                    imagePickerLauncher.launch(intent);
+                    return null;
+                });
+    }
+
+    public void showEditDialog(int layoutResId) {
+        BottomSheetSetting bottomSheetSetting = new BottomSheetSetting(layoutResId);
+        bottomSheetSetting.show(getSupportFragmentManager(), "TAG");
+    }
+
+    public void openLink(String link) {
+        String url = link;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        startActivity(intent);
+    }
+
+    public void setUpUserName(String newName) {
+        usernameInput.setText(newName);
+    }
+
+    public void updateToFireStore() {
+        String userId = FirebaseUtils.currentUserID();
+        if (userId != null) {
+            DocumentReference userRef = FirebaseUtils.allUserCollectionReference().document(userId);
+            userRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                @Override
+                public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if (error != null) {
+                        return;
+                    }
+                    if (value != null && value.exists()) {
+                        String updatedName = value.getString("username");
+                        if (updatedName != null) {
+                            setUpUserName(updatedName);
+                        }
+                        currentUser = value.toObject(User.class);
+                        if (currentUser != null) {
+                            btnnsonguoiban.setText(String.valueOf(currentUser.CountFriend()) + " người bạn");
                         }
                     }
-                });
-            }
+                }
+            });
         }
     }
+}

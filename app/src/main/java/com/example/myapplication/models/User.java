@@ -44,6 +44,14 @@ public class User implements Serializable {
     }
     public User() {
     }
+    public int CountFriend()
+    {
+        if(friends!=null)
+        {
+            return friends.size();
+        }
+        return 0;
+    }
 
     public User(String phone, String username, Timestamp createdTimestamp, List<String> friends, String userId,String birthday, String avaUrl) {
         this.phone = phone;
