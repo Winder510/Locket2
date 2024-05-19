@@ -123,7 +123,6 @@ public class CameraFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 handleClickSettingButton();
-                Toast.makeText(requireActivity(), "Settings", Toast.LENGTH_SHORT).show();
             }
         });
         btnRecentChat.setOnClickListener(new View.OnClickListener() {
@@ -330,20 +329,19 @@ public class CameraFragment extends Fragment{
 
 
     private void handleAfterTakePicture(File file) {
-        getListUserForRecyclerView(new OnSuccessListener<ArrayList<User>>() {
-            @Override
-            public void onSuccess(ArrayList<User> list) {
-                Bundle bundle = new Bundle();
-                bundle.putString("imageFilePath", file.getAbsolutePath());
-                bundle.putSerializable("list", list);
-                UploadFragment fragmentUpload = new UploadFragment();
-                AndroidUtils.showToast(getContext(),"PHong");
-                fragmentUpload.setArguments(bundle);
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.main, fragmentUpload)
-                        .addToBackStack(null)
-                        .commit();
+            getListUserForRecyclerView(new OnSuccessListener<ArrayList<User>>() {
+                @Override
+                public void onSuccess(ArrayList<User> list) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("imageFilePath", file.getAbsolutePath());
+                    bundle.putSerializable("list", list);
+                    UploadFragment fragmentUpload = new UploadFragment();
+                    fragmentUpload.setArguments(bundle);
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.main, fragmentUpload)
+                            .addToBackStack(null)
+                            .commit();
 
             }
         });

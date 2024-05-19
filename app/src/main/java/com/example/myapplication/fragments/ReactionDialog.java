@@ -1,13 +1,19 @@
 package com.example.myapplication.fragments;
 
+import static androidx.camera.core.impl.utils.ContextUtil.getApplicationContext;
+
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -82,35 +89,72 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         int viewId = v.getId();
+        int iconResId = 0;
+
         if (viewId == R.id.img_like) {
             Reaction = "like";
-            AndroidUtils.showToast(getContext(),"check"+currentID);
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_like;
         } else if (viewId == R.id.img_love) {
             Reaction = "love";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_love;
         } else if (viewId == R.id.img_lovelove) {
             Reaction = "lovelove";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_lovelove;
         } else if (viewId == R.id.img_wow) {
             Reaction = "wow";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_wow;
         } else if (viewId == R.id.img_haha) {
             Reaction = "haha";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_haha;
         } else if (viewId == R.id.img_sad) {
             Reaction = "sad";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_sad;
         } else if (viewId == R.id.img_angry) {
             Reaction = "angry";
-            getDialog().dismiss();
+            iconResId = R.drawable.ic_angry;
         }
+
+        if (iconResId != 0) {
+            showToastWithIcon(iconResId);
+        }
+
+        getDialog().dismiss();
         saveReaction();
     }
 
+    private void showToastWithIcon(int iconResId) {
+        final Toast toast = Toast.makeText(getContext(), "", Toast.LENGTH_SHORT);
+
+        ImageView toastIcon = new ImageView(getContext());
+
+        Drawable icon = ContextCompat.getDrawable(getContext(), iconResId);
+        if (icon != null) {
+            int iconSize = (int) (toastIcon.getHeight() * 2.0);
+            icon.setBounds(0, 0, iconSize, iconSize);
+            toastIcon.setImageDrawable(icon);
+        }
+
+        int padding = 16;
+        toastIcon.setPadding(padding, padding, padding, padding);
+
+        toast.setView(toastIcon);
+
+        toast.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toast.cancel();
+            }
+        }, 200);
+    }
+
+
+
+
+
+
     public void onResume() {
         super.onResume();
-        // Set the width of the dialog to match the parent width
         Window window = getDialog().getWindow();
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -137,14 +181,10 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
                 dialog.getWindow().setAttributes(params);
             }
         }
-        // Nền của Dialog được đặt thành trong suốt bằng cách sử dụng màu trong suốt.
         dialog.getWindow().getDecorView().setBackgroundResource(android.R.color.transparent);
-
-        // Thiết lập cho Dialog có thể huỷ bằng cách chạm bên ngoài của nó.
         dialog.setCanceledOnTouchOutside(true);
     }
     private void saveReaction() {
-        // Kiểm tra xem có document nào trong collection "reactions" chứa userID của người dùng không
         documentReference.collection("reactions")
                 .whereEqualTo("userId", userID)
                 .get()
@@ -154,14 +194,11 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
                         if (task.isSuccessful()) {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                // Nếu đã có document chứa userID của người dùng
                                 for (QueryDocumentSnapshot document : querySnapshot) {
-                                    // Cập nhật biểu cảm mới vào document đã tồn tại
                                     document.getReference().update("reaction", Reaction)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    // Cập nhật thành công
                                                     Log.d("TAG", "Reaction updated successfully");
                                                     dismiss();
                                                 }
@@ -176,8 +213,6 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
                                             });
                                 }
                             } else {
-                                // Nếu không có document chứa userID của người dùng
-                                // Thêm một document mới chứa userID và biểu cảm vào collection "reactions"
                                 Map<String, Object> reactionData = new HashMap<>();
                                 reactionData.put("userId", userID);
                                 reactionData.put("reaction", Reaction);
@@ -186,7 +221,6 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
-                                                // Thêm thành công
                                                 Log.d("TAG", "Reaction added successfully");
                                                 dismiss();
                                             }
@@ -194,14 +228,12 @@ public class ReactionDialog extends DialogFragment implements View.OnClickListen
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                // Xảy ra lỗi khi thêm
                                                 Log.w("TAG", "Error adding reaction", e);
                                                 Toast.makeText(requireContext(), "Error adding reaction", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             }
                         } else {
-                            // Xảy ra lỗi khi truy vấn
                             Log.w("TAG", "Error getting documents", task.getException());
                             Toast.makeText(requireContext(), "Error getting documents", Toast.LENGTH_SHORT).show();
                         }
