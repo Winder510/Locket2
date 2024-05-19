@@ -102,7 +102,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="300dp"
             android:padding="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 

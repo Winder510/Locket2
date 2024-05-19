@@ -235,7 +235,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", friends)
                 .whereIn("visibility", Arrays.asList("public", "private"))
-                .orderBy("created_at", Query.Direction.DESCENDING)
+             //   .orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         // Xử lý lỗi nếu có
@@ -249,7 +249,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
                             posts.add(post);
                         }
                     }
-                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
+                    posts.sort((post1, post2) -> post2.getCreated_at().compareTo(post1.getCreated_at()));
                     adapter.notifyDataSetChanged();
 
                 });
@@ -284,7 +284,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", Collections.singletonList(userId))
                 .whereIn("visibility", Arrays.asList("public", "private"))
-                .orderBy("created_at", Query.Direction.DESCENDING)
+              //  .orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         return;
@@ -297,7 +297,7 @@ public class AllPostFragment extends Fragment implements AddFriend {
                             posts.add(post);
                         }
                     }
-                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
+                    posts.sort((post1, post2) -> post2.getCreated_at().compareTo(post1.getCreated_at()));
                     adapter.notifyDataSetChanged();
                 });
     }

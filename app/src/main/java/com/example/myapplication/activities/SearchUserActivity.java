@@ -80,7 +80,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         btnxemthem.setOnClickListener(v -> {
             // Chuyển đổi từ dp sang pixel
             int height100Dp = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+                    TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
             int height500Dp = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 500, getResources().getDisplayMetrics());
 

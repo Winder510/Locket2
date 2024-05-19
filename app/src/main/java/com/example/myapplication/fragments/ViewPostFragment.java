@@ -363,24 +363,26 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         if (friends == null || friends.isEmpty()) {
             return;
         }
-        friends.add(FirebaseUtils.currentUserID());
+       friends.add(FirebaseUtils.currentUserID());
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", friends)
-                .whereIn("visibility", Arrays.asList("public", "private"))
-                .orderBy("created_at", Query.Direction.DESCENDING)
+                .whereIn("visibility", Arrays.asList("public","private"))
+                //.orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         return;
                     }
                     posts.clear();
+                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Post post = document.toObject(Post.class);
                         if(post.getVisibility().equals("public")||(post.getVisibility().equals("private")&&post.getUserId().equals(FirebaseUtils.currentUserID()))||
-                           (post.getVisibility().equals("private")&&post.getAllowed_users().contains(FirebaseUtils.currentUserID()))){
+                                (post.getVisibility().equals("private")&&post.getAllowed_users().contains(FirebaseUtils.currentUserID()))){
                             posts.add(post);
                         }
                     }
+                    posts.sort((post1, post2) -> post2.getCreated_at().compareTo(post1.getCreated_at()));
                     adapter.notifyDataSetChanged();
 
                 });
@@ -435,12 +437,13 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         CollectionReference postsRef = db.collection("posts");
         postsRef.whereIn("userId", Collections.singletonList(userId))
                 .whereIn("visibility", Arrays.asList("public", "private"))
-                .orderBy("created_at", Query.Direction.DESCENDING)
+                //.orderBy("created_at", Query.Direction.DESCENDING)
                 .addSnapshotListener((queryDocumentSnapshots, e) -> {
                     if (e != null) {
                         return;
                     }
                     posts.clear();
+                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Post post = document.toObject(Post.class);
                         if (post.getVisibility().equals("public") || (post.getVisibility().equals("private") && post.getUserId().equals(FirebaseUtils.currentUserID())) ||
@@ -448,7 +451,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                             posts.add(post);
                         }
                     }
-                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
+                    posts.sort((post1, post2) -> post2.getCreated_at().compareTo(post1.getCreated_at()));
                     adapter.notifyDataSetChanged();
                 });
     }
