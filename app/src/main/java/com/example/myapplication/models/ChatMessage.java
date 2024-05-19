@@ -7,7 +7,7 @@ public class ChatMessage {
     private String senderId;
     private Timestamp timestamp;
     private String imageUrl;
-    private String imageDate;
+    private Timestamp imageDate;
     private String imageCaption;
 
     public ChatMessage() {
@@ -20,7 +20,7 @@ public class ChatMessage {
         this.imageUrl= imageUrl;
     }
 
-    public ChatMessage(String message, String senderId, Timestamp timestamp,String imageUrl,String imageDate,String imageCaption) {
+    public ChatMessage(String message, String senderId, Timestamp timestamp,String imageUrl,Timestamp imageDate,String imageCaption) {
         this.message = message;
         this.senderId = senderId;
         this.timestamp = timestamp;
@@ -29,11 +29,11 @@ public class ChatMessage {
         this.imageCaption=imageCaption;
     }
 
-    public String getImageDate() {
+    public Timestamp getImageDate() {
         return imageDate;
     }
 
-    public void setImageDate(String imageDate) {
+    public void setImageDate(Timestamp imageDate) {
         this.imageDate = imageDate;
     }
 

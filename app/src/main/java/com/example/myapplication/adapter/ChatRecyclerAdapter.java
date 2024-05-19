@@ -1,6 +1,7 @@
 package com.example.myapplication.adapter;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,10 @@ import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.Timestamp;
 import com.squareup.picasso.Picasso;
+
+import java.util.Date;
 
 public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, RecyclerView.ViewHolder> {
 
@@ -37,6 +41,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
         this.context = context;
         this.user = user;
     }
+
     private boolean isLatestMessage(int position) {
         return position == getItemCount() - 1;
     }
@@ -78,7 +83,6 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
     }
 
 
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -111,10 +115,11 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
             viewHolder.nameTextView.setText("Bạn");
             if (!model.getImageCaption().isEmpty()) {
                 viewHolder.statusTextView.setText(model.getImageCaption());
-            }else{
+            } else {
                 viewHolder.statusTextView.setVisibility(View.GONE);
             }
-            viewHolder.dateTextView.setText(model.getImageDate());
+
+            viewHolder.dateTextView.setText(transTimestamp(model.getTimestamp()));
             viewHolder.profile_pic_image_view.setVisibility(View.VISIBLE);
             FirebaseUtils.getOtherProfilePicStorageRef(model.getSenderId()).getDownloadUrl()
                     .addOnSuccessListener(uri -> {
@@ -131,11 +136,11 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
             viewHolder.nameTextView.setText(user.getUsername());
             if (!model.getImageCaption().isEmpty()) {
                 viewHolder.statusTextView.setText(model.getImageCaption());
-            }else{
+            } else {
                 viewHolder.statusTextView.setVisibility(View.GONE);
             }
 
-            viewHolder.dateTextView.setText(model.getImageDate());
+            viewHolder.dateTextView.setText(transTimestamp(model.getTimestamp()));
             viewHolder.profile_pic_image_view.setVisibility(View.GONE);
             Picasso.get().load(model.getImageUrl()).into(viewHolder.imagePost);
             viewHolder.left_chat_layout.setVisibility(View.VISIBLE);
@@ -150,12 +155,22 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
             GroupChatModelViewHolder viewHolder = (GroupChatModelViewHolder) holder;
             FirebaseUtils.getOtherProfilePicStorageRef(user.getUserId()).getDownloadUrl()
                     .addOnSuccessListener(uri -> {
-                        AndroidUtils.setProfilePic(context,uri,viewHolder.profile_pic_image_view);
+                        AndroidUtils.setProfilePic(context, uri, viewHolder.profile_pic_image_view);
                     });
             viewHolder.leftChatLayout.setVisibility(View.VISIBLE);
             viewHolder.leftChatTextview.setText(model.getMessage());
         }
 
+    }
+
+    private CharSequence transTimestamp(Timestamp timestamp) {
+        Date date = new Date(timestamp.getSeconds() * 1000); // Convert from seconds to milliseconds
+        CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
+                date.getTime(),
+                System.currentTimeMillis(),
+                DateUtils.MINUTE_IN_MILLIS
+        );
+        return timeAgo;
     }
 
     class ChatModelViewHolder extends RecyclerView.ViewHolder {
@@ -178,7 +193,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
 
         public GroupChatModelViewHolder(@NonNull View itemView) {
             super(itemView);
-            profile_pic_image_view= itemView.findViewById(R.id.profile_pic_image_view);
+            profile_pic_image_view = itemView.findViewById(R.id.profile_pic_image_view);
             leftChatLayout = itemView.findViewById(R.id.left_chat_layout);
             leftChatTextview = itemView.findViewById(R.id.left_chat_textview);
         }

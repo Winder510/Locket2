@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -58,6 +59,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -521,8 +523,8 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         String otherUserId = posts.get(viewPager2.getCurrentItem()).getUserId();
         String chatroomId = FirebaseUtils.getChatroomId(FirebaseUtils.currentUserID(), otherUserId);
         getOrCreateChatRoomModel(chatroomId, otherUserId, message);
-
-        ChatMessage chatMessage = new ChatMessage(message, FirebaseUtils.currentUserID(), Timestamp.now(), posts.get(viewPager2.getCurrentItem()).getPostImg_url(), "time", posts.get(viewPager2.getCurrentItem()).getPostCaption());
+        // Tính toán và hiển thị thời gian đã đăng
+        ChatMessage chatMessage = new ChatMessage(message, FirebaseUtils.currentUserID(), Timestamp.now(), posts.get(viewPager2.getCurrentItem()).getPostImg_url(),posts.get(viewPager2.getCurrentItem()).getCreated_at(), posts.get(viewPager2.getCurrentItem()).getPostCaption());
 
         FirebaseUtils.getChatroomMessageReference(chatroomId).add(chatMessage)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {

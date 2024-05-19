@@ -144,7 +144,7 @@
                     android:id="@+id/btnEditBday"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:background="@color/btn_color"
+                    android:background="@drawable/custom_btn2"
                     android:baselineAligned="false"
                     android:padding="7dp"
                     android:scaleType="centerCrop"
@@ -155,37 +155,6 @@
                     android:textAlignment="textStart"
                     android:drawableLeft="@drawable/ic_party_balloons"
                     android:drawableRight="@drawable/ic_choose"/>
-                <Button
-                    android:id="@+id/btnEditMail"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@color/btn_color"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:text="Thay đổi địa chỉ email"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_email"
-                    android:drawableRight="@drawable/ic_choose"/>
-
-                <Button
-                    android:id="@+id/btnListBlock"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/custom_btn2"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:text="Đã chặn"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_block"
-                    android:drawableRight="@drawable/ic_choose"/>
 
             </LinearLayout>
 
@@ -194,53 +163,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:text="Hỗ trợ"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color"
-                    android:textSize="20dp"
-                    android:drawableLeft="@drawable/ic_question"
-                    android:drawablePadding="15dp"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="25dp"
-                    />
-                <Button
-                    android:id="@+id/btnEditReport"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/custom_btn"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:layout_marginTop="10dp"
-                    android:text="Báo cáo sự cố"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_warning2"
-                    android:drawableRight="@drawable/ic_choose"/>
-
-                <Button
-                    android:id="@+id/btnEditSuggestion"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/custom_btn2"
-                    android:baselineAligned="false"
-                    android:padding="7dp"
-                    android:scaleType="centerCrop"
-                    android:text="Gửi đề xuất"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
-                    android:textColor="@color/st_setting_color2"
-                    android:textAlignment="textStart"
-                    android:drawableLeft="@drawable/ic_popular"
-                    android:drawableRight="@drawable/ic_choose"/>
-
-            </LinearLayout>
+                android:orientation="vertical"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

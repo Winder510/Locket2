@@ -48,7 +48,7 @@ public class SettingsActivity extends AppCompatActivity implements SimpleGesture
     ImageView profilePic;
     TextView usernameInput;
 
-    Button logoutBtn, profilePicBtn, editNameBtn, editBdayBtn, listBlockBtn, editMailBtn, editReportBtn, editSuggestionBtn,
+    Button logoutBtn, profilePicBtn, editNameBtn, editBdayBtn,
             openTiktokBtn, openIgBtn, openTwitterBtn, openServiceBtn, openPolicyBtn;
 
     ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -70,10 +70,6 @@ public class SettingsActivity extends AppCompatActivity implements SimpleGesture
         usernameInput = findViewById(R.id.profile_username);
         editNameBtn = findViewById(R.id.btnEditName);
         editBdayBtn = findViewById(R.id.btnEditBday);
-        listBlockBtn = findViewById(R.id.btnListBlock);
-        editMailBtn = findViewById(R.id.btnEditMail);
-        editReportBtn = findViewById(R.id.btnEditReport);
-        editSuggestionBtn = findViewById(R.id.btnEditSuggestion);
         openTiktokBtn = findViewById(R.id.btnOpenTiktok);
         openIgBtn = findViewById(R.id.btnOpenIG);
         openTwitterBtn = findViewById(R.id.btnOpenTwitter);
@@ -145,12 +141,8 @@ public class SettingsActivity extends AppCompatActivity implements SimpleGesture
         profilePic.setOnClickListener(v -> pickImage());
         profilePicBtn.setOnClickListener(v -> pickImage());
 
-        editMailBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_email));
         editNameBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_name));
         editBdayBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_birthday));
-        listBlockBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_block));
-        editReportBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_report));
-        editSuggestionBtn.setOnClickListener(v -> showEditDialog(R.layout.edit_suggestion));
         openTiktokBtn.setOnClickListener(v -> openLink("https://www.tiktok.com/@locketcamera"));
         openIgBtn.setOnClickListener(v -> openLink("https://www.instagram.com/locketcamera/"));
         openTwitterBtn.setOnClickListener(v -> openLink("https://twitter.com/locketcamera"));
