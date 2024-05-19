@@ -10,7 +10,7 @@
 
 
     <ImageButton
-        android:id="@+id/round_image_view"
+        android:id="@+id/back_btn"
         android:layout_width="53dp"
         android:layout_height="50dp"
         android:layout_margin="3dp"

@@ -37,13 +37,17 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
                         if (model.getLastMessageSenderId() != null) {
                             lastMessageSendedByMe = model.getLastMessageSenderId().equals(FirebaseUtils.currentUserID());
                         }
-
+                        String otherUserID = model.getUserIds().get(1);
                         User otherUser = task.getResult().toObject(User.class);
-                        FirebaseUtils.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
+                        FirebaseUtils.getOtherProfilePicStorageRef(otherUserID).getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     AndroidUtils.setProfilePic(context,uri,holder.profilePic);
                                 });
-                        holder.usernameText.setText(otherUser.getUsername());
+                        if(otherUser!=null)
+                        {
+                            holder.usernameText.setText(otherUser.getUsername());
+                        }
+
                         if (lastMessageSendedByMe) {
                             holder.lastMessageText.setText("You: " + model.getLastMessage());
                         } else {

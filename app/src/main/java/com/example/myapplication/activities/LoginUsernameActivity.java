@@ -1,13 +1,14 @@
 package com.example.myapplication.activities;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,10 +28,11 @@ public class LoginUsernameActivity extends AppCompatActivity {
     ProgressBar progressBar;
     String phoneNumber;
     User user;
-
+    ImageButton backButton;
     String phoneSearch;
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,10 @@ public class LoginUsernameActivity extends AppCompatActivity {
         phoneNumber = getIntent().getExtras().getString("phone");
         phoneSearch=getIntent().getStringExtra("phonesearch");
 
+        backButton = findViewById(R.id.back_btn);
+        backButton.setOnClickListener((v) -> {
+            onBackPressed();
+        });
 
         getUserName();
         nextBtn.setOnClickListener(v -> {

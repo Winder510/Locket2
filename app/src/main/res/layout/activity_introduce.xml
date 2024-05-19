@@ -83,27 +83,28 @@
                 android:textStyle="bold" />
 
             <Button
-                android:layout_width="334sp"
+                android:layout_width="360dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20sp"
-                android:backgroundTint="@color/primary_color"
-                android:paddingStart="10dp"
-                android:paddingTop="20dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="20dp"
-                android:text="Tạo một tài khoản"
-                android:textColor="@color/black"
-                android:textSize="27sp" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:backgroundTint="@color/transparent_color"
-                android:text="Đăng nhập"
+                android:text="Bạn có muốn tham gia ..."
                 android:textColor="@color/white"
                 android:textSize="27sp"
-
+                android:textStyle="bold"
                 tools:ignore="NestedWeights" />
+
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary_color"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:text="Bắt đầu"
+                android:textColor="@color/black"
+                android:textSize="27sp" />
 
 
         </LinearLayout>

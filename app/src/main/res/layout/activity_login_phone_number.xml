@@ -10,7 +10,7 @@
 
 
     <ImageButton
-        android:id="@+id/round_image_view"
+        android:id="@+id/back_btn"
         android:layout_width="53dp"
         android:layout_height="50dp"
         android:layout_margin="3dp"
@@ -34,6 +34,7 @@
         android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="NestedWeights">
@@ -49,40 +50,33 @@
             tools:ignore="RtlSymmetry"
             tools:layout_editor_absoluteX="40dp"
             tools:layout_editor_absoluteY="321dp" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center">
 
-    <com.hbb20.CountryCodePicker
-        android:id="@+id/login_countrycode"
-        android:layout_width="86dp"
-        android:layout_height="wrap_content"
-        app:ccp_contentColor="@color/white"
-        app:ccp_showNameCode="false"
-        app:ccp_defaultPhoneCode="84"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/login_edit_text"
-        android:hint="Số điện thoại"
-        android:paddingStart="15dp"
-        android:textColor="@color/white"
-        android:textColorHint="#888888"
-        android:textSize="20sp"
-        android:inputType="phone"
-        android:id="@+id/login_mobile_number"/>
-</LinearLayout>
-
-
-        <Button
-            android:layout_width="372dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/transparent_color"
-            android:text="Sử dụng email thay cho số điện thoại"
-            android:textColor="#888"
-            android:textSize="18sp"
-            android:textStyle="italic" />
+            android:gravity="center">
+
+            <com.hbb20.CountryCodePicker
+                android:id="@+id/login_countrycode"
+                android:layout_width="86dp"
+                android:layout_height="wrap_content"
+                app:ccp_contentColor="@color/white"
+                app:ccp_defaultPhoneCode="84"
+                app:ccp_showNameCode="false" />
+
+            <EditText
+                android:id="@+id/login_mobile_number"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/login_edit_text"
+                android:hint="Số điện thoại"
+                android:inputType="phone"
+                android:paddingStart="15dp"
+                android:textColor="@color/white"
+                android:textColorHint="#888888"
+                android:textSize="20sp" />
+        </LinearLayout>
+
 
     </LinearLayout>
 

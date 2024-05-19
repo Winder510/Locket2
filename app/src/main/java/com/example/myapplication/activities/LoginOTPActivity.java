@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +46,9 @@ public class LoginOTPActivity extends AppCompatActivity {
     TextView resendOtpTextView;
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     Long timeoutSecond = 60L;
+    ImageButton backButton;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,13 +57,16 @@ public class LoginOTPActivity extends AppCompatActivity {
         otpInput = findViewById(R.id.login_otp);
         progressBar = findViewById(R.id.login_progress_bar);
         resendOtpTextView = findViewById(R.id.resend_otp_textview);
-
+        backButton= findViewById(R.id.back_btn);
         phoneNumber = Objects.requireNonNull(getIntent().getExtras()).getString("phone");
         Intent intent=getIntent();
         phoneSearch=intent.getStringExtra("phonesearch");
 
         sendOtp(phoneNumber, false);
 
+        backButton.setOnClickListener((v)-> {
+            onBackPressed();
+        });
         nextButton.setOnClickListener(v -> {
             String enterOtp = otpInput.getText().toString();
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCode, enterOtp);
