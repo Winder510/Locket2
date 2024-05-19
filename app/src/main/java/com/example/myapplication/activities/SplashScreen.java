@@ -17,6 +17,7 @@ import com.example.myapplication.utils.FirebaseUtils;
 public class SplashScreen extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.Theme_MyApplication);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 

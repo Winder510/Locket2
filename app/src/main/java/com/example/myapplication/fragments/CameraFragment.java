@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -58,7 +59,14 @@ public class CameraFragment extends Fragment{
     ImageButton capture, toggleFlash, flipCamera, btnSetting, btnRecentChat;
     Button btnSearchUser;
     ImageView imageViewTest;
+    private Camera camera;
+    private ProcessCameraProvider cameraProvider;
+    private CameraSelector cameraSelector;
+    private Preview preview;
+    private ImageCapture imageCapture;
     private PreviewView previewView;
+    private ScaleGestureDetector scaleGestureDetector;
+    private float currentZoomRatio = 1f;
     TextView badge;
     // for <setting layout>
     User currentUser;
@@ -100,6 +108,8 @@ public class CameraFragment extends Fragment{
         btnSearchUser = view.findViewById(R.id.btnSearchUser);
         btnRecentChat = view.findViewById(R.id.btnRecentChat);
         badge = view.findViewById(R.id.badge);
+
+
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             activityResultLauncher.launch(Manifest.permission.CAMERA);
@@ -143,13 +153,23 @@ public class CameraFragment extends Fragment{
                 startCamera(cameraFacing);
             }
         });
+        scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            @Override
+            public boolean onScale(ScaleGestureDetector detector) {
+                float scaleFactor = detector.getScaleFactor();
+                currentZoomRatio *= scaleFactor;
+                currentZoomRatio = Math.max(1f, Math.min(currentZoomRatio, camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio()));
+                camera.getCameraControl().setZoomRatio(currentZoomRatio);
+                return true;
+            }
+        });
 
-
-
-
-
-
+        previewView.setOnTouchListener((v, event) -> {
+            scaleGestureDetector.onTouchEvent(event);
+            return true;
+        });
     }
+
 
     @Override
     public void onResume() {
@@ -200,24 +220,29 @@ public class CameraFragment extends Fragment{
     }
 
     public void startCamera(int cameraFacing) {
-        int aspectRatio = aspectRatio(previewView.getWidth(), previewView.getHeight());
-        ListenableFuture<ProcessCameraProvider> listenableFuture = ProcessCameraProvider.getInstance(requireContext());
-
-        listenableFuture.addListener(() -> {
+        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
+        cameraProviderFuture.addListener(() -> {
             try {
-                ProcessCameraProvider cameraProvider = (ProcessCameraProvider) listenableFuture.get();
-
-                Preview preview = new Preview.Builder().setTargetAspectRatio(aspectRatio).build();
-
-                ImageCapture imageCapture = new ImageCapture.Builder().setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-                        .setTargetRotation(requireActivity().getWindowManager().getDefaultDisplay().getRotation()).build();
-
+                cameraProvider = cameraProviderFuture.get();
+                if (cameraProvider == null) {
+                    return; // Early return if cameraProvider is null
+                }
                 CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(cameraFacing).build();
+                        .requireLensFacing(cameraFacing)
+                        .build();
 
-                cameraProvider.unbindAll();
+                preview = new Preview.Builder()
+                        .build();
 
-                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
+                imageCapture = new ImageCapture.Builder()
+                        .build();
+
+                cameraProvider.unbindAll(); // Unbind use cases before rebinding
+
+                camera = cameraProvider.bindToLifecycle(
+                        this, cameraSelector, preview, imageCapture);
+
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
                 capture.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -237,9 +262,11 @@ public class CameraFragment extends Fragment{
                         setFlashIcon(camera);
                     }
                 });
-
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+
             } catch (ExecutionException | InterruptedException e) {
+                // Handle exception
                 e.printStackTrace();
             }
         }, ContextCompat.getMainExecutor(getContext()));
