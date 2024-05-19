@@ -129,7 +129,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         // Load profile picture
         FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    AndroidUtils.setProfilePic(requireContext(), uri, btnSetting);
+                    AndroidUtils.setProfilePic(getContext(), uri, btnSetting);
                 });
 
         return rootView;
@@ -332,7 +332,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
             fragmentUpload.setArguments(bundle);
         }
         fragmentUpload.setOnDataPassListener(this);
-        handleSetVisibleSomeLayout(false);
+
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
 
         fragmentManager.beginTransaction()
@@ -462,7 +462,7 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     @Override
     public void onDataPass(Integer data,boolean visible) {
         viewPager2.setCurrentItem(data,false);
-        handleSetVisibleSomeLayout(visible);
+
     }
 
     @Override
@@ -476,21 +476,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
         }
         else{
             handlefilterPost(user.getUserId());
-        }
-    }
-
-    private void  handleSetVisibleSomeLayout(boolean isVisible){
-        if(isVisible){
-            action1.setVisibility(View.VISIBLE);
-            allPost.setVisibility(View.VISIBLE);
-            optionPost.setVisibility(View.VISIBLE);
-            topLayout.setVisibility(View.VISIBLE);
-        }
-        else {
-            action1.setVisibility(View.INVISIBLE);
-            allPost.setVisibility(View.INVISIBLE);
-            optionPost.setVisibility(View.INVISIBLE);
-            topLayout.setVisibility(View.INVISIBLE);
         }
     }
 

@@ -25,6 +25,7 @@ import com.example.myapplication.activities.SettingsActivity;
 import com.example.myapplication.adapter.AllPostAdapter;
 import com.example.myapplication.adapter.FriendAdapter;
 import com.example.myapplication.interfaces.AddFriend;
+import com.example.myapplication.interfaces.OnBackToCameraFragmentListener;
 import com.example.myapplication.interfaces.OnDataPassListener;
 import com.example.myapplication.interfaces.OnItemClickListener;
 import com.example.myapplication.models.Post;
@@ -55,9 +56,19 @@ public class AllPostFragment extends Fragment implements AddFriend {
     private OnDataPassListener onDataPassListener;
     private FriendAdapter friendAdapter;
     Button btnalluser;
-    ImageButton btnSetting,btnRecentChat;
+    ImageButton btnSetting,btnRecentChat,btnBackToCamera;
     User currentUserFilter;
     User currentUser;
+    private OnBackToCameraFragmentListener mlistener;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnBackToCameraFragmentListener) {
+            mlistener = (OnBackToCameraFragmentListener) context;
+        }else {
+            throw new RuntimeException(context.toString());
+        }
+    }
 
     public void setOnDataPassListener(OnDataPassListener listener) {
         this.onDataPassListener = listener;
@@ -84,9 +95,10 @@ public class AllPostFragment extends Fragment implements AddFriend {
         btnalluser = rootView.findViewById(R.id.btnalluser);
         btnSetting = rootView.findViewById(R.id.btnSetting);
         btnRecentChat = rootView.findViewById(R.id.btnRecentChat);
+        btnBackToCamera = rootView.findViewById(R.id.btnBackToCamera);
         FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                    AndroidUtils.setProfilePic(getContext(),uri,btnSetting);
                 });
         adapter = new AllPostAdapter(posts, getContext(), new OnItemClickListener() {
             @Override
@@ -187,6 +199,15 @@ public class AllPostFragment extends Fragment implements AddFriend {
                 Intent intent = new Intent(requireContext(), RecentChatActivity.class);
                 startActivity(intent);
                 CustomIntent.customType(requireContext(), "left-to-right");
+            }
+        });
+        btnBackToCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mlistener != null) {
+
+                    mlistener.onBackToCameraFragment();
+                }
             }
         });
     }
