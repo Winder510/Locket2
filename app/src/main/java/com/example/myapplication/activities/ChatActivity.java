@@ -162,7 +162,7 @@ public class ChatActivity extends AppCompatActivity {
                     jsonObject.put("notification",notificationObj);
                     jsonObject.put("data",dataObj);
                     jsonObject.put("to",otherUser.getFcmToken());
-
+                    AndroidUtils.showToast(getApplicationContext(),"Check");
                     callApi(jsonObject);
 
 

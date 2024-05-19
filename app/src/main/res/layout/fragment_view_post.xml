@@ -22,11 +22,7 @@
             android:clickable="true"
             android:focusable="true"
             tools:ignore="MissingClass" />
-        <FrameLayout
-            android:id="@+id/viewAllPost"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+
     </com.example.myapplication.models.NestedScrollableHost>
 
     <LinearLayout
@@ -244,6 +240,10 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-
+    <FrameLayout
+        android:id="@+id/viewAllPost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 
 </FrameLayout>

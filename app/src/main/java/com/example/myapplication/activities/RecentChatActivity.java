@@ -94,7 +94,6 @@ public class RecentChatActivity extends AppCompatActivity implements SimpleGestu
     public void onSwipe(int direction) {
 
         switch (direction) {
-
             case SimpleGestureFilter.SWIPE_RIGHT:
                 onBackPressed();
                 CustomIntent.customType(RecentChatActivity.this, "right-to-left");
