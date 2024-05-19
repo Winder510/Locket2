@@ -51,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
     ImageButton backBtn;
     TextView otherUsername;
     RecyclerView recyclerView;
-    ImageView imageView,profile_pic_layout;
+    ImageView imageView, profile_pic_layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,9 +69,10 @@ public class ChatActivity extends AppCompatActivity {
         imageView = findViewById(R.id.profile_pic_image_view);
         profile_pic_layout = findViewById(R.id.profile_pic_image_view);
 
+
         FirebaseUtils.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
                 .addOnSuccessListener(uri -> {
-                    AndroidUtils.setProfilePic(this,uri,profile_pic_layout);
+                    AndroidUtils.setProfilePic(this, uri, profile_pic_layout);
                 });
         backBtn.setOnClickListener((v) -> {
             onBackPressed();
@@ -88,11 +89,13 @@ public class ChatActivity extends AppCompatActivity {
         });
         setupChatRecyclerView();
     }
-    void setupChatRecyclerView(){
+
+    void setupChatRecyclerView() {
         Query query = FirebaseUtils.getChatroomMessageReference(chatroomId).orderBy("timestamp", Query.Direction.DESCENDING);
 
-        FirestoreRecyclerOptions<ChatMessage> options = new FirestoreRecyclerOptions.Builder<ChatMessage>().setQuery(query, ChatMessage.class).build();
-        adapter = new ChatRecyclerAdapter(options, getApplicationContext(),otherUser);
+        FirestoreRecyclerOptions<ChatMessage> options = new FirestoreRecyclerOptions.Builder<ChatMessage>()
+                .setQuery(query, ChatMessage.class).build();
+        adapter = new ChatRecyclerAdapter(options, getApplicationContext(), otherUser);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         recyclerView.setLayoutManager(manager);
@@ -106,13 +109,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
     void sendMessageToUser(String message) {
         chatroom.setLastMessageTimestamp(Timestamp.now());
         chatroom.setLastMessageSenderId(FirebaseUtils.currentUserID());
         chatroom.setLastMessage(message);
         FirebaseUtils.getChatroomReference(chatroomId).set(chatroom);
 
-        ChatMessage chatMessage = new ChatMessage(message, FirebaseUtils.currentUserID(), Timestamp.now(),"",null,"");
+        ChatMessage chatMessage = new ChatMessage(message, FirebaseUtils.currentUserID(), Timestamp.now(), "", null, "");
         FirebaseUtils.getChatroomMessageReference(chatroomId).add(chatMessage)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
@@ -136,7 +140,7 @@ public class ChatActivity extends AppCompatActivity {
                                 chatroomId,
                                 Arrays.asList(FirebaseUtils.currentUserID(), otherUser.getUserId()),
                                 Timestamp.now(),
-                                "","");
+                                "", "");
                         FirebaseUtils.getChatroomReference(chatroomId).set(chatroom);
                     }
                 }
@@ -144,35 +148,40 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-    void sendNotification(String message){
 
+    void sendNotification(String message) {
         FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 User currentUser = task.getResult().toObject(User.class);
-                try{
-                    JSONObject jsonObject  = new JSONObject();
+                String currentUserToken = currentUser.getFcmToken();
+                String otherUserToken = otherUser.getFcmToken();
 
-                    JSONObject notificationObj = new JSONObject();
-                    notificationObj.put("title",currentUser.getUsername());
-                    notificationObj.put("body",message);
-
-                    JSONObject dataObj = new JSONObject();
-                    dataObj.put("userId",currentUser.getUserId());
-
-                    jsonObject.put("notification",notificationObj);
-                    jsonObject.put("data",dataObj);
-                    jsonObject.put("to",otherUser.getFcmToken());
-                    AndroidUtils.showToast(getApplicationContext(),"Check");
-                    callApi(jsonObject);
-
-
-                }catch (Exception e){
-
-                }
-
+                sendNotificationToToken(currentUserToken, otherUser.getUsername(), message); // Thông báo cho người dùng hiện tại
+                sendNotificationToToken(otherUserToken, currentUser.getUsername(), message); // Thông báo cho người dùng khác
             }
         });
+    }
 
+    void sendNotificationToToken(String token, String title, String message) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+
+            JSONObject notificationObj = new JSONObject();
+            notificationObj.put("title", title);
+            notificationObj.put("body", message);
+
+            JSONObject dataObj = new JSONObject();
+            dataObj.put("userId", FirebaseUtils.currentUserID());
+
+            jsonObject.put("notification", notificationObj);
+            jsonObject.put("data", dataObj);
+            jsonObject.put("to", token);
+
+            callApi(jsonObject);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     void callApi(JSONObject jsonObject) {
@@ -188,14 +197,17 @@ public class ChatActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-
+                e.printStackTrace();
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-
+                if (response.isSuccessful()) {
+                    // Handle successful response
+                } else {
+                    // Handle error response
+                }
             }
         });
     }
 }
-// test

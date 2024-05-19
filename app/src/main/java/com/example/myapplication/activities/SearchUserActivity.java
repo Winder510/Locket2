@@ -27,6 +27,7 @@ import com.example.myapplication.interfaces.ConfirmFriendRequest;
 import com.example.myapplication.models.Chatroom;
 import com.example.myapplication.models.FriendRequest;
 import com.example.myapplication.models.User;
+import com.example.myapplication.utils.AndroidUtils;
 import com.example.myapplication.utils.FirebaseUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -363,8 +364,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     @Override
     public void onClick(User user) {
         Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("username", user.getUsername());
-        intent.putExtra("userId", user.getUserId());
+        AndroidUtils.passUserModelAsIntent(intent,user);
         startActivity(intent);
     }
 

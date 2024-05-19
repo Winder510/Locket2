@@ -22,7 +22,6 @@ public class AndroidUtils {
         intent.putExtra("userId", model.getUserId());
         intent.putExtra("profile", model.getProfilePicUrl());
         intent.putExtra("fcmToken",model.getFcmToken());
-
     }
 
     public static User getUserModelFromIntent(Intent intent) {
