@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Nguyễn Tuấn Anh"
-        android:fontFamily="@font/varelaround_regular"
+        android:fontFamily="@font/lexend"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:maxLines="2"/>

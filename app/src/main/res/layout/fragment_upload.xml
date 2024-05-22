@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
                 android:text="Gửi đến..."
-                android:fontFamily="@font/varelaround_regular"
+                android:fontFamily="@font/lexend"
                 android:textColor="@color/white"
                 android:textSize="20dp"/>
         </LinearLayout>
@@ -65,7 +65,7 @@
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_edittext"
                 android:hint="Add a message"
-                android:fontFamily="@font/varelaround_regular"
+                android:fontFamily="@font/lexend"
                 android:textColor="@color/white"
                 android:textAlignment="center"
                 android:padding="3dp"

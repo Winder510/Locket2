@@ -13,18 +13,19 @@
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/white"></View>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        android:fontFamily="More Fonts..."
+        android:paddingBottom="15dp"
         android:text="Phản ứng"
-        android:fontFamily="@font/varelaround_regular"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        tools:ignore="RtlSymmetry"
-        android:layout_marginTop="15dp"/>
+        tools:ignore="RtlSymmetry" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_userReaction"
         android:layout_width="match_parent"
