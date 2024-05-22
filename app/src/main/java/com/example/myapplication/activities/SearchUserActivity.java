@@ -8,8 +8,10 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,12 +35,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.EventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +60,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     String chatroomId;
     Chatroom chatroom;
     TextView btnxemthem;
-
+    LinearLayout moreLayout;
 
     public static int receiveItemCount = 0;
 
@@ -72,30 +73,49 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         search();
         getListFiend();
         backButton=findViewById(R.id.btnback);
+
         backButton.setOnClickListener(v -> {
             Intent intent=new Intent(this,MainActivity.class);
             startActivity(intent);
             CustomIntent.customType(this, "right-to-left");
         });
         btnxemthem=findViewById(R.id.btnxemthem);
+        rcvUser.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Chuyển đổi từ dp sang pixel
+                int height300Dp = (int) TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
+
+                // Kiểm tra chiều cao hiện tại của RecyclerView
+                ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
+                if (layoutParams.height > height300Dp) {
+                    btnxemthem.setText("Xem thêm");
+                    moreLayout.setVisibility(View.GONE);
+                } else {
+                    moreLayout.setVisibility(View.GONE);
+                }
+            }
+        });
         btnxemthem.setOnClickListener(v -> {
             // Chuyển đổi từ dp sang pixel
-            int height100Dp = (int) TypedValue.applyDimension(
+            int height300Dp = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
             int height500Dp = (int) TypedValue.applyDimension(
                     TypedValue.COMPLEX_UNIT_DIP, 500, getResources().getDisplayMetrics());
 
             // Kiểm tra chiều cao hiện tại của RecyclerView và thay đổi
             ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
-            if (layoutParams.height == height100Dp) {
+            if (layoutParams.height == height300Dp) {
                 layoutParams.height = height500Dp;
                 btnxemthem.setText("Ẩn bớt");
             } else {
-                layoutParams.height = height100Dp;
+                layoutParams.height = height300Dp;
                 btnxemthem.setText("Xem thêm");
             }
             rcvUser.setLayoutParams(layoutParams);
         });
+
     }
 
 
@@ -177,6 +197,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         rcvUser = findViewById(R.id.user_recycler_view);
         friendAdapter = new AddFriendAdapter(true, this,getApplicationContext());
         rcvUser.setAdapter(friendAdapter);
+        moreLayout = findViewById(R.id.moreLayout);
     }
 
 

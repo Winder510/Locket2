@@ -71,7 +71,7 @@
                 android:text="Ảnh trực tiếp từ bạn bè,"
                 android:fontFamily="@font/varelaround_regular"
                 android:textColor="#737373"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -82,7 +82,7 @@
                 android:text=" ngay trên điện thoại mình"
                 android:fontFamily="@font/varelaround_regular"
                 android:textColor="#737373"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <Button
@@ -93,7 +93,7 @@
                 android:fontFamily="@font/varelaround_regular"
                 android:text="Bạn có muốn tham gia ..."
                 android:textColor="@color/white"
-                android:textSize="27sp"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 tools:ignore="NestedWeights" />
 
@@ -110,7 +110,7 @@
                 android:fontFamily="@font/varelaround_regular"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="27sp" />
+                android:textSize="25sp" />
 
 
         </LinearLayout>

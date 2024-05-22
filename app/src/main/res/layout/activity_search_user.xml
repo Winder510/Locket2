@@ -22,16 +22,16 @@
 
             <ImageButton
                 android:id="@+id/btnback"
-                android:layout_width="53dp"
-                android:layout_height="50dp"
+                android:layout_width="39dp"
+                android:layout_height="41dp"
                 android:layout_marginStart="16dp"
                 android:background="@drawable/btn_oval_no_stroke"
                 android:padding="15dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_left_arrow"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/yourfriend"
@@ -105,11 +105,12 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:padding="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <LinearLayout
+            android:id="@+id/moreLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"

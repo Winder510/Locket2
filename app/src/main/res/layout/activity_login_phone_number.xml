@@ -67,11 +67,11 @@
 
             <EditText
                 android:id="@+id/login_mobile_number"
-                android:layout_width="match_parent"
+                android:layout_width="310dp"
                 android:layout_height="60dp"
                 android:background="@drawable/login_edit_text"
-                android:hint="Số điện thoại"
                 android:fontFamily="@font/varelaround_regular"
+                android:hint="Số điện thoại"
                 android:inputType="phone"
                 android:paddingStart="15dp"
                 android:textColor="@color/white"
