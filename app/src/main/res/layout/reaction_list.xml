@@ -24,7 +24,6 @@
         android:textSize="20sp"
         android:textStyle="bold"
         tools:ignore="RtlSymmetry"
-        android:fontFamily="@font/varelaround_regular"
         android:layout_marginTop="15dp"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_userReaction"
