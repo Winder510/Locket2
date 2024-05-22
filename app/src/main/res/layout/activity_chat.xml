@@ -36,6 +36,7 @@
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
+                android:fontFamily="@font/varelaround_regular"
                 android:id="@+id/other_username"
                 />
         </LinearLayout>
@@ -77,6 +78,7 @@
             android:background="@drawable/edit_text_rounded_corner2"
             android:elevation="4dp"
             android:hint="Write message here"
+            android:fontFamily="@font/varelaround_regular"
             android:padding="10dp"
             android:textColorHint="@color/st_setting_color"
             android:id="@+id/chat_message_input"

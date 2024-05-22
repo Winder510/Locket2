@@ -52,9 +52,10 @@
                     android:src="@drawable/logo" />
 
                 <TextView
-                    android:layout_width="137dp"
+                    android:layout_width="158dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:fontFamily="@font/varelaround_regular"
                     android:text="Locket"
                     android:textColor="@color/white"
                     android:textSize="45sp"
@@ -68,6 +69,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="Ảnh trực tiếp từ bạn bè,"
+                android:fontFamily="@font/varelaround_regular"
                 android:textColor="#737373"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -78,15 +80,17 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text=" ngay trên điện thoại mình"
+                android:fontFamily="@font/varelaround_regular"
                 android:textColor="#737373"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
             <Button
-                android:layout_width="360dp"
+                android:layout_width="385dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20sp"
                 android:backgroundTint="@color/transparent_color"
+                android:fontFamily="@font/varelaround_regular"
                 android:text="Bạn có muốn tham gia ..."
                 android:textColor="@color/white"
                 android:textSize="27sp"
@@ -103,6 +107,8 @@
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
                 android:text="Bắt đầu"
+                android:fontFamily="@font/varelaround_regular"
+                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="27sp" />
 

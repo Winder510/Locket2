@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="18sp"
+            android:fontFamily="@font/varelaround_regular"
             android:id="@+id/left_chat_textview" />
 
     </LinearLayout>

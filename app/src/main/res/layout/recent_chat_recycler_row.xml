@@ -26,6 +26,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="User name"
+                android:fontFamily="@font/varelaround_regular"
                 android:textSize="18sp"
                 android:textColor="@color/st_setting_color"
                 android:textStyle="bold"
@@ -39,6 +40,7 @@
                 android:layout_toRightOf="@id/user_name_text"
                 android:layout_marginStart="10dp"
                 tools:text="2d"
+                android:fontFamily="@font/varelaround_regular"
                 android:textSize="15dp"
                 android:maxLines="1"/>
 
@@ -47,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/user_name_text"
                 tools:text="+000000000000"
+                android:fontFamily="@font/varelaround_regular"
                 android:textColor="@color/st_setting_color"
                 android:id="@+id/last_message_text"
                 android:maxLines="1"/>

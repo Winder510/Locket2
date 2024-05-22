@@ -55,6 +55,8 @@
                 android:layout_margin="0dp"
                 android:backgroundTint="@color/btn_color"
                 android:text="Tất cả bạn bè"
+                android:fontFamily="@font/varelaround_regular"
+                android:textStyle="bold"
                 android:textSize="15dp"
                 app:icon="@drawable/ic_friend"
                 tools:ignore="NestedWeights" />

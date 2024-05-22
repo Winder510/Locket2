@@ -46,6 +46,8 @@
             android:paddingEnd="10dp"
             android:paddingBottom="10dp"
             android:text="Lưu"
+            android:fontFamily="@font/varelaround_regular"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="30sp" />
 
@@ -65,6 +67,7 @@
         android:layout_marginBottom="368dp"
         android:background="@drawable/login_edit_text"
         android:hint="Tên của bạn"
+        android:fontFamily="@font/varelaround_regular"
         android:inputType="text"
         android:paddingStart="15dp"
         android:textColor="@color/white"

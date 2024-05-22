@@ -19,6 +19,7 @@
         android:paddingBottom="15dp"
         android:layout_gravity="center_horizontal"
         android:text="Phản ứng"
+        android:fontFamily="@font/varelaround_regular"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"

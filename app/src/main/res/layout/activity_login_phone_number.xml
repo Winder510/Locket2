@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:paddingBottom="15dp"
             android:text="Số điện thoại của bạn là gì?"
+            android:fontFamily="@font/varelaround_regular"
             android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold"
@@ -70,6 +71,7 @@
                 android:layout_height="60dp"
                 android:background="@drawable/login_edit_text"
                 android:hint="Số điện thoại"
+                android:fontFamily="@font/varelaround_regular"
                 android:inputType="phone"
                 android:paddingStart="15dp"
                 android:textColor="@color/white"
@@ -96,6 +98,7 @@
             android:background="@color/transparent_color"
             android:maxLines="2"
             android:text="Bằng cách nhận vào Tiếp tục, bạn đồng ý với chúng tôi Điều khoản Dịch vụ và Chính sách quyền riêng tư"
+            android:fontFamily="@font/varelaround_regular"
             android:textAlignment="center"
             android:textColor="#888888"
             android:textSize="15sp" />
@@ -112,6 +115,8 @@
             android:paddingEnd="10dp"
             android:paddingBottom="10dp"
             android:text="SEND OTP"
+            android:fontFamily="@font/varelaround_regular"
+            android:textStyle="bold"
             android:textColor="@color/black"
             android:textSize="20sp" />
 

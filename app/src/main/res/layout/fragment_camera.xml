@@ -52,6 +52,8 @@
                     android:layout_margin="0dp"
                     android:backgroundTint="@color/btn_color"
                     android:text="Bạn bè"
+                    android:fontFamily="@font/varelaround_regular"
+                    android:textStyle="bold"
                     android:textSize="15dp"
                     app:icon="@drawable/ic_friend"
                     tools:ignore="NestedWeights" />
@@ -65,6 +67,7 @@
                     android:gravity="center"
                     android:padding="1dp"
                     android:text="0"
+                    android:fontFamily="@font/varelaround_regular"
                     android:textColor="@color/black" />
             </FrameLayout>
 
@@ -178,6 +181,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Lịch sử"
+                android:fontFamily="@font/varelaround_regular"
                 android:textSize="25dp" />
 
             <ImageView

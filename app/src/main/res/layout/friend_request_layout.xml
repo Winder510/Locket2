@@ -34,6 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Nguyễn Tuấn Anh"
+        android:fontFamily="@font/varelaround_regular"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:maxLines="2"/>
@@ -43,6 +44,8 @@
         android:background="@drawable/btn_bg"
         android:drawableStart="@drawable/baseline_check_24"
         android:text="Chấp nhận"
+        android:fontFamily="@font/varelaround_regular"
+        android:textStyle="bold"
         android:textSize="14sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

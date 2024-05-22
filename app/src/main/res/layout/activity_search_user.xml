@@ -38,6 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Your Friends"
+                android:fontFamily="@font/varelaround_regular"
                 android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -53,6 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="You can add n more people"
+            android:fontFamily="@font/varelaround_regular"
             android:textColor="@color/st_setting_color"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -83,6 +85,7 @@
                 android:elevation="4dp"
                 android:textAlignment="center"
                 android:hint="Add someone new"
+                android:fontFamily="@font/varelaround_regular"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
@@ -126,6 +129,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/tv_bg"
                 android:text="Xem thêm"
+                android:fontFamily="@font/varelaround_regular"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
 
@@ -155,6 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="Yêu cầu kết bạn"
+                android:fontFamily="@font/varelaround_regular"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -184,6 +189,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="Đã gửi yêu cầu"
+                android:fontFamily="@font/varelaround_regular"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
