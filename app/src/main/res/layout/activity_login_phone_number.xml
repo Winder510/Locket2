@@ -31,7 +31,7 @@
         android:layout_height="wrap_content"
         android:gravity="center|left"
         android:orientation="vertical"
-        android:padding="20dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="15dp"
+            android:padding="15dp"
             android:text="Số điện thoại của bạn là gì?"
             android:fontFamily="@font/varelaround_regular"
             android:textColor="@color/white"
@@ -55,7 +55,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:weightSum="10"
+            android:orientation="horizontal">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/login_countrycode"
@@ -63,11 +65,13 @@
                 android:layout_height="wrap_content"
                 app:ccp_contentColor="@color/white"
                 app:ccp_defaultPhoneCode="84"
-                app:ccp_showNameCode="false" />
+                app:ccp_showNameCode="false"
+                android:textAlignment="center"/>
 
             <EditText
                 android:id="@+id/login_mobile_number"
-                android:layout_width="310dp"
+                android:layout_width="0dp"
+                android:layout_weight="9"
                 android:layout_height="60dp"
                 android:background="@drawable/login_edit_text"
                 android:fontFamily="@font/varelaround_regular"
@@ -76,10 +80,9 @@
                 android:paddingStart="15dp"
                 android:textColor="@color/white"
                 android:textColorHint="#888888"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+               />
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout

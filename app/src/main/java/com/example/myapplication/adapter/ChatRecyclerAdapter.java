@@ -119,7 +119,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
                 viewHolder.statusTextView.setVisibility(View.GONE);
             }
 
-            viewHolder.dateTextView.setText(transTimestamp(model.getTimestamp()));
+            viewHolder.dateTextView.setText(transTimestamp(model.getImageDate()));
             viewHolder.profile_pic_image_view.setVisibility(View.VISIBLE);
             FirebaseUtils.getOtherProfilePicStorageRef(model.getSenderId()).getDownloadUrl()
                     .addOnSuccessListener(uri -> {
@@ -140,7 +140,7 @@ public class ChatRecyclerAdapter extends FirestoreRecyclerAdapter<ChatMessage, R
                 viewHolder.statusTextView.setVisibility(View.GONE);
             }
 
-            viewHolder.dateTextView.setText(transTimestamp(model.getTimestamp()));
+            viewHolder.dateTextView.setText(transTimestamp(model.getImageDate()));
             viewHolder.profile_pic_image_view.setVisibility(View.GONE);
             Picasso.get().load(model.getImageUrl()).into(viewHolder.imagePost);
             viewHolder.left_chat_layout.setVisibility(View.VISIBLE);

@@ -61,7 +61,7 @@
             android:textColor="@color/white"
             android:textColorHint="#888888"
             android:textSize="20sp"
-            android:inputType="textEmailAddress"
+            android:inputType="phone"
             android:id="@+id/login_otp"/>
     </LinearLayout>
 

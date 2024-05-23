@@ -61,6 +61,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
     Chatroom chatroom;
     TextView btnxemthem;
     LinearLayout moreLayout;
+    List<User> userList = new ArrayList<>();
 
     public static int receiveItemCount = 0;
 
@@ -80,45 +81,54 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
             CustomIntent.customType(this, "right-to-left");
         });
         btnxemthem=findViewById(R.id.btnxemthem);
-        rcvUser.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                // Chuyển đổi từ dp sang pixel
-                int height300Dp = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
 
-                // Kiểm tra chiều cao hiện tại của RecyclerView
-                ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
-                if (layoutParams.height > height300Dp) {
-                    btnxemthem.setText("Xem thêm");
-                    moreLayout.setVisibility(View.GONE);
-                } else {
-                    moreLayout.setVisibility(View.GONE);
-                }
-            }
-        });
+
+
+
         btnxemthem.setOnClickListener(v -> {
-            // Chuyển đổi từ dp sang pixel
-            int height300Dp = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, 300, getResources().getDisplayMetrics());
-            int height500Dp = (int) TypedValue.applyDimension(
-                    TypedValue.COMPLEX_UNIT_DIP, 500, getResources().getDisplayMetrics());
+            int height300Dp = dpToPx(300); // Convert 300dp to pixels
+
+            // Toggle the isExpanded flag
+            isExpanded = !isExpanded;
 
             // Kiểm tra chiều cao hiện tại của RecyclerView và thay đổi
             ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
-            if (layoutParams.height == height300Dp) {
-                layoutParams.height = height500Dp;
+            if (isExpanded) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT; // Expand to wrap_content
                 btnxemthem.setText("Ẩn bớt");
             } else {
-                layoutParams.height = height300Dp;
+                layoutParams.height = height300Dp; // Collapse to 300dp height
                 btnxemthem.setText("Xem thêm");
             }
             rcvUser.setLayoutParams(layoutParams);
         });
 
     }
+    private void updateMoreLayoutVisibility() {
+        if(friendAdapter.getNumberofFriend() == 3){
+            ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
+            layoutParams.height = dpToPx(300);
+            rcvUser.setLayoutParams(layoutParams);
+            return;
+        }
+        if (friendAdapter.getNumberofFriend() > 2) {
+            ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
+            layoutParams.height = dpToPx(300);
+            rcvUser.setLayoutParams(layoutParams);
+            moreLayout.setVisibility(View.VISIBLE);
+        } else {
+            ViewGroup.LayoutParams layoutParams = rcvUser.getLayoutParams();
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            rcvUser.setLayoutParams(layoutParams);
+            moreLayout.setVisibility(View.GONE);
+        }
+    }
 
-
+    private int dpToPx(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }
+    private boolean isExpanded = false; // Add this line to your class
+    private int initialHeight; // Add this line to store initial height
 
     private void getListFiend() {
         FirebaseUtils.currentUserDetail().get().addOnCompleteListener(task -> {
@@ -131,6 +141,7 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
                                 User friend = task1.getResult().toObject(User.class);
                                 if (friend != null) {
                                     friendAdapter.addItem(friend);
+                                    updateMoreLayoutVisibility();
                                 }
                             }
                         });
@@ -252,6 +263,8 @@ public class SearchUserActivity extends AppCompatActivity implements ConfirmFrie
         super.onResume();
         getRecive();
         getSend();
+        updateMoreLayoutVisibility();
+
     }
 
     private void getSend() {

@@ -68,6 +68,7 @@
         android:id="@+id/bottom_layout">
 
         <EditText
+            android:id="@+id/chat_message_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -81,8 +82,13 @@
             android:fontFamily="@font/varelaround_regular"
             android:padding="10dp"
             android:textColorHint="@color/st_setting_color"
-            android:id="@+id/chat_message_input"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white"
+            android:inputType="textMultiLine"
+            android:scrollHorizontally="false"
+            android:overScrollMode="always"
+            android:maxLines="5"
+            android:minLines="1"/>
+
 
         <ImageButton
             android:id="@+id/message_send_btn"

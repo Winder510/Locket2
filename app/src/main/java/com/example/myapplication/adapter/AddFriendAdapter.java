@@ -37,6 +37,9 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
     Context context;
 
+    public int getNumberofFriend(){
+        return list.size();
+    }
     public AddFriendAdapter(Boolean isFriend, AddFriend addFriend, Context context) {
         this.isFriend = isFriend;
         this.addFriend = addFriend;
