@@ -2,6 +2,7 @@ package com.example.myapplication.utils;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -114,8 +115,9 @@ public class FirebaseUtils {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     public static String timestampToString(Timestamp timestamp) {
-        return new SimpleDateFormat("HH:MM").format(timestamp.toDate());
+        return new SimpleDateFormat("HH:mm").format(timestamp.toDate());
     }
 
     public static void logout() {
