@@ -55,10 +55,31 @@ public class ViewPostAdapter
         } else {
             holder.captionText.setVisibility(View.GONE);
         }
+//        FirebaseUtils.getUserInfor(post.getUserId())
+//                .get()
+//                .addOnSuccessListener(documentSnapshot -> {
+//                    if (documentSnapshot.exists()) {
+//                        if (documentSnapshot.getString("userId").equals(FirebaseUtils.currentUserID())) {
+//                            holder.userNameTextview.setText("Bạn");
+//                        } else {
+//                            String userName = documentSnapshot.getString("username");
+//                            String userId = documentSnapshot.getString("userId");
+//                            FirebaseUtils.getOtherProfilePicStorageRef(userId).getDownloadUrl()
+//                                    .addOnSuccessListener(uri -> {
+//                                        AndroidUtils.setProfilePic(context, uri, holder.profile_pic_image_view);
+//                                    });
+//                            holder.userNameTextview.setText(userName);
+//                        }
+//                    }
+//                });
         FirebaseUtils.getUserInfor(post.getUserId())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        // Handle error
+                        return;
+                    }
+
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
                         if (documentSnapshot.getString("userId").equals(FirebaseUtils.currentUserID())) {
                             holder.userNameTextview.setText("Bạn");
                         } else {

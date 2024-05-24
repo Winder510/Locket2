@@ -340,4 +340,12 @@ public class AllPostFragment extends Fragment implements AddFriend {
             loadPosts();
         }
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                });
+    }
 }

@@ -39,7 +39,7 @@ public class RecentChatRecyclerAdapter extends FirestoreRecyclerAdapter<Chatroom
                         }
                         String otherUserID = model.getUserIds().get(1);
                         User otherUser = task.getResult().toObject(User.class);
-                        FirebaseUtils.getOtherProfilePicStorageRef(otherUserID).getDownloadUrl()
+                        FirebaseUtils.getOtherProfilePicStorageRef(otherUser.getUserId()).getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     AndroidUtils.setProfilePic(context,uri,holder.profilePic);
                                 });

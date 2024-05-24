@@ -173,7 +173,10 @@ public class CameraFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
-
+        FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                });
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         executorService.submit(new Runnable() {
             public void run() {

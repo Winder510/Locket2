@@ -89,7 +89,6 @@ public class SettingsActivity extends AppCompatActivity implements SimpleGesture
                             if (selectedImageUri != null) {
                                 FirebaseUtils.getCurrentProfilePicStorageRef().putFile(selectedImageUri)
                                         .addOnCompleteListener(task -> {
-                                            AndroidUtils.showToast(getApplicationContext(), "hehe");
                                             FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
                                                     .addOnSuccessListener(uri -> {
                                                         // Cập nhật URL của ảnh vào tài liệu người dùng trong Firestore

@@ -376,7 +376,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                         return;
                     }
                     posts.clear();
-                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Post post = document.toObject(Post.class);
                         if(post.getVisibility().equals("public")||(post.getVisibility().equals("private")&&post.getUserId().equals(FirebaseUtils.currentUserID()))||
@@ -445,7 +444,6 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
                         return;
                     }
                     posts.clear();
-                    AndroidUtils.showToast(getContext(), "Check " + queryDocumentSnapshots.size());
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Post post = document.toObject(Post.class);
                         if (post.getVisibility().equals("public") || (post.getVisibility().equals("private") && post.getUserId().equals(FirebaseUtils.currentUserID())) ||
@@ -526,5 +524,14 @@ public class ViewPostFragment extends Fragment implements AddFriend, OnDataPassL
     @Override
     public void onPostDeleted() {
         loadPosts();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FirebaseUtils.getCurrentProfilePicStorageRef().getDownloadUrl()
+                .addOnSuccessListener(uri -> {
+                    AndroidUtils.setProfilePic(requireContext(),uri,btnSetting);
+                });
     }
 }
